@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VibeLevel</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            color: #000000;
+            text-align: center;
+        }
+
+        header {
+            padding: 30px 20px;
+            border-bottom: 1px solid #000000;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin: 0;
+            letter-spacing: 3px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        nav {
+            padding: 25px 15px;
+            text-align: center;
+            border-bottom: 1px solid black;
+        }
+
+        nav a {
+            color: black;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        #coleccion {
+            padding: 20px;
+        }
+
+        .producto {
+            margin: 40px auto;
+            padding: 25px 15px;
+            max-width: 400px;
+            border-top: 1px solid #000000;
+        }
+
+        .producto img {
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select {
+            padding: 12px;
+            min-width: 180px;
+            background: white;
+            color: black;
+            border: 1px solid black;
+            font-size: 15px;
+        }
+
+        button,
+        .boton {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 30px;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover,
+        .boton:hover {
+            opacity: 0.8;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 30px 20px;
+            border-top: 1px solid black;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>VibeLevel</h1>
+        <p>Streetwear • Worldwide</p>
+
+        <a href="#coleccion" class="boton">VER COLECCIÓN</a>
+    </header>
+
+    <nav>
+        <a href="#">INICIO</a>
+        <a href="#coleccion">COLECCIÓN</a>
+        <a href="#contacto">CONTACTO</a>
+    </nav>
+
+    <section id="coleccion">
+
+        <h2>Nueva colección</h2>
+        <p>Descubre las piezas de VibeLevel.</p>
+
+
+        <!-- VIBELEVEL ESSENTIALS -->
+
+        <div class="producto">
+
+            <h3>VibeLevel Essentials</h3>
+
+            <img src="vibelevel1.jpg"
+                 alt="VibeLevel Essentials"
+                 width="300">
+
+            <p>Streetwear diseñado para destacar.</p>
+
+            <p>
+                <strong>Precio: próximamente</strong>
+            </p>
+
+            <label for="tallaEssentials">
+                Selecciona tu talla:
+            </label>
+
+            <select id="tallaEssentials">
+                <option value="">Elegir talla</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+            </select>
+
+            <br>
+
+            <button onclick="comprarEssentials()">
+                COMPRAR
+            </button>
+
+        </div>
+
+
+        <!-- VIBELEVEL POLO -->
+
+        <div class="producto">
+
+            <h3>VibeLevel Polo</h3>
+
+            <p>Polo streetwear VibeLevel.</p>
+
+            <p>
+                <strong>Precio: próximamente</strong>
+            </p>
+
+            <label for="tallaPolo">
+                Selecciona tu talla:
+            </label>
+
+            <select id="tallaPolo">
+                <option value="">Elegir talla</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+            </select>
+
+            <br>
+
+            <button onclick="comprarPolo()">
+                COMPRAR
+            </button>
+
+        </div>
+
+
+        <!-- VIBELEVEL HOODIE -->
+
+        <div class="producto">
+
+            <h3>VibeLevel Hoodie</h3>
+
+            <p>Hoodie streetwear VibeLevel.</p>
+
+            <p>
+                <strong>Precio: próximamente</strong>
+            </p>
+
+            <label for="tallaHoodie">
+                Selecciona tu talla:
+            </label>
+
+            <select id="tallaHoodie">
+                <option value="">Elegir talla</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+            </select>
+
+            <br>
+
+            <button onclick="comprarHoodie()">
+                COMPRAR
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONTACTO -->
+
+    <footer id="contacto">
+
+        <p>
+            VibeLevel • Streetwear Worldwide
+        </p>
+
+        <p>
+            Contacto por WhatsApp
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        const numeroWhatsApp = "240555626619";
+
+
+        function comprarEssentials() {
+
+            const talla =
+                document.getElementById("tallaEssentials").value;
+
+            if (talla === "") {
+
+                alert("Selecciona una talla primero.");
+
+                return;
+            }
+
+            const mensaje =
+                "Hola, estoy interesado en VibeLevel Essentials. Talla: "
+                + talla;
+
+            window.location.href =
+                "https://wa.me/"
+                + numeroWhatsApp
+                + "?text="
+                + encodeURIComponent(mensaje);
+        }
+
+
+        function comprarPolo() {
+
+            const talla =
+                document.getElementById("tallaPolo").value;
+
+            if (talla === "") {
+
+                alert("Selecciona una talla primero.");
+
+                return;
+            }
+
+            const mensaje =
+                "Hola, estoy interesado en el VibeLevel Polo. Talla: "
+                + talla;
+
+            window.location.href =
+                "https://wa.me/"
+                + numeroWhatsApp
+                + "?text="
+                + encodeURIComponent(mensaje);
+        }
+
+
+        function comprarHoodie() {
+
+            const talla =
+                document.getElementById("tallaHoodie").value;
+
+            if (talla === "") {
+
+                alert("Selecciona una talla primero.");
+
+                return;
+            }
+
+            const mensaje =
+                "Hola, estoy interesado en el VibeLevel Hoodie. Talla: "
+                + talla;
+
+            window.location.href =
+                "https://wa.me/"
+                + numeroWhatsApp
+                + "?text="
+                + encodeURIComponent(mensaje);
+        }
+
+    </script>
+
+</body>
+
+  </html>
