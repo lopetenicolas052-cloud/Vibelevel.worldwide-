@@ -717,32 +717,21 @@ document
         "💾 Guardando producto en Supabase...";
 
 
-        const {data,error} =
-        await cliente
-        .from("products")
-        .insert({
-
-            name:nombre,
-
-            description:descripcion,
-
-    
-            price:precio,
-
-            old_price:precioAnterior,
-
-            image_url:publicUrl,
-
-            sizes:tallas,
-
-            stock:stock,
-
-
-            is_sale:esOferta,
-
-            sold_out:stock <= 0
-
-        })
+        const resultado =
+  await cliente
+    .from("products")
+    .insert([
+      {
+        name: nombre,
+        price:
+          precio === ""
+            ? null
+            : Number(precio),
+        description: descripcion,
+        image_url: imageUrl,
+        sizes: tallas
+      }
+    ]);
         .select();
 
 
