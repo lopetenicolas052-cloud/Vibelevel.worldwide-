@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#000000">
 
 <title>VIBELEVEL WORLDWIDE</title>
@@ -26,9 +26,7 @@ body{
     font-family:Arial,Helvetica,sans-serif;
 }
 
-button,
-input,
-select{
+button,input,select,textarea{
     font:inherit;
 }
 
@@ -36,14 +34,14 @@ button{
     cursor:pointer;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 
 header{
     position:sticky;
     top:0;
     z-index:1000;
     height:70px;
-    background:rgba(0,0,0,.95);
+    background:rgba(0,0,0,.97);
     border-bottom:1px solid #222;
     display:flex;
     align-items:center;
@@ -66,6 +64,7 @@ header{
 }
 
 .icon-btn{
+    position:relative;
     border:1px solid #333;
     background:#111;
     color:#fff;
@@ -80,21 +79,21 @@ header{
 
 .cart-count{
     position:absolute;
-    margin-top:-28px;
-    margin-left:28px;
+    top:-6px;
+    right:-6px;
     background:#fff;
     color:#000;
-    min-width:18px;
-    height:18px;
+    min-width:19px;
+    height:19px;
     border-radius:50%;
-    font-size:11px;
+    font-size:10px;
     font-weight:bold;
     display:flex;
     align-items:center;
     justify-content:center;
 }
 
-/* HERO */
+/* ================= HERO ================= */
 
 .hero{
     min-height:390px;
@@ -122,7 +121,7 @@ header{
     letter-spacing:3px;
 }
 
-/* CONTROLS */
+/* ================= CONTROLS ================= */
 
 .controls{
     padding:25px 18px;
@@ -144,10 +143,6 @@ header{
     padding:14px 16px;
     outline:none;
     border-radius:4px;
-}
-
-.search:focus{
-    border-color:#fff;
 }
 
 .refresh{
@@ -180,7 +175,7 @@ header{
     color:#000;
 }
 
-/* COLLECTION */
+/* ================= COLLECTION ================= */
 
 .collection{
     max-width:1300px;
@@ -205,26 +200,13 @@ header{
     font-size:13px;
 }
 
+/* ================= PRODUCTS ================= */
+
 .products{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:16px;
 }
-
-@media(max-width:950px){
-    .products{
-        grid-template-columns:repeat(3,1fr);
-    }
-}
-
-@media(max-width:650px){
-    .products{
-        grid-template-columns:repeat(2,1fr);
-        gap:10px;
-    }
-}
-
-/* PRODUCT */
 
 .product{
     background:#0d0d0d;
@@ -354,7 +336,7 @@ header{
     cursor:not-allowed;
 }
 
-/* LOADING */
+/* ================= STATES ================= */
 
 .loading{
     grid-column:1/-1;
@@ -382,7 +364,7 @@ header{
     line-height:1.6;
 }
 
-/* CART */
+/* ================= CART ================= */
 
 .cart-overlay{
     position:fixed;
@@ -432,6 +414,12 @@ header{
     flex:1;
     overflow-y:auto;
     padding:15px;
+}
+
+.cart-empty{
+    text-align:center;
+    color:#777;
+    padding:60px 20px;
 }
 
 .cart-item{
@@ -523,7 +511,7 @@ header{
     letter-spacing:1px;
 }
 
-/* CHECKOUT */
+/* ================= CHECKOUT ================= */
 
 .checkout-form{
     display:none;
@@ -604,7 +592,7 @@ header{
     font-weight:bold;
 }
 
-/* FOOTER */
+/* ================= FOOTER ================= */
 
 footer{
     border-top:1px solid #222;
@@ -614,166 +602,353 @@ footer{
     font-size:11px;
     letter-spacing:2px;
 }
+
+/* ================= MOBILE ================= */
+
+@media(max-width:950px){
+    .products{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:650px){
+    .products{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+
+    .product-name{
+        font-size:13px;
+    }
+
+    .price{
+        font-size:13px;
+    }
+
+    .collection{
+        padding-left:10px;
+        padding-right:10px;
+    }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-    <a href="#" class="logo">VIBELEVEL</a>
 
-    <div class="header-right">
-        <button class="icon-btn" onclick="openCart()">
-            🛒
-            <span class="cart-count" id="cartCount">0</span>
-        </button>
-    </div>
+<a href="#" class="logo">
+VIBELEVEL
+</a>
+
+<div class="header-right">
+
+<button class="icon-btn" onclick="openCart()">
+🛒
+<span class="cart-count" id="cartCount">0</span>
+</button>
+
+</div>
+
 </header>
 
+
 <section class="hero">
-    <div>
-        <h1>VIBELEVEL</h1>
-        <p>WORLDWIDE STREETWEAR</p>
-    </div>
+
+<div>
+
+<h1>VIBELEVEL</h1>
+
+<p>
+WORLDWIDE STREETWEAR
+</p>
+
+</div>
+
 </section>
+
 
 <section class="controls">
 
-    <div class="controls-top">
-        <input
-            id="search"
-            class="search"
-            type="text"
-            placeholder="Buscar producto..."
-            oninput="renderProducts()"
-        >
+<div class="controls-top">
 
-        <button class="refresh" onclick="loadProducts()">
-            ↻
-        </button>
-    </div>
+<input
+id="search"
+class="search"
+type="text"
+placeholder="Buscar producto..."
+oninput="renderProducts()"
+>
 
-    <div class="categories" id="categories">
-        <button class="category active" onclick="setCategory('ALL',this)">
-            TODOS
-        </button>
-    </div>
-
-</section>
-
-<main class="collection">
-
-    <div class="section-title">
-        <h2>COLECCIÓN</h2>
-        <span id="productCount">0 productos</span>
-    </div>
-
-    <div class="products" id="products">
-        <div class="loading">
-            CARGANDO PRODUCTOS...
-        </div>
-    </div>
-
-</main>
-
-<footer>
-    VIBELEVEL WORLDWIDE · STREETWEAR
-</footer>
-
-
-<!-- CART -->
-
-<div class="cart-overlay" id="cartOverlay" onclick="closeCartOutside(event)">
-
-    <aside class="cart">
-
-        <div class="cart-header">
-            <h3>MI CARRITO</h3>
-            <button class="close" onclick="closeCart()">×</button>
-        </div>
-
-        <div class="cart-items" id="cartItems"></div>
-
-        <div class="cart-bottom">
-
-            <div class="total-row">
-                <span>Subtotal</span>
-                <strong id="subtotal">0 XAF</strong>
-            </div>
-
-            <div class="total-row shipping">
-                <span>Envío</span>
-                <strong id="shipping">0 XAF</strong>
-            </div>
-
-            <div class="total-row final">
-                <span>TOTAL</span>
-                <strong id="total">0 XAF</strong>
-            </div>
-
-            <button class="checkout" onclick="openCheckout()">
-                FINALIZAR COMPRA
-            </button>
-
-        </div>
-
-    </aside>
+<button
+class="refresh"
+onclick="loadProducts()"
+>
+↻
+</button>
 
 </div>
 
 
-<!-- CHECKOUT -->
+<div
+class="categories"
+id="categories"
+>
 
-<div class="checkout-form" id="checkoutForm">
+<button
+class="category active"
+onclick="setCategory('ALL',this)"
+>
+TODOS
+</button>
 
-    <div class="checkout-box">
+</div>
 
-        <h2>FINALIZAR PEDIDO</h2>
+</section>
 
-        <div class="field">
-            <label>Nombre</label>
-            <input id="customerName" type="text" placeholder="Tu nombre">
-        </div>
 
-        <div class="field">
-            <label>Teléfono</label>
-            <input id="customerPhone" type="tel" placeholder="Tu número">
-        </div>
+<main class="collection">
 
-        <div class="field">
-            <label>Dirección</label>
-            <textarea id="customerAddress" placeholder="Dirección de entrega"></textarea>
-        </div>
+<div class="section-title">
 
-        <div class="field">
-            <label>Método de envío</label>
+<h2>
+COLECCIÓN
+</h2>
 
-            <select id="shippingMethod" onchange="updateCart()">
-                <option value="0">Recogida / acordar</option>
-                <option value="2000">Envío local — 2.000 XAF</option>
-                <option value="5000">Envío — 5.000 XAF</option>
-            </select>
+<span id="productCount">
+0 productos
+</span>
 
-        </div>
+</div>
 
-        <div class="field">
-            <label>Notas</label>
-            <textarea id="orderNotes" placeholder="Talla, color u otra información"></textarea>
-        </div>
 
-        <div class="form-buttons">
+<div
+class="products"
+id="products"
+>
 
-            <button class="cancel" onclick="closeCheckout()">
-                CANCELAR
-            </button>
+<div class="loading">
+CARGANDO PRODUCTOS...
+</div>
 
-            <button class="whatsapp" onclick="finishOrder()">
-                PEDIR POR WHATSAPP
-            </button>
+</div>
 
-        </div>
+</main>
 
-    </div>
+
+<footer>
+VIBELEVEL WORLDWIDE · STREETWEAR
+</footer>
+
+
+<!-- ================= CART ================= -->
+
+<div
+class="cart-overlay"
+id="cartOverlay"
+onclick="closeCartOutside(event)"
+>
+
+<aside class="cart">
+
+<div class="cart-header">
+
+<h3>
+MI CARRITO
+</h3>
+
+<button
+class="close"
+onclick="closeCart()"
+>
+×
+</button>
+
+</div>
+
+
+<div
+class="cart-items"
+id="cartItems"
+>
+</div>
+
+
+<div class="cart-bottom">
+
+<div class="total-row">
+
+<span>
+Subtotal
+</span>
+
+<strong id="subtotal">
+0 XAF
+</strong>
+
+</div>
+
+
+<div class="total-row shipping">
+
+<span>
+Envío
+</span>
+
+<strong id="shipping">
+0 XAF
+</strong>
+
+</div>
+
+
+<div class="total-row final">
+
+<span>
+TOTAL
+</span>
+
+<strong id="total">
+0 XAF
+</strong>
+
+</div>
+
+
+<button
+class="checkout"
+onclick="openCheckout()"
+>
+FINALIZAR COMPRA
+</button>
+
+</div>
+
+</aside>
+
+</div>
+
+
+<!-- ================= CHECKOUT ================= -->
+
+<div
+class="checkout-form"
+id="checkoutForm"
+>
+
+<div class="checkout-box">
+
+<h2>
+FINALIZAR PEDIDO
+</h2>
+
+
+<div class="field">
+
+<label>
+Nombre
+</label>
+
+<input
+id="customerName"
+type="text"
+placeholder="Tu nombre"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Teléfono
+</label>
+
+<input
+id="customerPhone"
+type="tel"
+placeholder="Tu número"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Dirección
+</label>
+
+<textarea
+id="customerAddress"
+placeholder="Dirección de entrega"
+></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Método de envío
+</label>
+
+<select
+id="shippingMethod"
+onchange="updateCart()"
+>
+
+<option value="0">
+Recogida / acordar
+</option>
+
+<option value="2000">
+Envío local — 2.000 XAF
+</option>
+
+<option value="5000">
+Envío — 5.000 XAF
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Notas
+</label>
+
+<textarea
+id="orderNotes"
+placeholder="Talla, color u otra información"
+></textarea>
+
+</div>
+
+
+<div class="form-buttons">
+
+<button
+class="cancel"
+onclick="closeCheckout()"
+>
+CANCELAR
+</button>
+
+
+<button
+class="whatsapp"
+onclick="finishOrder()"
+>
+PEDIR POR WHATSAPP
+</button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -781,7 +956,7 @@ footer{
 <script>
 
 /* =========================================================
-   VIBELEVEL SUPABASE
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -790,7 +965,8 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
 
-const db = window.supabase.createClient(
+const db =
+window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
@@ -803,14 +979,49 @@ const db = window.supabase.createClient(
 const WHATSAPP =
 "240555626619";
 
-
 let allProducts = [];
+
 let cart = [];
+
 let currentCategory = "ALL";
 
 
 /* =========================================================
-   CARGAR PRODUCTOS DESDE SUPABASE
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHtml(value)
+        .replace(/`/g,"&#096;");
+}
+
+
+/* =========================================================
+   PRECIO
+========================================================= */
+
+function formatPrice(value){
+
+    return Number(value || 0)
+        .toLocaleString("es-ES")
+        + " XAF";
+}
+
+
+/* =========================================================
+   CARGAR PRODUCTOS
 ========================================================= */
 
 async function loadProducts(){
@@ -826,32 +1037,51 @@ async function loadProducts(){
 
     try{
 
-        const { data, error } = await db
+        const response =
+            await db
             .from("products")
             .select("*")
-            .order("created_at", {
-                ascending:false
-            });
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
 
-        if(error){
-            console.error(error);
+
+        if(response.error){
+
+            console.error(
+                "Supabase:",
+                response.error
+            );
 
             container.innerHTML = `
                 <div class="error">
-                    <strong>No se pudieron cargar los productos.</strong>
+                    <strong>
+                    No se pudieron cargar los productos.
+                    </strong>
+
                     <br><br>
-                    ${escapeHtml(error.message)}
+
+                    ${escapeHtml(
+                        response.error.message
+                    )}
                 </div>
             `;
 
             return;
         }
 
-        allProducts = data || [];
+
+        allProducts =
+            response.data || [];
+
 
         buildCategories();
 
         renderProducts();
+
 
     }catch(error){
 
@@ -864,7 +1094,9 @@ async function loadProducts(){
                 ${escapeHtml(error.message)}
             </div>
         `;
+
     }
+
 }
 
 
@@ -875,109 +1107,186 @@ async function loadProducts(){
 function buildCategories(){
 
     const box =
-        document.getElementById("categories");
+        document.getElementById(
+            "categories"
+        );
+
 
     const categories = [
         ...new Set(
             allProducts
-                .map(p => p.category)
-                .filter(Boolean)
+            .map(
+                product =>
+                    product.category
+            )
+            .filter(Boolean)
         )
     ];
 
+
     box.innerHTML = `
         <button
-            class="category ${currentCategory === "ALL" ? "active" : ""}"
+            class="category ${
+                currentCategory === "ALL"
+                ? "active"
+                : ""
+            }"
             onclick="setCategory('ALL',this)"
         >
             TODOS
         </button>
     `;
 
+
     categories.forEach(category => {
 
         const button =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
+
 
         button.className =
             "category " +
-            (currentCategory === category
+            (
+                currentCategory === category
                 ? "active"
-                : "");
+                : ""
+            );
+
 
         button.textContent =
-            String(category).toUpperCase();
+            String(category)
+            .toUpperCase();
+
 
         button.onclick =
-            () => setCategory(category,button);
+            function(){
+
+                setCategory(
+                    category,
+                    button
+                );
+
+            };
+
 
         box.appendChild(button);
 
     });
-}
 
-
-function setCategory(category,button){
-
-    currentCategory = category;
-
-    document
-        .querySelectorAll(".category")
-        .forEach(b => b.classList.remove("active"));
-
-    button.classList.add("active");
-
-    renderProducts();
 }
 
 
 /* =========================================================
-   MOSTRAR PRODUCTOS
+   CATEGORÍA
+========================================================= */
+
+function setCategory(
+    category,
+    button
+){
+
+    currentCategory =
+        category;
+
+
+    document
+    .querySelectorAll(".category")
+    .forEach(
+        b =>
+            b.classList.remove(
+                "active"
+            )
+    );
+
+
+    if(button){
+        button.classList.add(
+            "active"
+        );
+    }
+
+
+    renderProducts();
+
+}
+
+
+/* =========================================================
+   RENDER PRODUCTS
 ========================================================= */
 
 function renderProducts(){
 
     const container =
-        document.getElementById("products");
+        document.getElementById(
+            "products"
+        );
+
 
     const search =
         document
-            .getElementById("search")
-            .value
-            .toLowerCase()
-            .trim();
-
-    let products =
-        allProducts.filter(product => {
-
-            const name =
-                String(product.name || "")
-                    .toLowerCase();
-
-            const description =
-                String(product.description || "")
-                    .toLowerCase();
-
-            const category =
-                String(product.category || "");
-
-            const categoryOK =
-                currentCategory === "ALL" ||
-                category === currentCategory;
-
-            const searchOK =
-                !search ||
-                name.includes(search) ||
-                description.includes(search) ||
-                category.toLowerCase().includes(search);
-
-            return categoryOK && searchOK;
-        });
+        .getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
 
 
-    document.getElementById("productCount")
-        .textContent =
-        `${products.length} producto${products.length === 1 ? "" : "s"}`;
+    const products =
+        allProducts.filter(
+            product => {
+
+                const name =
+                    String(
+                        product.name || ""
+                    ).toLowerCase();
+
+
+                const description =
+                    String(
+                        product.description || ""
+                    ).toLowerCase();
+
+
+                const category =
+                    String(
+                        product.category || ""
+                    );
+
+
+                const categoryOK =
+                    currentCategory === "ALL" ||
+                    category === currentCategory;
+
+
+                const searchOK =
+                    !search ||
+                    name.includes(search) ||
+                    description.includes(search) ||
+                    category
+                    .toLowerCase()
+                    .includes(search);
+
+
+                return (
+                    categoryOK &&
+                    searchOK
+                );
+
+            }
+        );
+
+
+    document
+    .getElementById("productCount")
+    .textContent =
+        products.length +
+        (
+            products.length === 1
+            ? " producto"
+            : " productos"
+        );
 
 
     if(!products.length){
@@ -993,12 +1302,18 @@ function renderProducts(){
 
 
     container.innerHTML =
-        products.map(product => productCard(product)).join("");
+        products
+        .map(
+            product =>
+                productCard(product)
+        )
+        .join("");
+
 }
 
 
 /* =========================================================
-   TARJETA DE PRODUCTO
+   PRODUCT CARD
 ========================================================= */
 
 function productCard(product){
@@ -1006,103 +1321,57 @@ function productCard(product){
     const id =
         product.id;
 
+
     const name =
-        escapeHtml(product.name || "Producto");
+        product.name ||
+        "Producto";
+
 
     const category =
-        escapeHtml(product.category || "");
+        product.category ||
+        "";
 
-    const description =
-        escapeHtml(product.description || "");
 
     const price =
-        Number(product.price || 0);
+        Number(
+            product.price || 0
+        );
+
 
     const oldPrice =
-        Number(product.old_price || 0);
+        Number(
+            product.old_price || 0
+        );
+
+
+    const stock =
+        Number(
+            product.stock || 0
+        );
+
 
     const soldOut =
         product.sold_out === true ||
-        Number(product.stock || 0) <= 0;
+        stock <= 0;
 
 
     const image =
         product.image_url ||
-        "https://via.placeholder.com/700x900/111111/ffffff?text=VIBELEVEL";
+        "";
 
 
     let sizes = [];
 
+
     if(Array.isArray(product.sizes)){
-        sizes = product.sizes;
-    }else if(typeof product.sizes === "string"){
+
+        sizes =
+            product.sizes;
+
+    }else if(
+        typeof product.sizes === "string"
+    ){
+
         sizes =
             product.sizes
-                .split(",")
-                .map(x => x.trim())
-                .filter(Boolean);
-    }
-
-
-    return `
-        <article class="product">
-
-            <div class="product-image">
-
-                <img
-                    src="${escapeAttribute(image)}"
-                    alt="${escapeAttribute(name)}"
-                    loading="lazy"
-                    onerror="this.src='https://via.placeholder.com/700x900/111111/ffffff?text=VIBELEVEL'"
-                >
-
-                <div class="badges">
-
-                    ${
-                        product.is_new
-                        ? `<span class="badge">NEW</span>`
-                        : ""
-                    }
-
-                    ${
-                        product.is_sale
-                        ? `<span class="badge sale">SALE</span>`
-                        : ""
-                    }
-
-                    ${
-                        soldOut
-                        ? `<span class="badge sold">SOLD OUT</span>`
-                        : ""
-                    }
-
-                </div>
-
-            </div>
-
-
-            <div class="product-info">
-
-                <div class="product-category">
-                    ${category}
-                </div>
-
-                <div class="product-name">
-                    ${name}
-                </div>
-
-                <div style="display:none">
-                    ${description}
-                </div>
-
-                <div class="prices">
-
-                    <span class="price">
-                        ${formatPrice(price)}
-                    </span>
-
-                    ${
-                        oldPrice > price
-                        ? `
-                        <span class="old-price">
-                            ${formatPrice(oldPri
+  
