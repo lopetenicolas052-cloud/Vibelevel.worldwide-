@@ -2,345 +2,1422 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>VibeLevel</title>
+<meta charset="UTF-8">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #ffffff;
-            color: #000000;
-            text-align: center;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        header {
-            padding: 30px 20px;
-            border-bottom: 1px solid #000000;
-        }
+<title>VibeLevel</title>
 
-        h1 {
-            font-size: 42px;
-            margin: 0;
-            letter-spacing: 3px;
-        }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        h2 {
-            font-size: 28px;
-            margin-top: 40px;
-        }
+<style>
 
-        h3 {
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        p {
-            font-size: 16px;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #000000;
+    color: #ffffff;
+}
 
-        nav {
-            padding: 25px 15px;
-            text-align: center;
-            border-bottom: 1px solid black;
-        }
+header {
+    padding: 35px 20px;
+    text-align: center;
+    border-bottom: 1px solid #333333;
+}
 
-        nav a {
-            color: black;
-            text-decoration: none;
-            margin: 0 10px;
-            font-size: 13px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
+h1 {
+    margin: 0;
+    font-size: 42px;
+    letter-spacing: 4px;
+}
 
-        #coleccion {
-            padding: 20px;
-        }
+header p {
+    color: #cccccc;
+}
 
-        .producto {
-            margin: 40px auto;
-            padding: 25px 15px;
-            max-width: 400px;
-            border-top: 1px solid #000000;
-        }
+nav {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #333333;
+}
 
-        .producto img {
-            max-width: 100%;
-            height: auto;
-            margin: 15px 0;
-        }
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
 
-        label {
-            display: block;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+#botonCarrito {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 13px 18px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        select {
-            padding: 12px;
-            min-width: 180px;
-            background: white;
-            color: black;
-            border: 1px solid black;
-            font-size: 15px;
-        }
+#contador {
+    background: #000000;
+    color: #ffffff;
+    padding: 3px 7px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
 
-        button,
-        .boton {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 14px 30px;
-            background: #000000;
-            color: #ffffff;
-            border: none;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 14px;
-        }
+#coleccion {
+    padding: 30px 15px;
+    max-width: 1100px;
+    margin: auto;
+}
 
-        button:hover,
-        .boton:hover {
-            opacity: 0.8;
-        }
+.titulo {
+    text-align: center;
+    margin-bottom: 35px;
+}
 
-        footer {
-            margin-top: 50px;
-            padding: 30px 20px;
-            border-top: 1px solid black;
-            font-size: 13px;
-        }
-    </style>
+#productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.producto {
+    background: #111111;
+    border: 1px solid #333333;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.producto img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.categoria {
+    color: #aaaaaa;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.oferta {
+    display: inline-block;
+    background: #ffffff;
+    color: #000000;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.precio-anterior {
+    color: #888888;
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.precio {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+.boton {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#cargando {
+    text-align: center;
+    padding: 30px;
+}
+
+#error {
+    text-align: center;
+    color: #ff7777;
+}
+
+#carritoPagina {
+    display: none;
+    min-height: 100vh;
+    padding: 30px 15px;
+    background: #000000;
+}
+
+.carrito-contenido {
+    max-width: 700px;
+    margin: auto;
+}
+
+.item-carrito {
+    border-bottom: 1px solid #333333;
+    padding: 20px 0;
+}
+
+.item-carrito h3 {
+    margin: 0 0 10px 0;
+}
+
+.cantidad {
+    margin-top: 12px;
+}
+
+.cantidad button {
+    width: 40px;
+    height: 35px;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    font-weight: bold;
+}
+
+.eliminar {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border: 1px solid #555555 !important;
+    padding: 8px 12px !important;
+    width: auto !important;
+    margin-left: 10px;
+}
+
+.envio {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #333333;
+}
+
+.envio select {
+    margin-bottom: 15px;
+}
+
+.resumen {
+    border-top: 1px solid #555555;
+    margin-top: 25px;
+    padding-top: 20px;
+}
+
+.linea {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+}
+
+.total {
+    font-size: 24px;
+    font-weight: bold;
+    border-top: 1px solid #ffffff;
+    padding-top: 15px;
+}
+
+#reseñas {
+    max-width: 700px;
+    margin: 70px auto;
+    padding: 30px 20px;
+    border-top: 1px solid #333333;
+    text-align: center;
+}
+
+.estrellas {
+    font-size: 28px;
+    margin: 15px 0;
+}
+
+#reseñas input,
+#reseñas textarea,
+#reseñas select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #111111;
+    color: #ffffff;
+    border: 1px solid #444444;
+}
+
+#reseñas textarea {
+    height: 100px;
+}
+
+.reseña {
+    text-align: left;
+    border-top: 1px solid #333333;
+    padding: 20px 0;
+}
+
+footer {
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 1px solid #333333;
+    color: #aaaaaa;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-    <header>
-        <h1>VibeLevel</h1>
-        <p>Streetwear • Worldwide</p>
 
-        <a href="#coleccion" class="boton">VER COLECCIÓN</a>
-    </header>
+<button id="botonCarrito" onclick="abrirCarrito()">
 
-    <nav>
-        <a href="#">INICIO</a>
-        <a href="#coleccion">COLECCIÓN</a>
-        <a href="#contacto">CONTACTO</a>
-    </nav>
+🛒 CARRITO
 
-    <section id="coleccion">
+<span id="contador">0</span>
 
-        <h2>Nueva colección</h2>
-        <p>Descubre las piezas de VibeLevel.</p>
+</button>
 
 
-        <!-- VIBELEVEL ESSENTIALS -->
+<div id="tienda">
 
-        <div class="producto">
 
-            <h3>VibeLevel Essentials</h3>
+<header>
 
-            <img src="vibelevel1.jpg"
-                 alt="VibeLevel Essentials"
-                 width="300">
+<h1>VibeLevel</h1>
 
-            <p>Streetwear diseñado para destacar.</p>
+<p>Streetwear • Worldwide</p>
 
-            <p>
-                <strong>Precio: próximamente</strong>
-            </p>
+</header>
 
-            <label for="tallaEssentials">
-                Selecciona tu talla:
-            </label>
 
-            <select id="tallaEssentials">
-                <option value="">Elegir talla</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-            </select>
+<nav>
 
-            <br>
+<a href="#">INICIO</a>
 
-            <button onclick="comprarEssentials()">
-                COMPRAR
-            </button>
+<a href="#coleccion">CATÁLOGO</a>
 
-        </div>
+<a href="#reseñas">RESEÑAS</a>
 
+<a href="#contacto">CONTACTO</a>
 
-        <!-- VIBELEVEL POLO -->
+</nav>
 
-        <div class="producto">
 
-            <h3>VibeLevel Polo</h3>
+<section id="coleccion">
 
-            <p>Polo streetwear VibeLevel.</p>
+<div class="titulo">
 
-            <p>
-                <strong>Precio: próximamente</strong>
-            </p>
+<h2>VIBELEVEL COLLECTION</h2>
 
-            <label for="tallaPolo">
-                Selecciona tu talla:
-            </label>
+<p>Streetwear diseñado para destacar.</p>
 
-            <select id="tallaPolo">
-                <option value="">Elegir talla</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-            </select>
+</div>
 
-            <br>
 
-            <button onclick="comprarPolo()">
-                COMPRAR
-            </button>
+<p id="cargando">
+Cargando productos...
+</p>
 
-        </div>
+<p id="error"></p>
 
+<div id="productos"></div>
 
-        <!-- VIBELEVEL HOODIE -->
+</section>
 
-        <div class="producto">
 
-            <h3>VibeLevel Hoodie</h3>
+<section id="reseñas">
 
-            <p>Hoodie streetwear VibeLevel.</p>
+<h2>⭐ RESEÑAS</h2>
 
-            <p>
-                <strong>Precio: próximamente</strong>
-            </p>
+<p>Comparte tu experiencia con VibeLevel.</p>
 
-            <label for="tallaHoodie">
-                Selecciona tu talla:
-            </label>
 
-            <select id="tallaHoodie">
-                <option value="">Elegir talla</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-            </select>
+<input
+id="nombreResena"
+type="text"
+placeholder="Tu nombre"
+>
 
-            <br>
 
-            <button onclick="comprarHoodie()">
-                COMPRAR
-            </button>
+<select id="estrellasResena">
 
-        </div>
+<option value="5">⭐⭐⭐⭐⭐ 5 estrellas</option>
 
-    </section>
+<option value="4">⭐⭐⭐⭐ 4 estrellas</option>
 
+<option value="3">⭐⭐⭐ 3 estrellas</option>
 
-    <!-- CONTACTO -->
+<option value="2">⭐⭐ 2 estrellas</option>
 
-    <footer id="contacto">
+<option value="1">⭐ 1 estrella</option>
 
-        <p>
-            VibeLevel • Streetwear Worldwide
-        </p>
+</select>
 
-        <p>
-            Contacto por WhatsApp
-        </p>
 
-    </footer>
+<textarea
+id="textoResena"
+placeholder="Escribe tu reseña..."
+></textarea>
 
 
-    <!-- JAVASCRIPT -->
+<button class="boton" onclick="guardarResena()">
 
-    <script>
+PUBLICAR RESEÑA
 
-        const numeroWhatsApp = "240555626619";
+</button>
 
 
-        function comprarEssentials() {
+<div id="listaResenas"></div>
 
-            const talla =
-                document.getElementById("tallaEssentials").value;
+</section>
 
-            if (talla === "") {
 
-                alert("Selecciona una talla primero.");
+<footer id="contacto">
 
-                return;
-            }
+<p>VibeLevel • Streetwear Worldwide</p>
 
-            const mensaje =
-                "Hola, estoy interesado en VibeLevel Essentials. Talla: "
-                + talla;
+<p>Contacto por WhatsApp</p>
 
-            window.location.href =
-                "https://wa.me/"
-                + numeroWhatsApp
-                + "?text="
-                + encodeURIComponent(mensaje);
-        }
+</footer>
 
 
-        function comprarPolo() {
+</div>
 
-            const talla =
-                document.getElementById("tallaPolo").value;
 
-            if (talla === "") {
 
-                alert("Selecciona una talla primero.");
+<div id="carritoPagina">
 
-                return;
-            }
+<div class="carrito-contenido">
 
-            const mensaje =
-                "Hola, estoy interesado en el VibeLevel Polo. Talla: "
-                + talla;
 
-            window.location.href =
-                "https://wa.me/"
-                + numeroWhatsApp
-                + "?text="
-                + encodeURIComponent(mensaje);
-        }
+<h1>🛒 TU CARRITO</h1>
 
 
-        function comprarHoodie() {
+<button
+class="boton"
+onclick="volverTienda()"
+>
 
-            const talla =
-                document.getElementById("tallaHoodie").value;
+← VOLVER A LA TIENDA
 
-            if (talla === "") {
+</button>
 
-                alert("Selecciona una talla primero.");
 
-                return;
-            }
+<div id="listaCarrito">
 
-            const mensaje =
-                "Hola, estoy interesado en el VibeLevel Hoodie. Talla: "
-                + talla;
+</div>
 
-            window.location.href =
-                "https://wa.me/"
-                + numeroWhatsApp
-                + "?text="
-                + encodeURIComponent(mensaje);
-        }
 
-    </script>
+<div class="envio">
+
+<h2>🚚 ENVÍO</h2>
+
+<p>Selecciona tu compañía de envío:</p>
+
+
+<select id="empresaEnvio" onchange="actualizarTotal()">
+
+<option value="0">
+Seleccionar compañía de envío
+</option>
+
+<option value="0">
+Recogida / acordar envío
+</option>
+
+<option value="0">
+Empresa de envío 1
+</option>
+
+<option value="0">
+Empresa de envío 2
+</option>
+
+<option value="0">
+Empresa de envío 3
+</option>
+
+</select>
+
+</div>
+
+
+<div class="resumen">
+
+<div class="linea">
+
+<span>Productos</span>
+
+<span id="subtotal">0 XAF</span>
+
+</div>
+
+
+<div class="linea">
+
+<span>Envío</span>
+
+<span id="precioEnvio">0 XAF</span>
+
+</div>
+
+
+<div class="linea total">
+
+<span>TOTAL</span>
+
+<span id="total">0 XAF</span>
+
+</div>
+
+</div>
+
+
+<button
+class="boton"
+onclick="comprarPorWhatsApp()"
+>
+
+📲 COMPRAR POR WHATSAPP
+
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+var SUPABASE_URL =
+"https://yqlyxnlheoiftxhpteyb.supabase.co";
+
+
+var SUPABASE_KEY =
+"PEGA_AQUI_TU_PUBLISHABLE_KEY";
+
+
+var cliente =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+var numeroWhatsApp =
+"240555626619";
+
+
+var carrito = [];
+
+
+
+function cargarProductos() {
+
+
+cliente
+.from("productos")
+.select("*")
+.order("id", {
+ascending: false
+})
+
+
+.then(function(resultado) {
+
+
+document.getElementById(
+"cargando"
+).style.display = "none";
+
+
+if (resultado.error) {
+
+document.getElementById(
+"error"
+).textContent =
+"No se pudieron cargar los productos.";
+
+return;
+
+}
+
+
+mostrarProductos(
+resultado.data
+);
+
+
+});
+
+}
+
+
+
+function mostrarProductos(lista) {
+
+
+var contenedor =
+document.getElementById(
+"productos"
+);
+
+
+contenedor.innerHTML = "";
+
+
+if (!lista ||
+lista.length === 0) {
+
+contenedor.innerHTML =
+"<p>No hay productos disponibles todavía.</p>";
+
+return;
+
+}
+
+
+for (
+var i = 0;
+i < lista.length;
+i++
+) {
+
+
+var producto =
+lista[i];
+
+
+var imagen = "";
+
+
+if (producto.imagen) {
+
+imagen =
+"<img src='" +
+producto.imagen +
+"' alt='Producto'>";
+
+}
+
+
+var precioAnterior = "";
+
+
+if (producto.precio_anterior) {
+
+precioAnterior =
+"<span class='precio-anterior'>" +
+producto.precio_anterior +
+" XAF</span>";
+
+}
+
+
+var etiquetaOferta = "";
+
+
+if (producto.oferta === true) {
+
+etiquetaOferta =
+"<div class='oferta'>OFERTA</div>";
+
+}
+
+
+var tallas =
+"<option value=''>Elegir talla</option>";
+
+
+if (producto.tallas) {
+
+
+var listaTallas =
+producto.tallas.split(",");
+
+
+for (
+var j = 0;
+j < listaTallas.length;
+j++
+) {
+
+tallas +=
+"<option value='" +
+listaTallas[j].trim() +
+"'>" +
+listaTallas[j].trim() +
+"</option>";
+
+}
+
+}
+
+
+var categoria =
+producto.categoria ||
+"Streetwear";
+
+
+var html =
+
+"<div class='producto'>" +
+
+etiquetaOferta +
+
+"<div class='categoria'>" +
+categoria +
+"</div>" +
+
+imagen +
+
+"<h3>" +
+producto.nombre +
+"</h3>" +
+
+"<p>" +
+(producto.descripcion || "") +
+"</p>" +
+
+"<p class='precio'>" +
+
+precioAnterior +
+
+producto.precio +
+" XAF" +
+
+"</p>" +
+
+"<label>Talla</label>" +
+
+"<select id='talla" +
+producto.id +
+"'>" +
+
+tallas +
+
+"</select>" +
+
+"<button class='boton' " +
+
+"onclick='agregarCarrito(" +
+producto.id +
+")'>" +
+
+"🛒 AÑADIR AL CARRITO" +
+
+"</button>" +
+
+"</div>";
+
+
+contenedor.innerHTML +=
+html;
+
+
+}
+
+}
+
+
+
+function agregarCarrito(id) {
+
+
+var selector =
+document.getElementById(
+"talla" + id
+);
+
+
+var talla =
+selector.value;
+
+
+if (talla === "") {
+
+alert(
+"Selecciona una talla primero."
+);
+
+return;
+
+}
+
+
+cliente
+.from("productos")
+.select("*")
+.eq("id", id)
+.single()
+
+
+.then(function(resultado) {
+
+
+if (resultado.error) {
+
+alert(
+"No se pudo añadir el producto."
+);
+
+return;
+
+}
+
+
+var producto =
+resultado.data;
+
+
+var encontrado =
+false;
+
+
+for (
+var i = 0;
+i < carrito.length;
+i++
+) {
+
+
+if (
+carrito[i].id === id &&
+carrito[i].talla === talla
+) {
+
+carrito[i].cantidad++;
+
+encontrado = true;
+
+}
+
+}
+
+
+if (!encontrado) {
+
+carrito.push({
+
+id: producto.id,
+
+nombre: producto.nombre,
+
+precio: Number(
+producto.precio
+),
+
+talla: talla,
+
+cantidad: 1
+
+});
+
+}
+
+
+actualizarContador();
+
+
+alert(
+"Producto añadido al carrito."
+);
+
+
+});
+
+}
+
+
+
+function actualizarContador() {
+
+
+var cantidad = 0;
+
+
+for (
+var i = 0;
+i < carrito.length;
+i++
+) {
+
+cantidad +=
+carrito[i].cantidad;
+
+}
+
+
+document.getElementById(
+"contador"
+).textContent =
+cantidad;
+
+
+}
+
+
+
+function abrirCarrito() {
+
+
+document.getElementById(
+"tienda"
+).style.display =
+"none";
+
+
+document.getElementById(
+"carritoPagina"
+).style.display =
+"block";
+
+
+mostrarCarrito();
+
+
+}
+
+
+
+function volverTienda() {
+
+
+document.getElementById(
+"carritoPagina"
+).style.display =
+"none";
+
+
+document.getElementById(
+"tienda"
+).style.display =
+"block";
+
+
+}
+
+
+
+function mostrarCarrito() {
+
+
+var contenedor =
+document.getElementById(
+"listaCarrito"
+);
+
+
+contenedor.innerHTML =
+"";
+
+
+if (carrito.length === 0) {
+
+contenedor.innerHTML =
+"<p>Tu carrito está vacío.</p>";
+
+actualizarTotal();
+
+return;
+
+}
+
+
+for (
+var i = 0;
+i < carrito.length;
+i++
+) {
+
+
+var item =
+carrito[i];
+
+
+var subtotal =
+item.precio *
+item.cantidad;
+
+
+contenedor.innerHTML +=
+
+"<div class='item-carrito'>" +
+
+"<h3>" +
+item.nombre +
+"</h3>" +
+
+"<p>Talla: " +
+item.talla +
+"</p>" +
+
+"<p>Precio: " +
+item.precio +
+" XAF</p>" +
+
+"<p>Cantidad: " +
+item.cantidad +
+"</p>" +
+
+"<p>Subtotal: " +
+subtotal +
+" XAF</p>" +
+
+"<div class='cantidad'>" +
+
+"<button onclick='cambiarCantidad(" +
+i +
+",-1)'>−</button>" +
+
+"<button onclick='cambiarCantidad(" +
+i +
+",1)'>+</button>" +
+
+"<button class='eliminar' " +
+"onclick='eliminarProducto(" +
+i +
+")'>" +
+
+"🗑 ELIMINAR" +
+
+"</button>" +
+
+"</div>" +
+
+"</div>";
+
+}
+
+
+actualizarTotal();
+
+
+}
+
+
+
+function cambiarCantidad(
+indice,
+cambio
+) {
+
+
+carrito[indice].cantidad +=
+cambio;
+
+
+if (
+carrito[indice].cantidad <= 0
+) {
+
+carrito.splice(
+indice,
+1
+);
+
+}
+
+
+mostrarCarrito();
+
+
+actualizarContador();
+
+
+}
+
+
+
+function eliminarProducto(
+indice
+) {
+
+
+carrito.splice(
+indice,
+1
+);
+
+
+mostrarCarrito();
+
+
+actualizarContador();
+
+
+}
+
+
+
+function actualizarTotal() {
+
+
+var subtotal = 0;
+
+
+for (
+var i = 0;
+i < carrito.length;
+i++
+) {
+
+subtotal +=
+carrito[i].precio *
+carrito[i].cantidad;
+
+}
+
+
+var selector =
+document.getElementById(
+"empresaEnvio"
+);
+
+
+var envio =
+Number(selector.value);
+
+
+var total =
+subtotal +
+envio;
+
+
+document.getElementById(
+"subtotal"
+).textContent =
+subtotal +
+" XAF";
+
+
+document.getElementById(
+"precioEnvio"
+).textContent =
+envio +
+" XAF";
+
+
+document.getElementById(
+"total"
+).textContent =
+total +
+" XAF";
+
+
+}
+
+
+
+function comprarPorWhatsApp() {
+
+
+if (carrito.length === 0) {
+
+alert(
+"Tu carrito está vacío."
+);
+
+return;
+
+}
+
+
+var selector =
+document.getElementById(
+"empresaEnvio"
+);
+
+
+var empresa =
+selector.options[
+selector.selectedIndex
+].text;
+
+
+var envio =
+Number(
+selector.value
+);
+
+
+var total =
+0;
+
+
+var mensaje =
+"Hola, quiero hacer un pedido en VibeLevel.%0A%0A";
+
+
+for (
+var i = 0;
+i < carrito.length;
+i++
+) {
+
+
+var item =
+carrito[i];
+
+
+var subtotal =
+item.precio *
+item.cantidad;
+
+
+total += subtotal;
+
+
+mensaje +=
+"Producto: " +
+item.nombre +
+"%0A";
+
+
+mensaje +=
+"Talla: " +
+item.talla +
+"%0A";
+
+
+mensaje +=
+"Cantidad: " +
+item.cantidad +
+"%0A";
+
+
+mensaje +=
+"Precio: " +
+item.precio +
+" XAF%0A";
+
+
+mensaje +=
+"Subtotal: " +
+subtotal +
+" XAF%0A%0A";
+
+
+}
+
+
+total += envio;
+
+
+mensaje +=
+"Compañía de envío: " +
+empresa +
+"%0A";
+
+
+mensaje +=
+"Envío: " +
+envio +
+" XAF%0A";
+
+
+mensaje +=
+"TOTAL: " +
+total +
+" XAF";
+
+
+window.location.href =
+"https://wa.me/" +
+numeroWhatsApp +
+"?text=" +
+mensaje;
+
+
+}
+
+
+
+function guardarResena() {
+
+
+var nombre =
+document.getElementById(
+"nombreResena"
+).value;
+
+
+var estrellas =
+document.getElementById(
+"estrellasResena"
+).value;
+
+
+var texto =
+document.getElementById(
+"textoResena"
+).value;
+
+
+if (
+nombre === "" ||
+texto === ""
+) {
+
+alert(
+"Completa tu nombre y tu reseña."
+);
+
+return;
+
+}
+
+
+var resenas =
+JSON.parse(
+localStorage.getItem(
+"vibelevel_resenas"
+)
+) || [];
+
+
+resenas.push({
+
+nombre: nombre,
+
+estrellas: estrellas,
+
+texto: texto
+
+});
+
+
+localStorage.setItem(
+"vibelevel_resenas",
+JSON.stringify(
+resenas
+)
+);
+
+
+document.getElementById(
+"nombreResena"
+).value =
+"";
+
+
+document.getElementById(
+"textoResena"
+).value =
+"";
+
+
+mostrarResenas();
+
+
+alert(
+"⭐ Reseña publicada."
+);
+
+
+}
+
+
+
+function mostrarResenas() {
+
+
+var resenas =
+JSON.parse(
+localStorage.getItem(
+"vibelevel_resenas"
+)
+) || [];
+
+
+var contenedor =
+document.getElementById(
+"listaResenas"
+);
+
+
+contenedor.innerHTML =
+"";
+
+
+for (
+var i = 0;
+i < resenas.length;
+i++
+) {
+
+
+var estrellas = "";
+
+
+for (
+var j = 0;
+j < Number(
+resenas[i].estrellas
+);
+j++
+) {
+
+estrellas += "⭐";
+
+}
+
+
+contenedor.innerHTML +=
+
+"<div class='reseña'>" +
+
+"<strong>" +
+resenas[i].nombre +
+"</strong>" +
+
+"<div>" +
+estrellas +
+"</div>" +
+
+"<p>" +
+resenas[i].texto +
+"</p>" +
+
+"</div>";
+
+}
+
+
+}
+
+
+
+cargarProductos();
+
+actualizarContador();
+
+mostrarResenas();
+
+
+</script>
+
 
 </body>
 
-  </html>
+    </html>            
