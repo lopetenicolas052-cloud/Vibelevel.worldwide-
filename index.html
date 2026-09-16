@@ -2,496 +2,1107 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000000">
-<title>VibeLevel Worldwide</title>
+
+<title>VIBELEVEL WORLDWIDE</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:#fff;color:#000;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
-button,input,textarea,select{font-family:inherit}button{cursor:pointer}img{max-width:100%}a{color:inherit;text-decoration:none}
-.topbar{background:#000;color:#fff;height:32px;display:flex;justify-content:center;align-items:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;overflow:hidden}
-.topbar-track{white-space:nowrap}
-.header{height:78px;background:#fff;border-bottom:1px solid #ddd;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 28px;position:sticky;top:0;z-index:900}
-.header-left{display:flex;align-items:center;gap:22px}.header-center{text-align:center}
-.brand{font-size:25px;font-weight:1000;letter-spacing:5px}.header-right{display:flex;justify-content:flex-end;align-items:center;gap:15px}
-.header-button{border:0;background:none;font-size:12px;font-weight:bold}.cart-button{position:relative;width:43px;height:43px;border:1px solid #000;background:#000;color:#fff;border-radius:0;font-size:18px}
-.cart-count{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:#fff;color:#000;border:1px solid #000;font-size:10px;font-weight:bold}
-.menu-toggle{display:none;border:0;background:none;font-size:22px}
-.nav{background:#fff;border-bottom:1px solid #ddd;display:flex;justify-content:center;gap:35px;padding:15px 20px;font-size:10px;font-weight:bold;letter-spacing:1.5px}
-.nav a{position:relative}.nav a:after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:1px;background:#000;transition:.2s}.nav a:hover:after{width:100%}
-.hero{min-height:calc(100vh - 110px);background:#000;color:#fff;position:relative;display:flex;align-items:flex-end;overflow:hidden}
-.hero-image{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.62;display:none}.hero.has-image .hero-image{display:block}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,.1))}
-.hero-content{position:relative;z-index:2;width:100%;padding:55px}.hero-small{font-size:10px;letter-spacing:4px;margin-bottom:15px}
-.hero-title{font-size:clamp(60px,12vw,180px);line-height:.78;font-weight:1000;letter-spacing:-8px}.hero-subtitle{margin-top:25px;font-size:12px;letter-spacing:4px}
-.hero-button{display:inline-block;margin-top:30px;background:#fff;color:#000;padding:16px 27px;font-size:11px;font-weight:bold;border:0}
-.marquee{background:#000;color:#fff;overflow:hidden;border-bottom:1px solid #000}.marquee-track{display:flex;width:max-content;animation:marquee 20s linear infinite}
-.marquee span{padding:14px 35px;font-size:10px;letter-spacing:3px;font-weight:bold}@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.section{padding:75px 30px;max-width:1500px;margin:auto}.section-header{display:flex;justify-content:space-between;align-items:end;margin-bottom:35px;border-bottom:1px solid #ddd;padding-bottom:15px}
-.section-title{font-size:35px;font-weight:1000;letter-spacing:-1px}.section-number{font-size:10px;letter-spacing:2px;color:#777}
-.drop{background:#000;color:#fff;min-height:550px;display:grid;grid-template-columns:1fr 1fr;margin-bottom:20px}.drop-image{min-height:550px;background:#111;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center}
-.drop-placeholder{color:#444;font-size:12px;letter-spacing:4px}.drop-content{display:flex;flex-direction:column;justify-content:center;padding:60px}
-.drop-label{font-size:10px;letter-spacing:4px;margin-bottom:20px}.drop-title{font-size:clamp(40px,6vw,85px);line-height:.85;font-weight:1000;letter-spacing:-5px}
-.drop-text{max-width:400px;color:#aaa;line-height:1.6;font-size:13px;margin-top:25px}.white-button{align-self:flex-start;margin-top:30px;background:#fff;color:#000;border:0;padding:15px 25px;font-size:10px;font-weight:bold}
-.categories{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#000}.category{min-height:220px;background:#111;color:#fff;position:relative;display:flex;align-items:flex-end;padding:25px;overflow:hidden}
-.category-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.65;transition:.4s}.category:hover .category-bg{transform:scale(1.06);opacity:.8}
-.category:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent,rgba(0,0,0,.9))}.category-content{position:relative;z-index:2}.category-name{font-size:25px;font-weight:900}.category-link{margin-top:8px;font-size:9px;letter-spacing:2px}
-.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:30px;padding-bottom:5px}.filter{flex:none;border:1px solid #bbb;background:#fff;padding:10px 17px;font-size:10px;font-weight:bold;letter-spacing:1px}.filter.active{background:#000;color:#fff;border-color:#000}
-.products{display:grid;grid-template-columns:repeat(4,1fr);gap:25px 12px}.product{position:relative;background:#fff;cursor:pointer;min-width:0}
-.product-image{aspect-ratio:4/5;background:#f1f1f1;position:relative;overflow:hidden}.product-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s}.product:hover .product-image img{transform:scale(1.035)}
-.product-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:11px;letter-spacing:3px}.product-badge{position:absolute;top:12px;left:12px;background:#fff;color:#000;padding:7px 9px;font-size:8px;font-weight:bold;letter-spacing:1px;z-index:4}.product-badge.black{background:#000;color:#fff}
-.product-info{padding:13px 4px 12px;text-align:left;min-width:0}.product-name{font-size:12px;font-weight:bold;text-transform:uppercase;line-height:1.3;white-space:normal;overflow-wrap:anywhere;word-break:normal}.product-category{color:#888;font-size:10px;margin-top:5px}.product-price{font-size:12px;font-weight:bold;margin-top:8px}.product-sold{color:#777;font-size:9px;margin-top:8px;font-weight:bold}
-.offer-banner{background:#000;color:#fff;padding:70px 40px;margin-bottom:35px;display:flex;justify-content:space-between;align-items:center}.offer-banner h2{font-size:clamp(40px,7vw,90px);font-weight:1000;line-height:.85;letter-spacing:-5px}.offer-banner p{max-width:300px;color:#aaa;font-size:12px;line-height:1.5}
-.sold-section{background:#000;color:#fff;max-width:none;padding-left:max(30px,calc((100vw - 1440px)/2));padding-right:max(30px,calc((100vw - 1440px)/2))}.sold-section .section-header{border-color:#333}.sold-products{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.sold-products .product{background:#080808;color:#fff}.sold-products .product-image{background:#111}.sold-products .product-badge{background:#fff;color:#000}.sold-products .product-category{color:#666}.sold-products .product-price{color:#777}
-.reviews-section{background:#f4f4f4;max-width:none}.reviews-inner{max-width:1500px;margin:auto}.review-layout{display:grid;grid-template-columns:350px 1fr;gap:60px}.review-form{background:#fff;padding:25px;border:1px solid #ddd}.review-form h3{font-size:16px;margin-bottom:20px}.field{margin-bottom:12px}.field label{display:block;font-size:9px;font-weight:bold;letter-spacing:1px;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;border:1px solid #ccc;padding:12px;background:#fff;outline:none}.field textarea{min-height:90px;resize:vertical}.stars{display:flex;gap:2px;margin-bottom:15px}.star{border:0;background:none;color:#bbb;font-size:25px;padding:0}.star.active{color:#000}.review-submit{width:100%;background:#000;color:#fff;border:0;padding:14px;font-size:10px;font-weight:bold}
-.reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.review{background:#fff;padding:22px;border:1px solid #ddd}.review-top{display:flex;justify-content:space-between;gap:15px;margin-bottom:12px}.review-name{font-size:11px;font-weight:bold;text-transform:uppercase}.review-stars{font-size:11px;letter-spacing:1px}.review-text{font-size:12px;color:#555;line-height:1.6}
-.footer{background:#000;color:#fff;padding:70px 30px 25px}.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px;max-width:1500px;margin:auto}.footer-brand{font-size:50px;font-weight:1000;letter-spacing:-4px}.footer-column h4{font-size:10px;letter-spacing:2px;margin-bottom:20px}.footer-column a{display:block;color:#888;font-size:11px;margin-bottom:11px}.footer-bottom{max-width:1500px;margin:60px auto 0;padding-top:20px;border-top:1px solid #222;display:flex;justify-content:space-between;color:#555;font-size:9px;letter-spacing:1px}
-.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;opacity:0;pointer-events:none;transition:.25s}.cart-overlay.open{opacity:1;pointer-events:auto}.cart{position:absolute;top:0;right:0;width:min(520px,100%);height:100%;background:#fff;transform:translateX(100%);transition:.3s;display:flex;flex-direction:column}.cart-overlay.open .cart{transform:translateX(0)}
-.cart-header{height:75px;border-bottom:1px solid #ddd;padding:0 22px;display:flex;justify-content:space-between;align-items:center;flex:none}.cart-header h2{font-size:17px;font-weight:900}.cart-close{border:0;background:none;font-size:25px}.cart-body{overflow-y:auto;flex:1;padding:20px}.cart-empty{text-align:center;padding:80px 20px;color:#888;font-size:11px;letter-spacing:2px}
-.cart-item{display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:14px;padding:15px 0;border-bottom:1px solid #ddd}.cart-item-image{width:80px;height:100px;background:#eee;object-fit:cover}.cart-item-name{font-size:11px;font-weight:bold;text-transform:uppercase;line-height:1.35;overflow-wrap:anywhere}.cart-item-price{font-size:11px;color:#666;margin-top:6px}.quantity{display:flex;align-items:center;margin-top:13px;border:1px solid #ccc;width:max-content}.quantity button{width:28px;height:27px;border:0;background:#fff;font-weight:bold}.quantity span{width:30px;text-align:center;font-size:10px}.cart-item-total{font-size:11px;font-weight:bold;white-space:nowrap}.cart-remove{margin-top:8px;border:0;background:none;color:#888;font-size:8px;text-decoration:underline}
-.cart-checkout{flex:none;border-top:1px solid #ddd;padding:20px;background:#fff;max-height:48vh;overflow-y:auto}.checkout-title{font-size:12px;font-weight:bold;margin-bottom:15px}.checkout-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checkout-grid .full{grid-column:1/-1}.checkout-field{margin-bottom:10px}.checkout-field label{display:block;font-size:8px;font-weight:bold;letter-spacing:1px;margin-bottom:5px}.checkout-field input,.checkout-field textarea{width:100%;border:1px solid #ccc;background:#fff;padding:11px;font-size:11px;outline:none}.checkout-field textarea{min-height:60px;resize:none}
-.summary{border-top:1px solid #ddd;margin-top:15px;padding-top:15px}.summary-row{display:flex;justify-content:space-between;gap:15px;font-size:11px;margin-bottom:9px}.summary-row.shipping{color:#777}.summary-row.total{border-top:1px solid #000;padding-top:14px;margin-top:13px;font-size:16px;font-weight:900}.whatsapp{width:100%;background:#000;color:#fff;border:0;padding:16px;margin-top:17px;font-size:10px;font-weight:900;letter-spacing:1px}.whatsapp:disabled{opacity:.3;cursor:not-allowed}.shipping-note{background:#f2f2f2;padding:12px;font-size:9px;color:#555;line-height:1.5;margin-top:10px}
-.product-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:3000;display:none;align-items:center;justify-content:center;padding:20px}.product-modal.open{display:flex}.product-modal-inner{width:min(1000px,100%);max-height:90vh;overflow-y:auto;background:#fff;display:grid;grid-template-columns:1fr 1fr;position:relative}.modal-image{min-height:600px;background:#eee}.modal-image img{width:100%;height:100%;object-fit:cover}.modal-info{padding:45px;display:flex;flex-direction:column;justify-content:center}.modal-close{position:absolute;top:12px;right:15px;z-index:5;background:#fff;border:0;font-size:25px}.modal-name{font-size:35px;font-weight:1000;line-height:.95;text-transform:uppercase;overflow-wrap:anywhere}.modal-description{color:#666;font-size:12px;line-height:1.6;margin-top:20px}.modal-price{font-size:18px;font-weight:bold;margin-top:20px}.modal-add{background:#000;color:#fff;border:0;padding:17px;margin-top:25px;font-size:10px;font-weight:bold}
-.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:#000;color:#fff;padding:13px 20px;font-size:10px;z-index:5000;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:1000px){.products,.sold-products{grid-template-columns:repeat(3,1fr)}.categories{grid-template-columns:repeat(2,1fr)}.review-layout{grid-template-columns:1fr}.footer-top{grid-template-columns:2fr 1fr 1fr}}
-@media(max-width:700px){.header{height:65px;grid-template-columns:auto 1fr auto;padding:0 15px}.menu-toggle{display:block}.header-left{display:block}.header-left .header-button{display:none}.brand{font-size:18px;letter-spacing:3px}.nav{justify-content:flex-start;overflow-x:auto;gap:25px;padding:12px 15px}.hero{min-height:75vh}.hero-content{padding:25px}.hero-title{font-size:20vw;letter-spacing:-5px}.section{padding:50px 15px}.section-title{font-size:26px}.drop{grid-template-columns:1fr}.drop-image{min-height:400px}.drop-content{padding:40px 25px}.categories{grid-template-columns:1fr 1fr}.category{min-height:160px}.category-name{font-size:19px}.products,.sold-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 9px}.product-name{font-size:10px;line-height:1.35}.product-price{font-size:10px}.offer-banner{display:block;padding:50px 25px}.offer-banner h2{margin-bottom:25px}.reviews-grid{grid-template-columns:1fr}.footer-top{grid-template-columns:1fr 1fr}.footer-brand{grid-column:1/-1}.footer-bottom{display:block;line-height:1.8}.product-modal-inner{grid-template-columns:1fr;max-height:95vh}.modal-image{min-height:350px}.modal-info{padding:30px 20px}.modal-name{font-size:28px}.checkout-grid{grid-template-columns:1fr}.checkout-grid .full{grid-column:auto}}
-.nav::-webkit-scrollbar,.filters::-webkit-scrollbar{display:none}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#050505;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* HEADER */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    height:70px;
+    background:rgba(0,0,0,.95);
+    border-bottom:1px solid #222;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+}
+
+.logo{
+    color:#fff;
+    text-decoration:none;
+    font-size:21px;
+    font-weight:900;
+    letter-spacing:3px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.icon-btn{
+    border:1px solid #333;
+    background:#111;
+    color:#fff;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+}
+
+.cart-count{
+    position:absolute;
+    margin-top:-28px;
+    margin-left:28px;
+    background:#fff;
+    color:#000;
+    min-width:18px;
+    height:18px;
+    border-radius:50%;
+    font-size:11px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* HERO */
+
+.hero{
+    min-height:390px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:60px 20px;
+    border-bottom:1px solid #1c1c1c;
+    background:
+        radial-gradient(circle at center,#181818 0%,#090909 40%,#000 75%);
+}
+
+.hero h1{
+    font-size:clamp(42px,10vw,90px);
+    font-weight:1000;
+    letter-spacing:7px;
+    line-height:.95;
+}
+
+.hero p{
+    margin-top:20px;
+    color:#aaa;
+    font-size:13px;
+    letter-spacing:3px;
+}
+
+/* CONTROLS */
+
+.controls{
+    padding:25px 18px;
+    max-width:1300px;
+    margin:auto;
+}
+
+.controls-top{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.search{
+    flex:1;
+    background:#111;
+    border:1px solid #333;
+    color:#fff;
+    padding:14px 16px;
+    outline:none;
+    border-radius:4px;
+}
+
+.search:focus{
+    border-color:#fff;
+}
+
+.refresh{
+    background:#fff;
+    color:#000;
+    border:0;
+    padding:0 18px;
+    border-radius:4px;
+    font-weight:bold;
+}
+
+.categories{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:5px;
+}
+
+.category{
+    white-space:nowrap;
+    background:#111;
+    color:#aaa;
+    border:1px solid #333;
+    padding:9px 15px;
+    border-radius:30px;
+}
+
+.category.active{
+    background:#fff;
+    color:#000;
+}
+
+/* COLLECTION */
+
+.collection{
+    max-width:1300px;
+    margin:auto;
+    padding:10px 18px 80px;
+}
+
+.section-title{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.section-title h2{
+    font-size:24px;
+    letter-spacing:2px;
+}
+
+.section-title span{
+    color:#777;
+    font-size:13px;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+@media(max-width:950px){
+    .products{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:650px){
+    .products{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+}
+
+/* PRODUCT */
+
+.product{
+    background:#0d0d0d;
+    border:1px solid #1d1d1d;
+    overflow:hidden;
+    position:relative;
+    transition:.2s;
+}
+
+.product:hover{
+    border-color:#444;
+    transform:translateY(-2px);
+}
+
+.product-image{
+    aspect-ratio:3/4;
+    background:#151515;
+    position:relative;
+    overflow:hidden;
+}
+
+.product-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.badges{
+    position:absolute;
+    top:10px;
+    left:10px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.badge{
+    background:#fff;
+    color:#000;
+    padding:5px 7px;
+    font-size:9px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.badge.sale{
+    background:#000;
+    color:#fff;
+    border:1px solid #fff;
+}
+
+.badge.sold{
+    background:#777;
+    color:#fff;
+}
+
+.product-info{
+    padding:13px;
+}
+
+.product-category{
+    color:#777;
+    font-size:9px;
+    letter-spacing:1.5px;
+    margin-bottom:6px;
+}
+
+.product-name{
+    font-size:15px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.prices{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.price{
+    font-size:15px;
+    font-weight:bold;
+}
+
+.old-price{
+    color:#666;
+    text-decoration:line-through;
+    font-size:12px;
+}
+
+.sizes{
+    display:flex;
+    gap:4px;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.size{
+    border:1px solid #333;
+    padding:4px 6px;
+    color:#aaa;
+    font-size:9px;
+}
+
+.add{
+    width:100%;
+    margin-top:12px;
+    border:1px solid #fff;
+    background:#fff;
+    color:#000;
+    padding:10px;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.add:hover{
+    background:#000;
+    color:#fff;
+}
+
+.add:disabled{
+    background:#222;
+    color:#666;
+    border-color:#222;
+    cursor:not-allowed;
+}
+
+/* LOADING */
+
+.loading{
+    grid-column:1/-1;
+    min-height:200px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#777;
+    letter-spacing:2px;
+}
+
+.empty{
+    grid-column:1/-1;
+    text-align:center;
+    padding:80px 20px;
+    color:#777;
+}
+
+.error{
+    grid-column:1/-1;
+    padding:25px;
+    border:1px solid #662222;
+    background:#160909;
+    color:#ff9999;
+    line-height:1.6;
+}
+
+/* CART */
+
+.cart-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    z-index:2000;
+    display:none;
+}
+
+.cart-overlay.open{
+    display:block;
+}
+
+.cart{
+    position:absolute;
+    right:0;
+    top:0;
+    height:100%;
+    width:min(430px,100%);
+    background:#0b0b0b;
+    border-left:1px solid #333;
+    display:flex;
+    flex-direction:column;
+}
+
+.cart-header{
+    height:70px;
+    padding:0 18px;
+    border-bottom:1px solid #222;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.cart-header h3{
+    letter-spacing:2px;
+}
+
+.close{
+    background:none;
+    border:0;
+    color:#fff;
+    font-size:25px;
+}
+
+.cart-items{
+    flex:1;
+    overflow-y:auto;
+    padding:15px;
+}
+
+.cart-item{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid #222;
+}
+
+.cart-item img{
+    width:70px;
+    height:85px;
+    object-fit:cover;
+    background:#151515;
+}
+
+.cart-item-info{
+    flex:1;
+}
+
+.cart-item-name{
+    font-weight:bold;
+    font-size:14px;
+}
+
+.cart-item-size{
+    color:#777;
+    font-size:11px;
+    margin-top:5px;
+}
+
+.cart-item-price{
+    margin-top:8px;
+}
+
+.qty{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:8px;
+}
+
+.qty button{
+    width:25px;
+    height:25px;
+    background:#171717;
+    border:1px solid #333;
+    color:#fff;
+}
+
+.remove{
+    background:none;
+    border:0;
+    color:#777;
+    font-size:11px;
+}
+
+.cart-bottom{
+    border-top:1px solid #222;
+    padding:18px;
+}
+
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.total-row.shipping{
+    color:#999;
+}
+
+.total-row.final{
+    font-size:20px;
+    font-weight:bold;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid #333;
+}
+
+.checkout{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    background:#fff;
+    color:#000;
+    border:0;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+/* CHECKOUT */
+
+.checkout-form{
+    display:none;
+    position:fixed;
+    z-index:3000;
+    inset:0;
+    background:rgba(0,0,0,.8);
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.checkout-form.open{
+    display:flex;
+}
+
+.checkout-box{
+    width:min(500px,100%);
+    max-height:90vh;
+    overflow-y:auto;
+    background:#0d0d0d;
+    border:1px solid #333;
+    padding:22px;
+}
+
+.checkout-box h2{
+    margin-bottom:20px;
+    letter-spacing:2px;
+}
+
+.field{
+    margin-bottom:13px;
+}
+
+.field label{
+    display:block;
+    color:#999;
+    font-size:11px;
+    margin-bottom:6px;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+    background:#111;
+    color:#fff;
+    border:1px solid #333;
+    padding:12px;
+    outline:none;
+}
+
+.field textarea{
+    min-height:80px;
+    resize:vertical;
+}
+
+.form-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+}
+
+.cancel{
+    flex:1;
+    background:#111;
+    color:#fff;
+    border:1px solid #333;
+    padding:13px;
+}
+
+.whatsapp{
+    flex:2;
+    background:#fff;
+    color:#000;
+    border:0;
+    padding:13px;
+    font-weight:bold;
+}
+
+/* FOOTER */
+
+footer{
+    border-top:1px solid #222;
+    text-align:center;
+    padding:40px 20px;
+    color:#555;
+    font-size:11px;
+    letter-spacing:2px;
+}
 </style>
 </head>
+
 <body>
 
-<div class="topbar"><div class="topbar-track">VIBELEVEL WORLDWIDE · NEW DROP · LIMITED PIECES · VIBELEVEL WORLDWIDE · NEW DROP · LIMITED PIECES</div></div>
+<header>
+    <a href="#" class="logo">VIBELEVEL</a>
 
-<header class="header">
-  <div class="header-left">
-    <button class="menu-toggle" onclick="scrollToSection('collection')">☰</button>
-    <button class="header-button" onclick="scrollToSection('new')">NEW</button>
-    <button class="header-button" onclick="scrollToSection('collection')">SHOP</button>
-  </div>
-  <div class="header-center"><div class="brand">VIBELEVEL</div></div>
-  <div class="header-right">
-    <button class="header-button" onclick="scrollToSection('reviews')">REVIEWS</button>
-    <button class="cart-button" onclick="openCart()">🛒<span class="cart-count" id="cartCount">0</span></button>
-  </div>
+    <div class="header-right">
+        <button class="icon-btn" onclick="openCart()">
+            🛒
+            <span class="cart-count" id="cartCount">0</span>
+        </button>
+    </div>
 </header>
 
-<nav class="nav">
-<a href="#new">NEW DROP</a><a href="#collection">ALL</a><a href="#collection" onclick="setCategory('TEES')">TEES</a><a href="#collection" onclick="setCategory('HOODIES')">HOODIES</a><a href="#collection" onclick="setCategory('BOTTOMS')">BOTTOMS</a><a href="#collection" onclick="setCategory('JACKETS')">JACKETS</a><a href="#collection" onclick="setCategory('ACCESSORIES')">ACCESSORIES</a><a href="#sale">SALE</a><a href="#sold">SOLD OUT</a>
-</nav>
-
-<main>
-<section class="hero" id="home">
-  <div class="hero-image" id="heroImage"></div><div class="hero-overlay"></div>
-  <div class="hero-content"><div class="hero-small">VIBELEVEL WORLDWIDE</div><h1 class="hero-title">VIBE<br>LEVEL</h1><div class="hero-subtitle">STREETWEAR · CULTURE · IDENTITY</div><button class="hero-button" onclick="scrollToSection('collection')">SHOP THE DROP</button></div>
-</section>
-
-<div class="marquee"><div class="marquee-track"><span>VIBELEVEL</span><span>WORLDWIDE</span><span>NEW DROP</span><span>LIMITED PIECES</span><span>STREET CULTURE</span><span>VIBELEVEL</span><span>WORLDWIDE</span><span>NEW DROP</span><span>LIMITED PIECES</span><span>STREET CULTURE</span></div></div>
-
-<section class="section" id="new">
-  <div class="section-header"><h2 class="section-title">NEW DROP</h2><span class="section-number">001 / NEW ARRIVALS</span></div>
-  <div class="drop"><div class="drop-image" id="dropImage"><span class="drop-placeholder">VIBELEVEL</span></div><div class="drop-content"><div class="drop-label">VIBELEVEL WORLDWIDE</div><h2 class="drop-title">THE<br>NEW<br>LEVEL</h2><p class="drop-text">Nuevas piezas. Nueva energía. Una colección construida alrededor de identidad, movimiento y street culture.</p><button class="white-button" onclick="scrollToSection('collection')">EXPLORE COLLECTION</button></div></div>
-</section>
-
-<section class="section" id="categories">
-  <div class="section-header"><h2 class="section-title">SHOP BY CATEGORY</h2><span class="section-number">VIBELEVEL</span></div>
-  <div class="categories">
-    <a href="#collection" class="category" onclick="setCategory('TEES')"><div class="category-bg"></div><div class="category-content"><div class="category-name">TEES</div><div class="category-link">SHOP →</div></div></a>
-    <a href="#collection" class="category" onclick="setCategory('HOODIES')"><div class="category-bg"></div><div class="category-content"><div class="category-name">HOODIES</div><div class="category-link">SHOP →</div></div></a>
-    <a href="#collection" class="category" onclick="setCategory('BOTTOMS')"><div class="category-bg"></div><div class="category-content"><div class="category-name">BOTTOMS</div><div class="category-link">SHOP →</div></div></a>
-    <a href="#collection" class="category" onclick="setCategory('ACCESSORIES')"><div class="category-bg"></div><div class="category-content"><div class="category-name">ACCESSORIES</div><div class="category-link">SHOP →</div></div></a>
-  </div>
-</section>
-
-<section class="section" id="collection">
-  <div class="section-header"><h2 class="section-title">ALL PRODUCTS</h2><span class="section-number" id="productCounter">0 PIECES</span></div>
-  <div class="filters">
-    <button class="filter active" onclick="setCategory('ALL')">ALL</button><button class="filter" onclick="setCategory('NEW')">NEW</button><button class="filter" onclick="setCategory('TEES')">TEES</button><button class="filter" onclick="setCategory('HOODIES')">HOODIES</button><button class="filter" onclick="setCategory('BOTTOMS')">BOTTOMS</button><button class="filter" onclick="setCategory('JACKETS')">JACKETS</button><button class="filter" onclick="setCategory('ACCESSORIES')">ACCESSORIES</button><button class="filter" onclick="setCategory('SALE')">SALE</button>
-  </div>
-  <div class="products" id="products"></div>
-</section>
-
-<section class="section" id="sale"><div class="offer-banner"><div><h2>SALE<br>/ DROP</h2></div><div><p>Piezas seleccionadas disponibles por tiempo limitado.</p><button class="white-button" onclick="setCategory('SALE');scrollToSection('collection')">SHOP SALE</button></div></div></section>
-
-<section class="sold-section section" id="sold">
-  <div class="section-header"><h2 class="section-title">SOLD OUT</h2><span class="section-number">ARCHIVE</span></div>
-  <div class="sold-products" id="soldProducts"></div>
-</section>
-
-<section class="reviews-section section" id="reviews">
-  <div class="reviews-inner">
-    <div class="section-header"><h2 class="section-title">COMMUNITY</h2><span class="section-number">REVIEWS</span></div>
-    <div class="review-layout">
-      <div class="review-form">
-        <h3>LEAVE A REVIEW</h3>
-        <div class="field"><label>NAME</label><input id="reviewName" type="text" placeholder="Your name"></div>
-        <div class="field"><label>RATING</label><div class="stars" id="reviewStars">
-          <button class="star" onclick="setRating(1)">★</button><button class="star" onclick="setRating(2)">★</button><button class="star" onclick="setRating(3)">★</button><button class="star" onclick="setRating(4)">★</button><button class="star" onclick="setRating(5)">★</button>
-        </div></div>
-        <div class="field"><label>REVIEW</label><textarea id="reviewText" placeholder="Tell us about your experience..."></textarea></div>
-        <button class="review-submit" onclick="submitReview()">PUBLISH REVIEW</button>
-      </div>
-      <div class="reviews-grid" id="reviewsGrid"></div>
+<section class="hero">
+    <div>
+        <h1>VIBELEVEL</h1>
+        <p>WORLDWIDE STREETWEAR</p>
     </div>
-  </div>
 </section>
+
+<section class="controls">
+
+    <div class="controls-top">
+        <input
+            id="search"
+            class="search"
+            type="text"
+            placeholder="Buscar producto..."
+            oninput="renderProducts()"
+        >
+
+        <button class="refresh" onclick="loadProducts()">
+            ↻
+        </button>
+    </div>
+
+    <div class="categories" id="categories">
+        <button class="category active" onclick="setCategory('ALL',this)">
+            TODOS
+        </button>
+    </div>
+
+</section>
+
+<main class="collection">
+
+    <div class="section-title">
+        <h2>COLECCIÓN</h2>
+        <span id="productCount">0 productos</span>
+    </div>
+
+    <div class="products" id="products">
+        <div class="loading">
+            CARGANDO PRODUCTOS...
+        </div>
+    </div>
+
 </main>
 
-<footer class="footer">
-  <div class="footer-top">
-    <div><div class="footer-brand">VIBELEVEL</div></div>
-    <div class="footer-column"><h4>SHOP</h4><a href="#new">New Drop</a><a href="#collection">All Products</a><a href="#sale">Sale</a><a href="#sold">Sold Out</a></div>
-    <div class="footer-column"><h4>CATEGORIES</h4><a href="#collection" onclick="setCategory('TEES')">Tees</a><a href="#collection" onclick="setCategory('HOODIES')">Hoodies</a><a href="#collection" onclick="setCategory('BOTTOMS')">Bottoms</a><a href="#collection" onclick="setCategory('ACCESSORIES')">Accessories</a></div>
-    <div class="footer-column"><h4>VIBELEVEL</h4><a href="#reviews">Reviews</a><a href="#home">Worldwide</a><a href="https://wa.me/240555626619" target="_blank" rel="noopener">WhatsApp</a></div>
-  </div>
-  <div class="footer-bottom"><span>VIBELEVEL WORLDWIDE © 2026</span><span>STREETWEAR · CULTURE · IDENTITY</span></div>
+<footer>
+    VIBELEVEL WORLDWIDE · STREETWEAR
 </footer>
 
+
+<!-- CART -->
+
 <div class="cart-overlay" id="cartOverlay" onclick="closeCartOutside(event)">
-  <aside class="cart">
-    <div class="cart-header"><h2>YOUR BAG</h2><button class="cart-close" onclick="closeCart()">×</button></div>
-    <div class="cart-body" id="cartBody"></div>
-    <div class="cart-checkout">
-      <div class="checkout-title">COMPLETE YOUR ORDER</div>
-      <div class="checkout-grid">
-        <div class="checkout-field"><label>NAME</label><input id="customerName" type="text" placeholder="Your name"></div>
-        <div class="checkout-field"><label>PHONE</label><input id="customerPhone" type="tel" placeholder="Your phone"></div>
-        <div class="checkout-field full"><label>DELIVERY ADDRESS</label><textarea id="customerAddress" placeholder="Delivery address"></textarea></div>
-      </div>
-      <div class="shipping-note"><strong>ENVÍO:</strong> el precio del envío se confirma directamente por WhatsApp. No se añade ningún coste de envío automáticamente.</div>
-      <div class="summary">
-        <div class="summary-row"><span>PRODUCTOS</span><strong id="productsTotal">0 XAF</strong></div>
-        <div class="summary-row shipping"><span>ENVÍO</span><strong>A CONFIRMAR</strong></div>
-        <div class="summary-row total"><span>TOTAL PRODUCTOS</span><strong id="grandTotal">0 XAF</strong></div>
-      </div>
-      <button class="whatsapp" id="whatsappButton" onclick="finishOrder()" disabled>TERMINAR PEDIDO POR WHATSAPP</button>
-    </div>
-  </aside>
+
+    <aside class="cart">
+
+        <div class="cart-header">
+            <h3>MI CARRITO</h3>
+            <button class="close" onclick="closeCart()">×</button>
+        </div>
+
+        <div class="cart-items" id="cartItems"></div>
+
+        <div class="cart-bottom">
+
+            <div class="total-row">
+                <span>Subtotal</span>
+                <strong id="subtotal">0 XAF</strong>
+            </div>
+
+            <div class="total-row shipping">
+                <span>Envío</span>
+                <strong id="shipping">0 XAF</strong>
+            </div>
+
+            <div class="total-row final">
+                <span>TOTAL</span>
+                <strong id="total">0 XAF</strong>
+            </div>
+
+            <button class="checkout" onclick="openCheckout()">
+                FINALIZAR COMPRA
+            </button>
+
+        </div>
+
+    </aside>
+
 </div>
 
-<div class="product-modal" id="productModal" onclick="closeProductOutside(event)">
-  <div class="product-modal-inner">
-    <button class="modal-close" onclick="closeProductModal()">×</button>
-    <div class="modal-image" id="modalImage"></div>
-    <div class="modal-info"><div class="modal-name" id="modalName"></div><div class="modal-description" id="modalDescription"></div><div class="modal-price" id="modalPrice"></div><button class="modal-add" id="modalAddButton">ADD TO BAG</button></div>
-  </div>
+
+<!-- CHECKOUT -->
+
+<div class="checkout-form" id="checkoutForm">
+
+    <div class="checkout-box">
+
+        <h2>FINALIZAR PEDIDO</h2>
+
+        <div class="field">
+            <label>Nombre</label>
+            <input id="customerName" type="text" placeholder="Tu nombre">
+        </div>
+
+        <div class="field">
+            <label>Teléfono</label>
+            <input id="customerPhone" type="tel" placeholder="Tu número">
+        </div>
+
+        <div class="field">
+            <label>Dirección</label>
+            <textarea id="customerAddress" placeholder="Dirección de entrega"></textarea>
+        </div>
+
+        <div class="field">
+            <label>Método de envío</label>
+
+            <select id="shippingMethod" onchange="updateCart()">
+                <option value="0">Recogida / acordar</option>
+                <option value="2000">Envío local — 2.000 XAF</option>
+                <option value="5000">Envío — 5.000 XAF</option>
+            </select>
+
+        </div>
+
+        <div class="field">
+            <label>Notas</label>
+            <textarea id="orderNotes" placeholder="Talla, color u otra información"></textarea>
+        </div>
+
+        <div class="form-buttons">
+
+            <button class="cancel" onclick="closeCheckout()">
+                CANCELAR
+            </button>
+
+            <button class="whatsapp" onclick="finishOrder()">
+                PEDIR POR WHATSAPP
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
-<div class="toast" id="toast"></div>
+
 
 <script>
-"use strict";
+
+/* =========================================================
+   VIBELEVEL SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+"https://yqlyxnlheoiftxhpteyb.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
 
 /* =========================================================
    CONFIGURACIÓN
 ========================================================= */
-const SUPABASE_URL="https://yqlyxnlheoiftxhpteyb.supabase.co";
-const SUPABASE_KEY="sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
-const WHATSAPP_NUMBER="240555626619";
 
-/* Supabase es OPCIONAL para que la página nunca deje de cargar */
-let supabaseClient=null;
-try{
-  if(window.supabase && typeof window.supabase.createClient==="function"){
-    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-  }
-}catch(e){console.log("Supabase no disponible:",e)}
+const WHATSAPP =
+"240555626619";
 
-let products=[];
-let cart=readJSON("vibelevel_cart",[]);
-let selectedRating=0;
-let currentCategory="ALL";
-let currentProduct=null;
 
-const demoProducts=[
-{id:"demo-1",name:"VibeLevel Essential Tee",description:"Heavyweight VibeLevel streetwear tee.",price:15000,category:"TEES",image:"",is_new:true,is_sale:false,is_sold:false},
-{id:"demo-2",name:"VibeLevel Signature Hoodie",description:"Premium heavyweight hoodie.",price:40000,category:"HOODIES",image:"",is_new:true,is_sale:false,is_sold:false},
-{id:"demo-3",name:"VibeLevel Cargo",description:"Streetwear cargo trousers.",price:35000,category:"BOTTOMS",image:"",is_new:false,is_sale:true,is_sold:false},
-{id:"demo-4",name:"VibeLevel Zip Jacket",description:"Limited streetwear jacket.",price:55000,category:"JACKETS",image:"",is_new:true,is_sale:false,is_sold:false},
-{id:"demo-5",name:"VibeLevel Cap",description:"VibeLevel embroidered cap.",price:12000,category:"ACCESSORIES",image:"",is_new:false,is_sale:false,is_sold:false},
-{id:"demo-6",name:"VibeLevel Limited Polo",description:"Limited edition VibeLevel polo.",price:25000,category:"TEES",image:"",is_new:false,is_sale:true,is_sold:false},
-{id:"demo-7",name:"VibeLevel Archive Tee",description:"Archive VibeLevel piece.",price:18000,category:"TEES",image:"",is_new:false,is_sale:false,is_sold:true}
-];
+let allProducts = [];
+let cart = [];
+let currentCategory = "ALL";
 
-function readJSON(){
-  try{
-    const value=JSON.parse(localStorage.getItem(key));
-    return value===null?fallback:value;
-  }catch(e){return fallback}
-}
-function writeJSON(){
-  try{localStorage.setItem(key,JSON.stringify(value));}catch(e){console.log(e)}
-}
-function formatPrice(){return Number(value||0).toLocaleString("es-ES")+" XAF"}
-function escapeHtml(){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function normalizeProduct(){
-  return {
-    id:p.id??("p-"+Date.now()+"-"+Math.random().toString(36).slice(2)),
-    name:p.name??p.nombre??"VibeLevel Product",
-    description:p.description??p.descripcion??"",
-    price:Number(p.price??p.precio??0),
-    category:String(p.category??p.categoria??"TEES").toUpperCase(),
-    image:p.image??p.image_url??p.imagen??"",
-    is_new:Boolean(p.is_new??p.new??p.nuevo??false),
-    is_sale:Boolean(p.is_sale??p.sale??p.oferta??false),
-    is_sold:Boolean(p.is_sold??p.sold??p.agotado??false)
-  };
-}
+
+/* =========================================================
+   CARGAR PRODUCTOS DESDE SUPABASE
+========================================================= */
 
 async function loadProducts(){
-  let loaded=false;
-  if(supabaseClient){
+
+    const container =
+        document.getElementById("products");
+
+    container.innerHTML = `
+        <div class="loading">
+            CARGANDO PRODUCTOS...
+        </div>
+    `;
+
     try{
-      const result=await supabaseClient.from("products").select("*").order("created_at",{ascending:false});
-      if(!result.error && Array.isArray(result.data) && result.data.length){
-        products=result.data.map(normalizeProduct);
-        loaded=true;
-      }
-    }catch(e){console.log("Products:",e)}
-  }
-  if(!loaded) products=demoProducts.map(normalizeProduct);
-  renderProducts();
+
+        const { data, error } = await db
+            .from("products")
+            .select("*")
+            .order("created_at", {
+                ascending:false
+            });
+
+        if(error){
+            console.error(error);
+
+            container.innerHTML = `
+                <div class="error">
+                    <strong>No se pudieron cargar los productos.</strong>
+                    <br><br>
+                    ${escapeHtml(error.message)}
+                </div>
+            `;
+
+            return;
+        }
+
+        allProducts = data || [];
+
+        buildCategories();
+
+        renderProducts();
+
+    }catch(error){
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="error">
+                Error de conexión con Supabase.
+                <br><br>
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+    }
 }
 
-function productCard(product,sold=false){
-  let badge="";
-  if(product.is_sold||sold) badge='<div class="product-badge black">SOLD OUT</div>';
-  else if(product.is_sale) badge='<div class="product-badge">SALE</div>';
-  else if(product.is_new) badge='<div class="product-badge">NEW</div>';
 
-  const image=product.image
-    ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="product-placeholder" style="display:none">VIBELEVEL</div>`
-    : `<div class="product-placeholder">VIBELEVEL</div>`;
+/* =========================================================
+   CATEGORÍAS
+========================================================= */
 
-  return `<article class="product" onclick="openProduct(${JSON.stringify(String(product.id))})">
-    <div class="product-image">${badge}${image}</div>
-    <div class="product-info">
-      <div class="product-name">${escapeHtml(product.name)}</div>
-      <div class="product-category">${escapeHtml(product.category)}</div>
-      <div class="product-price">${formatPrice(product.price)}</div>
-      ${(product.is_sold||sold)?'<div class="product-sold">SOLD OUT</div>':""}
-    </div>
-  </article>`;
+function buildCategories(){
+
+    const box =
+        document.getElementById("categories");
+
+    const categories = [
+        ...new Set(
+            allProducts
+                .map(p => p.category)
+                .filter(Boolean)
+        )
+    ];
+
+    box.innerHTML = `
+        <button
+            class="category ${currentCategory === "ALL" ? "active" : ""}"
+            onclick="setCategory('ALL',this)"
+        >
+            TODOS
+        </button>
+    `;
+
+    categories.forEach(category => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "category " +
+            (currentCategory === category
+                ? "active"
+                : "");
+
+        button.textContent =
+            String(category).toUpperCase();
+
+        button.onclick =
+            () => setCategory(category,button);
+
+        box.appendChild(button);
+
+    });
 }
 
-function emptyProducts(){
-  return `<div style="grid-column:1/-1;padding:70px 20px;text-align:center;color:#888;font-size:10px;letter-spacing:2px">${text}</div>`;
+
+function setCategory(category,button){
+
+    currentCategory = category;
+
+    document
+        .querySelectorAll(".category")
+        .forEach(b => b.classList.remove("active"));
+
+    button.classList.add("active");
+
+    renderProducts();
 }
+
+
+/* =========================================================
+   MOSTRAR PRODUCTOS
+========================================================= */
 
 function renderProducts(){
-  const container=document.getElementById("products");
-  const soldContainer=document.getElementById("soldProducts");
-  if(!container||!soldContainer)return;
 
-  let available=products.filter(p=>!p.is_sold);
-  if(currentCategory==="NEW")available=available.filter(p=>p.is_new);
-  if(currentCategory==="SALE")available=available.filter(p=>p.is_sale);
-  if(["TEES","HOODIES","BOTTOMS","JACKETS","ACCESSORIES"].includes(currentCategory)){
-    available=available.filter(p=>String(p.category).toUpperCase()===currentCategory);
-  }
+    const container =
+        document.getElementById("products");
 
-  container.innerHTML=available.length?available.map(p=>productCard(p)).join(""):emptyProducts("NO PRODUCTS IN THIS CATEGORY");
-  const sold=products.filter(p=>p.is_sold);
-  soldContainer.innerHTML=sold.length?sold.map(p=>productCard(p,true)).join(""):emptyProducts("NO SOLD OUT PRODUCTS");
-  document.getElementById("productCounter").textContent=available.length+" PIECES";
+    const search =
+        document
+            .getElementById("search")
+            .value
+            .toLowerCase()
+            .trim();
+
+    let products =
+        allProducts.filter(product => {
+
+            const name =
+                String(product.name || "")
+                    .toLowerCase();
+
+            const description =
+                String(product.description || "")
+                    .toLowerCase();
+
+            const category =
+                String(product.category || "");
+
+            const categoryOK =
+                currentCategory === "ALL" ||
+                category === currentCategory;
+
+            const searchOK =
+                !search ||
+                name.includes(search) ||
+                description.includes(search) ||
+                category.toLowerCase().includes(search);
+
+            return categoryOK && searchOK;
+        });
+
+
+    document.getElementById("productCount")
+        .textContent =
+        `${products.length} producto${products.length === 1 ? "" : "s"}`;
+
+
+    if(!products.length){
+
+        container.innerHTML = `
+            <div class="empty">
+                NO HAY PRODUCTOS PARA MOSTRAR.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        products.map(product => productCard(product)).join("");
 }
 
-function setCategory(){
-  currentCategory=String(category).toUpperCase();
-  document.querySelectorAll(".filter").forEach(button=>{
-    button.classList.toggle("active",button.textContent.trim().toUpperCase()===currentCategory);
-  });
-  renderProducts();
-}
 
-function scrollToSection(){
-  const el=document.getElementById(id);
-  if(el)el.scrollIntoView({behavior:"smooth"});
-}
+/* =========================================================
+   TARJETA DE PRODUCTO
+========================================================= */
 
-function openProduct(){
-  const product=products.find(p=>String(p.id)===String(id));
-  if(!product)return;
-  currentProduct=product;
-  const image=document.getElementById("modalImage");
-  image.innerHTML=product.image
-    ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" onerror="this.outerHTML='<div class=&quot;product-placeholder&quot;>VIBELEVEL</div>'">`
-    : `<div class="product-placeholder">VIBELEVEL</div>`;
-  document.getElementById("modalName").textContent=product.name;
-  document.getElementById("modalDescription").textContent=product.description;
-  document.getElementById("modalPrice").textContent=formatPrice(product.price);
-  const button=document.getElementById("modalAddButton");
-  button.disabled=!!product.is_sold;
-  button.textContent=product.is_sold?"SOLD OUT":"ADD TO BAG";
-  button.onclick=()=>{if(!product.is_sold){addToCart(product.id);closeProductModal()}};
-  document.getElementById("productModal").classList.add("open");
-}
-function closeProductModal(){document.getElementById("productModal").classList.remove("open")}
-function closeProductOutside(e){if(e.target.id==="productModal")closeProductModal()}
+function productCard(product){
 
-function addToCart(id){
-  const product=products.find(p=>String(p.id)===String(id));
-  if(!product||product.is_sold)return;
-  const existing=cart.find(i=>String(i.id)===String(product.id));
-  if(existing)existing.quantity++;
-  else cart.push({id:product.id,name:product.name,price:Number(product.price),image:product.image||"",quantity:1});
-  saveCart();renderCart();showToast("ADDED TO YOUR BAG");openCart();
-}
-function saveCart(){writeJSON("vibelevel_cart",cart)}
+    const id =
+        product.id;
 
-function renderCart(){
-  const body=document.getElementById("cartBody");
-  const count=cart.reduce((s,i)=>s+Number(i.quantity||0),0);
-  document.getElementById("cartCount").textContent=count;
-  if(!cart.length){
-    body.innerHTML='<div class="cart-empty">YOUR BAG IS EMPTY</div>';
-    document.getElementById("productsTotal").textContent="0 XAF";
-    document.getElementById("grandTotal").textContent="0 XAF";
-    document.getElementById("whatsappButton").disabled=true;
-    return;
-  }
-  body.innerHTML=cart.map((item,index)=>{
-    const subtotal=Number(item.price)*Number(item.quantity);
-    const image=item.image
-      ? `<img class="cart-item-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" onerror="this.style.display='none'">`
-      : `<div class="cart-item-image" style="display:flex;align-items:center;justify-content:center;font-size:9px;color:#999">VIBELEVEL</div>`;
-    return `<div class="cart-item">
-      ${image}
-      <div>
-        <div class="cart-item-name">${escapeHtml(item.name)}</div>
-        <div class="cart-item-price">${formatPrice(item.price)}</div>
-        <div class="quantity"><button onclick="changeQuantity(${index},-1)">−</button><span>${item.quantity}</span><button onclick="changeQuantity(${index},1)">+</button></div>
-        <button class="cart-remove" onclick="removeCartItem(${index})">REMOVE</button>
-      </div>
-      <div class="cart-item-total">${formatPrice(subtotal)}</div>
-    </div>`;
-  }).join("");
-  calculateCartTotal();
-}
+    const name =
+        escapeHtml(product.name || "Producto");
 
-function changeQuantity(index,amount){
-  if(!cart[index])return;
-  cart[index].quantity=Number(cart[index].quantity)+amount;
-  if(cart[index].quantity<=0)cart.splice(index,1);
-  saveCart();renderCart();
-}
-function removeCartItem(index){cart.splice(index,1);saveCart();renderCart()}
-function calculateCartTotal(){
-  const total=cart.reduce((s,i)=>s+Number(i.price)*Number(i.quantity),0);
-  document.getElementById("productsTotal").textContent=formatPrice(total);
-  document.getElementById("grandTotal").textContent=formatPrice(total);
-  document.getElementById("whatsappButton").disabled=!cart.length;
-}
-function openCart(){
-  document.getElementById("cartOverlay").classList.add("open");
-  document.body.style.overflow="hidden";
-  renderCart();
-}
-function closeCart(){
-  document.getElementById("cartOverlay").classList.remove("open");
-  document.body.style.overflow="";
-}
-function closeCartOutside(e){if(e.target.id==="cartOverlay")closeCart()}
+    const category =
+        escapeHtml(product.category || "");
 
-/* WHATSAPP: usa location.href para evitar que el navegador bloquee la apertura */
-function finishOrder(){
-  if(!cart.length){showToast("YOUR BAG IS EMPTY");return}
-  const name=document.getElementById("customerName").value.trim();
-  const phone=document.getElementById("customerPhone").value.trim();
-  const address=document.getElementById("customerAddress").value.trim();
-  if(!name){showToast("ENTER YOUR NAME");return}
-  if(!phone){showToast("ENTER YOUR PHONE");return}
-  if(!address){showToast("ENTER DELIVERY ADDRESS");return}
+    const description =
+        escapeHtml(product.description || "");
 
-  const total=cart.reduce((s,i)=>s+Number(i.price)*Number(i.quantity),0);
-  let message=`🖤 *VIBELEVEL WORLDWIDE — NEW ORDER*\n\n━━━━━━━━━━━━━━━━━━\n\n*CUSTOMER*\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\n\n━━━━━━━━━━━━━━━━━━\n\n*ORDER*\n\n`;
-  cart.forEach(item=>{
-    const subtotal=Number(item.price)*Number(item.quantity);
-    message+=`• ${item.name}\n  Quantity: ${item.quantity}\n  Unit price: ${formatPrice(item.price)}\n  Subtotal: ${formatPrice(subtotal)}\n\n`;
-  });
-  message+=`━━━━━━━━━━━━━━━━━━\n\n*PRODUCTS TOTAL*\n${formatPrice(total)}\n\n*SHIPPING*\nTO BE CONFIRMED BY WHATSAPP\n\n*TOTAL TO PAY*\n${formatPrice(total)} + SHIPPING\n\n━━━━━━━━━━━━━━━━━━\n\nHello VibeLevel, I would like to complete this order.\nPlease confirm the shipping cost on WhatsApp.`;
+    const price =
+        Number(product.price || 0);
 
-  /* Guardar en Supabase si está disponible; nunca bloquea WhatsApp */
-  if(supabaseClient){
-    supabaseClient.from("orders").insert({
-      customer_name:name,customer_phone:phone,customer_address:address,
-      products_total:total,shipping_cost:null,total:total,
-      shipping_status:"TO_BE_CONFIRMED",items:cart
-    }).then(r=>{if(r.error)console.log("Order save:",r.error.message)}).catch(console.log);
-  }
+    const oldPrice =
+        Number(product.old_price || 0);
 
-  const url="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);
-  window.location.href=url;
-}
+    const soldOut =
+        product.sold_out === true ||
+        Number(product.stock || 0) <= 0;
 
-function setRating(){
-  selectedRating=rating;
-  document.querySelectorAll("#reviewStars .star").forEach((star,index)=>star.classList.toggle("active",index<rating));
-}
 
-async function submitReview(){
-  const name=document.getElementById("reviewName").value.trim();
-  const text=document.getElementById("reviewText").value.trim();
-  if(!name){showToast("ENTER YOUR NAME");return}
-  if(!selectedRating){showToast("SELECT A RATING");return}
-  if(!text){showToast("WRITE A REVIEW");return}
+    const image =
+        product.image_url ||
+        "https://via.placeholder.com/700x900/111111/ffffff?text=VIBELEVEL";
 
-  const review={name,rating:selectedRating,review:text};
-  const local=readJSON("vibelevel_reviews",[]);
-  local.unshift(review);writeJSON("vibelevel_reviews",local);
 
-  if(supabaseClient){
-    try{
-      const result=await supabaseClient.from("reviews").insert({name,rating:selectedRating,review:text});
-      if(result.error)console.log("Review:",result.error.message);
-    }catch(e){console.log(e)}
-  }
-  document.getElementById("reviewName").value="";
-  document.getElementById("reviewText").value="";
-  setRating(0);
-  await loadReviews();
-  showToast("REVIEW PUBLISHED");
-}
+    let sizes = [];
 
-async function loadReviews(){
-  let reviews=[];
-  if(supabaseClient){
-    try{
-      const result=await supabaseClient.from("reviews").select("*").order("created_at",{ascending:false});
-      if(!result.error&&Array.isArray(result.data)){
-        reviews=result.data.map(x=>({name:x.name||"VibeLevel Customer",rating:Number(x.rating||5),review:x.review||x.text||""}));
-      }
-    }catch(e){console.log(e)}
-  }
-  const local=readJSON("vibelevel_reviews",[]);
-  /* Siempre mostramos también las reseñas locales, incluso si Supabase está configurado */
-  const combined=[...local,...reviews];
-  const seen=new Set();
-  reviews=combined.filter(r=>{
-    const key=(r.name||"")+"|"+(r.rating||"")+"|"+(r.review||"");
-    if(seen.has(key))return false;seen.add(key);return true;
-  });
+    if(Array.isArray(product.sizes)){
+        sizes = product.sizes;
+    }else if(typeof product.sizes === "string"){
+        sizes =
+            product.sizes
+                .split(",")
+                .map(x => x.trim())
+                .filter(Boolean);
+    }
 
-  const container=document.getElementById("reviewsGrid");
-  if(!reviews.length){
-    container.innerHTML='<div style="color:#777;font-size:11px;padding:20px">NO REVIEWS YET.</div>';
-    return;
-  }
-  container.innerHTML=reviews.map(r=>`<article class="review"><div class="review-top"><span class="review-name">${escapeHtml(r.name)}</span><span class="review-stars">${"★".repeat(Math.min(5,Math.max(0,Number(r.rating))))}</span></div><div class="review-text">${escapeHtml(r.review)}</div></article>`).join("");
-}
 
-let toastTimer;
-function showToast(){
-  const toast=document.getElementById("toast");
-  toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>toast.classList.remove("show"),2200);
-}
+    return `
+        <article class="product">
 
-document.addEventListener("DOMContentLoaded",async()=>{
-  renderCart();
-  await loadProducts();
-  await loadReviews();
-});
-</script>
-</body>
-</html>
+            <div class="product-image">
+
+                <img
+                    src="${escapeAttribute(image)}"
+                    alt="${escapeAttribute(name)}"
+                    loading="lazy"
+                    onerror="this.src='https://via.placeholder.com/700x900/111111/ffffff?text=VIBELEVEL'"
+                >
+
+                <div class="badges">
+
+                    ${
+                        product.is_new
+                        ? `<span class="badge">NEW</span>`
+                        : ""
+                    }
+
+                    ${
+                        product.is_sale
+                        ? `<span class="badge sale">SALE</span>`
+                        : ""
+                    }
+
+                    ${
+                        soldOut
+                        ? `<span class="badge sold">SOLD OUT</span>`
+                        : ""
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    ${category}
+                </div>
+
+                <div class="product-name">
+                    ${name}
+                </div>
+
+                <div style="display:none">
+                    ${description}
+                </div>
+
+                <div class="prices">
+
+                    <span class="price">
+                        ${formatPrice(price)}
+                    </span>
+
+                    ${
+                        oldPrice > price
+                        ? `
+                        <span class="old-price">
+                            ${formatPrice(oldPri
