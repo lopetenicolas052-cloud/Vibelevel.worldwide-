@@ -1,699 +1,849 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VibeLevel Admin</title>
 
-  <title>VibeLevel Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
 
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: white;
-    }
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    background:#111;
+    color:#fff;
+}
 
-    .caja {
-      max-width: 500px;
-      margin: 30px auto;
-      background: #222;
-      padding: 25px;
-      border-radius: 15px;
-    }
+.caja{
+    max-width:520px;
+    margin:20px auto;
+    background:#222;
+    padding:25px;
+    border-radius:15px;
+}
 
-    h1 {
-      text-align: center;
-      letter-spacing: 2px;
-    }
+h1{text-align:center;letter-spacing:2px}
+h2{margin-top:30px}
 
-    h2 {
-      margin-top: 30px;
-    }
+p{color:#ccc}
 
-    p {
-      color: #ccc;
-    }
+label{
+    display:block;
+    margin-top:18px;
+    font-weight:bold;
+    font-size:14px;
+}
 
-    input,
-    textarea,
-    button {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 14px;
-      margin-top: 12px;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-    }
+input,
+textarea,
+select,
+button{
+    width:100%;
+    box-sizing:border-box;
+    padding:14px;
+    margin-top:10px;
+    border-radius:8px;
+    border:none;
+    font-size:16px;
+}
 
-    input,
-    textarea {
-      background: white;
-      color: black;
-    }
+input,
+textarea,
+select{
+    background:#fff;
+    color:#000;
+}
 
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
 
-    input[type="file"] {
-      background: #fff;
-      padding: 12px;
-    }
+button{
+    background:#fff;
+    color:#000;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-    button {
-      background: white;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
+button:hover{
+    opacity:.85;
+}
 
-    button:hover {
-      opacity: 0.85;
-    }
+.botonSalir{
+    background:#333;
+    color:#fff;
+    border:1px solid #555;
+}
 
-    .botonSalir {
-      background: #333;
-      color: white;
-      border: 1px solid #555;
-    }
+#admin{
+    display:none;
+}
 
-    label {
-      display: block;
-      margin-top: 18px;
-      font-weight: bold;
-    }
+#mensaje,
+#mensajeProducto{
+    margin-top:15px;
+    text-align:center;
+    line-height:1.5;
+}
 
-    #admin {
-      display: none;
-    }
+.separador{
+    margin:30px 0;
+    border-top:1px solid #444;
+}
 
-    #mensaje,
-    #mensajeProducto {
-      margin-top: 15px;
-      text-align: center;
-      line-height: 1.5;
-    }
+#vistaPrevia{
+    display:none;
+    width:100%;
+    max-height:350px;
+    object-fit:contain;
+    margin-top:15px;
+    border-radius:10px;
+    background:#111;
+}
 
-    .separador {
-      margin: 30px 0;
-      border-top: 1px solid #444;
-    }
+.nota{
+    font-size:13px;
+    color:#aaa;
+    margin-top:8px;
+}
 
-    #vistaPrevia {
-      display: none;
-      width: 100%;
-      max-height: 350px;
-      object-fit: contain;
-      margin-top: 15px;
-      border-radius: 10px;
-      background: #111;
-    }
-
-    .nota {
-      font-size: 13px;
-      color: #aaa;
-      margin-top: 8px;
-    }
-  </style>
+.estado{
+    margin-top:15px;
+    padding:12px;
+    background:#111;
+    border:1px solid #333;
+    border-radius:8px;
+    font-size:13px;
+    color:#aaa;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="caja">
+<div class="caja">
 
-    <!-- ========================= -->
-    <!-- LOGIN -->
-    <!-- ========================= -->
+<!-- =========================
+     LOGIN
+========================= -->
 
-    <div id="login">
+<div id="login">
 
-      <h1>VibeLevel</h1>
+<h1>VIBELEVEL</h1>
 
-      <p>Panel de administrador</p>
+<p>Panel de administrador</p>
 
-      <input
-        id="email"
-        type="email"
-        placeholder="Correo electrónico"
-        autocomplete="email"
-      >
+<input
+id="email"
+type="email"
+placeholder="Correo electrónico"
+autocomplete="email"
+>
 
-      <input
-        id="password"
-        type="password"
-        placeholder="Contraseña"
-        autocomplete="current-password"
-      >
+<input
+id="password"
+type="password"
+placeholder="Contraseña"
+autocomplete="current-password"
+>
 
-      <button id="entrar">
-        ENTRAR
-      </button>
+<button id="entrar">
+ENTRAR
+</button>
 
-      <div id="mensaje"></div>
+<div id="mensaje"></div>
 
-    </div>
+</div>
 
 
-    <!-- ========================= -->
-    <!-- PANEL ADMIN -->
-    <!-- ========================= -->
+<!-- =========================
+     ADMIN
+========================= -->
 
-    <div id="admin">
+<div id="admin">
 
-      <h1>VibeLevel Admin</h1>
+<h1>VIBELEVEL ADMIN</h1>
 
-      <p>
-        Panel de administración
-      </p>
+<p>Publica productos directamente en Supabase.</p>
 
-      <div class="separador"></div>
+<div class="estado" id="estadoConexion">
+Comprobando conexión...
+</div>
 
-      <h2>Añadir producto</h2>
+<div class="separador"></div>
 
+<h2>Añadir producto</h2>
 
-      <!-- NOMBRE -->
 
-      <label for="nombre">
-        Nombre del producto
-      </label>
+<label for="nombre">
+Nombre del producto
+</label>
 
-      <input
-        id="nombre"
-        type="text"
-        placeholder="Ej: VibeLevel Polo"
-      >
+<input
+id="nombre"
+type="text"
+placeholder="Ej: VibeLevel Polo"
+>
 
 
-      <!-- PRECIO -->
+<label for="precio">
+Precio
+</label>
 
-      <label for="precio">
-        Precio
-      </label>
+<input
+id="precio"
+type="number"
+step="1"
+placeholder="Ej: 25000"
+>
 
-      <input
-        id="precio"
-        type="number"
-        step="0.01"
-        placeholder="Ej: 25000"
-      >
 
+<label for="precioAnterior">
+Precio anterior — opcional
+</label>
 
-      <!-- DESCRIPCIÓN -->
+<input
+id="precioAnterior"
+type="number"
+step="1"
+placeholder="Ej: 30000"
+>
 
-      <label for="descripcion">
-        Descripción
-      </label>
 
-      <textarea
-        id="descripcion"
-        placeholder="Describe el producto..."
-      ></textarea>
+<label for="categoria">
+Categoría
+</label>
 
+<select id="categoria">
 
-      <!-- IMAGEN -->
+<option value="TEES">TEES</option>
+<option value="HOODIES">HOODIES</option>
+<option value="BOTTOMS">BOTTOMS</option>
+<option value="JACKETS">JACKETS</option>
+<option value="ACCESSORIES">ACCESSORIES</option>
 
-      <label for="imagen">
-        Foto del producto
-      </label>
+</select>
 
-      <input
-        id="imagen"
-        type="file"
-        accept="image/*"
-      >
 
-      <div class="nota">
-        Selecciona una foto desde la galería de tu teléfono.
-      </div>
+<label for="descripcion">
+Descripción
+</label>
 
-      <img
-        id="vistaPrevia"
-        alt="Vista previa del producto"
-      >
+<textarea
+id="descripcion"
+placeholder="Describe el producto..."
+></textarea>
 
 
-      <!-- TALLAS -->
+<label for="imagen">
+Foto del producto
+</label>
 
-      <label for="tallas">
-        Tallas disponibles
-      </label>
+<input
+id="imagen"
+type="file"
+accept="image/*"
+>
 
-      <input
-        id="tallas"
-        type="text"
-        placeholder="Ej: S,M,L,XL,XXL"
-      >
+<div class="nota">
+Selecciona una foto desde la galería de tu teléfono.
+</div>
 
+<img
+id="vistaPrevia"
+alt="Vista previa"
+>
 
-      <!-- GUARDAR -->
 
-      <button id="guardar">
-        AÑADIR PRODUCTO
-      </button>
+<label for="tallas">
+Tallas disponibles
+</label>
 
-      <div id="mensajeProducto"></div>
+<input
+id="tallas"
+type="text"
+placeholder="Ej: S,M,L,XL,XXL"
+>
 
 
-      <div class="separador"></div>
+<label for="stock">
+Stock
+</label>
 
+<input
+id="stock"
+type="number"
+value="1"
+min="0"
+>
 
-      <!-- CERRAR SESIÓN -->
 
-      <button
-        id="salir"
-        class="botonSalir"
-      >
-        CERRAR SESIÓN
-      </button>
+<label>
+Novedad
+</label>
 
-    </div>
+<select id="esNuevo">
+<option value="false">NO</option>
+<option value="true">SÍ</option>
+</select>
 
-  </div>
 
+<label>
+Oferta
+</label>
 
-  <script>
+<select id="esOferta">
+<option value="false">NO</option>
+<option value="true">SÍ</option>
+</select>
 
-    /* ==========================================
-       CONFIGURACIÓN DE SUPABASE
-       ========================================== */
 
-    const SUPABASE_URL =
-      "https://yqlyxnlheoiftxhpteyb.supabase.co";
+<button id="guardar">
+AÑADIR PRODUCTO
+</button>
 
+<div id="mensajeProducto"></div>
 
-    /*
-      IMPORTANTE:
-      Pega aquí TU PUBLISHABLE KEY de Supabase.
-    */
 
-    const SUPABASE_KEY =
-      "sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
+<div class="separador"></div>
 
 
-    const cliente =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
+<button
+id="salir"
+class="botonSalir"
+>
+CERRAR SESIÓN
+</button>
 
+</div>
 
-    /* ==========================================
-       ELEMENTOS
-       ========================================== */
+</div>
 
-    const login =
-      document.getElementById("login");
-
-    const admin =
-      document.getElementById("admin");
-
-    const mensaje =
-      document.getElementById("mensaje");
-
-    const mensajeProducto =
-      document.getElementById("mensajeProducto");
-
-    const imagen =
-      document.getElementById("imagen");
-
-    const vistaPrevia =
-      document.getElementById("vistaPrevia");
-
-
-    /* ==========================================
-       VISTA PREVIA DE LA FOTO
-       ========================================== */
-
-    imagen.addEventListener("change", function() {
-
-      const archivo = imagen.files[0];
-
-      if (!archivo) {
-
-        vistaPrevia.style.display = "none";
-
-        return;
-      }
-
-
-      const url =
-        URL.createObjectURL(archivo);
-
-      vistaPrevia.src = url;
-
-      vistaPrevia.style.display = "block";
-
-    });
-
-
-    /* ==========================================
-       INICIAR SESIÓN
-       ========================================== */
-
-    document
-      .getElementById("entrar")
-      .addEventListener("click", async function() {
-
-        const email =
-          document
-            .getElementById("email")
-            .value
-            .trim();
-
-        const password =
-          document
-            .getElementById("password")
-            .value;
-
-
-        if (email === "" || password === "") {
-
-          mensaje.textContent =
-            "❌ Introduce el correo y la contraseña.";
-
-          return;
-        }
-
-
-        mensaje.textContent =
-          "Comprobando...";
-
-
-        const resultado =
-          await cliente.auth.signInWithPassword({
-
-            email: email,
-
-            password: password
-
-          });
-
-
-        if (resultado.error) {
-
-          mensaje.textContent =
-            "❌ " + resultado.error.message;
-
-          return;
-        }
-
-
-        mensaje.textContent = "";
-
-        login.style.display =
-          "none";
-
-        admin.style.display =
-          "block";
-
-      });
-
-
-    /* ==========================================
-       AÑADIR PRODUCTO
-       ========================================== */
-
-    document
-      .getElementById("guardar")
-      .addEventListener("click", async function() {
-
-        const nombre =
-          document
-            .getElementById("nombre")
-            .value
-            .trim();
-
-
-        const precio =
-          document
-            .getElementById("precio")
-            .value;
-
-
-        const descripcion =
-          document
-            .getElementById("descripcion")
-            .value
-            .trim();
-
-
-        const archivoImagen =
-          document
-            .getElementById("imagen")
-            .files[0];
-
-
-        const tallas =
-          document
-            .getElementById("tallas")
-            .value
-            .trim();
-
-
-        /* VALIDAR NOMBRE */
-
-        if (nombre === "") {
-
-          mensajeProducto.textContent =
-            "❌ Escribe el nombre del producto.";
-
-          return;
-        }
-
-
-        /* VALIDAR IMAGEN */
-
-        if (!archivoImagen) {
-
-          mensajeProducto.textContent =
-            "❌ Selecciona una foto del producto.";
-
-          return;
-        }
-
-
-        /* COMPROBAR SESIÓN */
-
-        const sesion =
-          await cliente.auth.getSession();
-
-
-        if (!sesion.data.session) {
-
-          mensajeProducto.textContent =
-            "❌ Tu sesión ha caducado. Vuelve a entrar.";
-
-          return;
-        }
-
-
-        mensajeProducto.textContent =
-          "📤 Subiendo imagen...";
-
-
-        try {
-
-          /* ======================================
-             CREAR NOMBRE ÚNICO PARA LA IMAGEN
-             ====================================== */
-
-          const extension =
-            archivoImagen.name
-              .split(".")
-              .pop()
-              .toLowerCase();
-
-
-          const nombreArchivo =
-            Date.now()
-            + "-"
-            + Math.random()
-              .toString(36)
-              .substring(2)
-            + "."
-            + extension;
-
-
-          const rutaImagen =
-            "productos/"
-            + nombreArchivo;
-
-
-          /* ======================================
-             SUBIR IMAGEN A SUPABASE STORAGE
-             ====================================== */
-
-          const subida =
-            await cliente
-              .storage
-              .from("product-images")
-              .upload(
-                rutaImagen,
-                archivoImagen,
-                {
-                  cacheControl: "3600",
-                  upsert: false,
-                  contentType: archivoImagen.type
-                }
-              );
-
-
-          if (subida.error) {
-
-            mensajeProducto.textContent =
-              "❌ Error al subir la imagen: "
-              + subida.error.message;
-
-            return;
-          }
-
-
-          /* ======================================
-             OBTENER URL PÚBLICA
-             ====================================== */
-
-          const resultadoUrl =
-            cliente
-              .storage
-              .from("product-images")
-              .getPublicUrl(rutaImagen);
-
-
-          const imageUrl =
-            resultadoUrl
-              .data
-              .publicUrl;
-
-
-          mensajeProducto.textContent =
-            "💾 Guardando producto...";
-
-
-          /* ======================================
-             GUARDAR PRODUCTO EN LA TABLA
-             ====================================== */
-
-          const resultado =
-            await cliente
-              .from("products")
-              .insert([
-
-                {
-                  name: nombre,
-
-                  price:
-                    precio === ""
-                      ? null
-                      : Number(precio),
-
-                  description:
-                    descripcion,
-
-                  image_url:
-                    imageUrl,
-
-                  sizes:
-                    tallas
-                }
-
-              ]);
-
-
-          /* ======================================
-             COMPROBAR ERROR
-             ====================================== */
-
-          if (resultado.error) {
-
-            mensajeProducto.textContent =
-              "❌ Error al guardar el producto: "
-              + resultado.error.message;
-
-            return;
-          }
-
-
-          /* ======================================
-             ÉXITO
-             ====================================== */
-
-          mensajeProducto.textContent =
-            "✅ ¡Producto añadido correctamente!";
-
-
-          /* LIMPIAR FORMULARIO */
-
-          document
-            .getElementById("nombre")
-            .value = "";
-
-          document
-            .getElementById("precio")
-            .value = "";
-
-          document
-            .getElementById("descripcion")
-            .value = "";
-
-          document
-            .getElementById("imagen")
-            .value = "";
-
-          document
-            .getElementById("tallas")
-            .value = "";
-
-
-          vistaPrevia.src = "";
-
-          vistaPrevia.style.display =
-            "none";
-
-
-        } catch (error) {
-
-          mensajeProducto.textContent =
-            "❌ Ha ocurrido un error: "
-            + error.message;
-
-        }
-
-      });
-
-
-    /* ==========================================
-       CERRAR SESIÓN
-       ========================================== */
-
-    document
-      .getElementById("salir")
-      .addEventListener("click", async function() {
-
-        await cliente.auth.signOut();
-
-        location.reload();
-
-      });
-
-  </script>
-
-</body>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const SUPABASE_URL = "https://yqlyxnlheoiftxhpteyb.supabase.co";
-const SUPABASE_KEY = "sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
 
-const supabaseClient = window.supabase.createClient(
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://yqlyxnlheoiftxhpteyb.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
+
+const cliente =
+window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+
+
+/* =========================================
+   ELEMENTOS
+========================================= */
+
+const login =
+document.getElementById("login");
+
+const admin =
+document.getElementById("admin");
+
+const mensaje =
+document.getElementById("mensaje");
+
+const mensajeProducto =
+document.getElementById("mensajeProducto");
+
+const imagen =
+document.getElementById("imagen");
+
+const vistaPrevia =
+document.getElementById("vistaPrevia");
+
+const estadoConexion =
+document.getElementById("estadoConexion");
+
+
+/* =========================================
+   VISTA PREVIA
+========================================= */
+
+imagen.addEventListener("change",function(){
+
+    const archivo =
+    imagen.files[0];
+
+    if(!archivo){
+
+        vistaPrevia.style.display="none";
+
+        return;
+    }
+
+    const url =
+    URL.createObjectURL(archivo);
+
+    vistaPrevia.src=url;
+
+    vistaPrevia.style.display="block";
+
+});
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+document
+.getElementById("entrar")
+.addEventListener("click",async function(){
+
+    const email =
+    document
+    .getElementById("email")
+    .value
+    .trim();
+
+    const password =
+    document
+    .getElementById("password")
+    .value;
+
+
+    if(!email || !password){
+
+        mensaje.textContent =
+        "❌ Introduce el correo y la contraseña.";
+
+        return;
+    }
+
+
+    mensaje.textContent =
+    "Comprobando acceso...";
+
+
+    try{
+
+        const {data,error} =
+        await cliente.auth.signInWithPassword({
+
+            email:email,
+
+            password:password
+
+        });
+
+
+        if(error){
+
+            mensaje.textContent =
+            "❌ "+error.message;
+
+            return;
+        }
+
+
+        if(!data.session){
+
+            mensaje.textContent =
+            "❌ No se pudo iniciar sesión.";
+
+            return;
+        }
+
+
+        login.style.display="none";
+
+        admin.style.display="block";
+
+        estadoConexion.textContent =
+        "✅ Conectado a Supabase";
+
+
+    }catch(error){
+
+        mensaje.textContent =
+        "❌ Error de conexión: "+error.message;
+
+    }
+
+});
+
+
+/* =========================================
+   COMPROBAR SESIÓN AL ABRIR
+========================================= */
+
+async function comprobarSesion(){
+
+    try{
+
+        const {data} =
+        await cliente.auth.getSession();
+
+        if(data.session){
+
+            login.style.display="none";
+
+            admin.style.display="block";
+
+            estadoConexion.textContent =
+            "✅ Sesión activa · Supabase conectado";
+
+        }else{
+
+            estadoConexion.textContent =
+            "Inicia sesión para administrar.";
+
+        }
+
+    }catch(error){
+
+        estadoConexion.textContent =
+        "❌ Error de conexión con Supabase.";
+
+    }
+
+}
+
+comprobarSesion();
+
+
+/* =========================================
+   PUBLICAR PRODUCTO
+========================================= */
+
+document
+.getElementById("guardar")
+.addEventListener("click",async function(){
+
+    mensajeProducto.textContent="";
+
+
+    const nombre =
+    document
+    .getElementById("nombre")
+    .value
+    .trim();
+
+
+    const precio =
+    Number(
+        document
+        .getElementById("precio")
+        .value
+    );
+
+
+    const precioAnterior =
+    Number(
+        document
+        .getElementById("precioAnterior")
+        .value
+    ) || 0;
+
+
+    const categoria =
+    document
+    .getElementById("categoria")
+    .value;
+
+
+    const descripcion =
+    document
+    .getElementById("descripcion")
+    .value
+    .trim();
+
+
+    const archivoImagen =
+    document
+    .getElementById("imagen")
+    .files[0];
+
+
+    const tallas =
+    document
+    .getElementById("tallas")
+    .value
+    .trim();
+
+
+    const stock =
+    Number(
+        document
+        .getElementById("stock")
+        .value
+    ) || 0;
+
+
+    const esNuevo =
+    document
+    .getElementById("esNuevo")
+    .value === "true";
+
+
+    const esOferta =
+    document
+    .getElementById("esOferta")
+    .value === "true";
+
+
+    /* VALIDACIONES */
+
+    if(!nombre){
+
+        mensajeProducto.textContent =
+        "❌ Escribe el nombre del producto.";
+
+        return;
+    }
+
+
+    if(!precio || precio < 0){
+
+        mensajeProducto.textContent =
+        "❌ Introduce un precio válido.";
+
+        return;
+    }
+
+
+    if(!archivoImagen){
+
+        mensajeProducto.textContent =
+        "❌ Selecciona una foto del producto.";
+
+        return;
+    }
+
+
+    /* SESIÓN */
+
+    const {data:sesionData} =
+    await cliente.auth.getSession();
+
+
+    if(!sesionData.session){
+
+        mensajeProducto.textContent =
+        "❌ Tu sesión ha caducado. Vuelve a entrar.";
+
+        return;
+    }
+
+
+    try{
+
+        /* ================================
+           SUBIR FOTO
+        ================================= */
+
+        mensajeProducto.textContent =
+        "📤 Subiendo imagen...";
+
+
+        const extension =
+        archivoImagen.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+
+        const nombreArchivo =
+        Date.now()
+        + "-"
+        + Math.random()
+        .toString(36)
+        .substring(2)
+        + "."
+        + extension;
+
+
+        const ruta =
+        "productos/"+nombreArchivo;
+
+
+        const subida =
+        await cliente
+        .storage
+        .from("product-images")
+        .upload(
+            ruta,
+            archivoImagen,
+            {
+                cacheControl:"3600",
+                upsert:false,
+                contentType:archivoImagen.type
+            }
+        );
+
+
+        if(subida.error){
+
+            mensajeProducto.textContent =
+            "❌ Error al subir la foto: "
+            +subida.error.message;
+
+            return;
+        }
+
+
+        /* ================================
+           URL PÚBLICA
+        ================================= */
+
+        const publicUrl =
+        cliente
+        .storage
+        .from("product-images")
+        .getPublicUrl(ruta)
+        .data
+        .publicUrl;
+
+
+        /* ================================
+           GUARDAR EN PRODUCTS
+        ================================= */
+
+        mensajeProducto.textContent =
+        "💾 Guardando producto en Supabase...";
+
+
+        const {data,error} =
+        await cliente
+        .from("products")
+        .insert({
+
+            name:nombre,
+
+            description:descripcion,
+
+            category:categoria,
+
+            price:precio,
+
+            old_price:precioAnterior,
+
+            image_url:publicUrl,
+
+            sizes:tallas,
+
+            stock:stock,
+
+            is_new:esNuevo,
+
+            is_sale:esOferta,
+
+            sold_out:stock <= 0
+
+        })
+        .select();
+
+
+        if(error){
+
+            console.error(error);
+
+            mensajeProducto.textContent =
+            "❌ Error al guardar en products: "
+            +error.message;
+
+            return;
+        }
+
+
+        /* ================================
+           ÉXITO
+        ================================= */
+
+        console.log(
+            "Producto guardado:",
+            data
+        );
+
+
+        mensajeProducto.textContent =
+        "✅ PRODUCTO PUBLICADO CORRECTAMENTE.";
+
+
+        /* LIMPIAR */
+
+        document
+        .getElementById("nombre")
+        .value="";
+
+        document
+        .getElementById("precio")
+        .value="";
+
+        document
+        .getElementById("precioAnterior")
+        .value="";
+
+        document
+        .getElementById("descripcion")
+        .value="";
+
+        document
+        .getElementById("imagen")
+        .value="";
+
+        document
+        .getElementById("tallas")
+        .value="";
+
+        document
+        .getElementById("stock")
+        .value="1";
+
+        document
+        .getElementById("esNuevo")
+        .value="false";
+
+        document
+        .getElementById("esOferta")
+        .value="false";
+
+        vistaPrevia.src="";
+
+        vistaPrevia.style.display="none";
+
+
+    }catch(error){
+
+        console.error(error);
+
+        mensajeProducto.textContent =
+        "❌ Error: "+error.message;
+
+    }
+
+});
+
+
+/* =========================================
+   CERRAR SESIÓN
+========================================= */
+
+document
+.getElementById("salir")
+.addEventListener("click",async function(){
+
+    await cliente.auth.signOut();
+
+    location.reload();
+
+});
+
 </script>
-   </html>
+
+</body>
+  </html>
