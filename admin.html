@@ -5,736 +5,419 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000000">
 <title>VibeLevel Admin</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 *{box-sizing:border-box}
-body{
-    margin:0;
-    padding:20px;
-    background:#080808;
-    color:#fff;
-    font-family:Arial,Helvetica,sans-serif;
-}
-.box{
-    width:min(600px,100%);
-    margin:20px auto;
-    background:#111;
-    border:1px solid #292929;
-    padding:25px;
-}
+body{margin:0;padding:20px;background:#080808;color:#fff;font-family:Arial,Helvetica,sans-serif}
+.box{width:min(600px,100%);margin:20px auto;background:#111;border:1px solid #292929;padding:25px}
 h1{text-align:center;letter-spacing:3px}
 h2{margin-top:30px}
-label{
-    display:block;
-    margin-top:18px;
-    margin-bottom:6px;
-    font-size:11px;
-    font-weight:bold;
-    letter-spacing:1px;
-}
-input,textarea,select{
-    width:100%;
-    padding:13px;
-    background:#fff;
-    color:#000;
-    border:0;
-    outline:none;
-    font-size:14px;
-}
-textarea{
-    min-height:100px;
-    resize:vertical;
-}
-button{
-    width:100%;
-    padding:14px;
-    margin-top:15px;
-    border:0;
-    background:#fff;
-    color:#000;
-    font-weight:bold;
-    cursor:pointer;
-}
+label{display:block;margin-top:18px;margin-bottom:6px;font-size:11px;font-weight:bold;letter-spacing:1px}
+input,textarea,select{width:100%;padding:13px;background:#fff;color:#000;border:0;outline:none;font-size:14px}
+textarea{min-height:100px;resize:vertical}
+button{width:100%;padding:14px;margin-top:15px;border:0;background:#fff;color:#000;font-weight:bold;cursor:pointer}
 button:hover{opacity:.85}
-.logout{
-    background:#222;
-    color:#fff;
-    border:1px solid #444;
-}
+.logout{background:#222;color:#fff;border:1px solid #444}
+.delete{background:#260d0d;color:#ff8c8c;border:1px solid #552222}
 .hidden{display:none}
-.message{
-    margin-top:15px;
-    padding:12px;
-    text-align:center;
-    font-size:12px;
-    line-height:1.5;
-}
+.message{margin-top:15px;padding:12px;text-align:center;font-size:12px;line-height:1.5}
 .success{background:#102510;color:#9cff9c}
 .error{background:#250f0f;color:#ff9999}
-.preview{
-    display:none;
-    width:100%;
-    max-height:350px;
-    object-fit:contain;
-    margin-top:15px;
-    background:#000;
-}
-.row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-.check{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top:18px;
-}
-.check input{
-    width:auto;
-}
-hr{
-    border:0;
-    border-top:1px solid #292929;
-    margin:30px 0;
-}
-.small{
-    color:#777;
-    font-size:11px;
-    line-height:1.5;
-}
-@media(max-width:600px){
-    .row{grid-template-columns:1fr}
-}
+.preview{display:none;width:100%;max-height:350px;object-fit:contain;margin-top:15px;background:#000}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check{display:flex;align-items:center;gap:10px;margin-top:18px}
+.check input{width:auto}
+hr{border:0;border-top:1px solid #292929;margin:30px 0}
+.small{color:#777;font-size:11px;line-height:1.5}
+.productsAdmin{display:grid;gap:12px;margin-top:15px}
+.productAdmin{display:flex;gap:12px;align-items:center;background:#080808;border:1px solid #292929;padding:10px}
+.productAdmin img{width:75px;height:75px;object-fit:cover;background:#000}
+.productAdminInfo{flex:1;min-width:0}
+.productAdminInfo strong{display:block;font-size:13px;margin-bottom:6px}
+.productAdminInfo span{display:block;color:#888;font-size:11px}
+.productAdmin .delete{width:auto;padding:10px 12px;margin:0;font-size:11px}
+@media(max-width:600px){.row{grid-template-columns:1fr}.productAdmin{align-items:flex-start}.productAdmin .delete{width:90px}}
 </style>
 </head>
-
 <body>
-
 <div class="box">
 
-<!-- LOGIN -->
 <div id="login">
-
-    <h1>VIBELEVEL</h1>
-    <p class="small">PANEL DE ADMINISTRACIÓN</p>
-
-    <label>Correo electrónico</label>
-    <input
-        id="email"
-        type="email"
-        placeholder="Tu correo"
-        autocomplete="email"
-    >
-
-    <label>Contraseña</label>
-    <input
-        id="password"
-        type="password"
-        placeholder="Tu contraseña"
-        autocomplete="current-password"
-    >
-
-    <button id="loginBtn">ENTRAR</button>
-
-    <div id="loginMessage"></div>
-
+<h1>VIBELEVEL</h1>
+<p class="small">PANEL DE ADMINISTRACIÓN</p>
+<label>Correo electrónico</label>
+<input id="email" type="email" placeholder="Tu correo" autocomplete="email">
+<label>Contraseña</label>
+<input id="password" type="password" placeholder="Tu contraseña" autocomplete="current-password">
+<button id="loginBtn">ENTRAR</button>
+<div id="loginMessage"></div>
 </div>
 
-
-<!-- ADMIN -->
 <div id="admin" class="hidden">
+<h1>VIBELEVEL ADMIN</h1>
+<p class="small">Publica productos directamente en la tienda.</p>
 
-    <h1>VIBELEVEL ADMIN</h1>
+<hr>
 
-    <p class="small">
-        Publica productos directamente en la tienda.
-    </p>
+<h2>AÑADIR PRODUCTO</h2>
 
-    <hr>
+<label>Nombre del producto</label>
+<input id="name" type="text" placeholder="Ej: VibeLevel Polo">
 
-    <h2>AÑADIR PRODUCTO</h2>
-
-    <label>Nombre del producto</label>
-    <input
-        id="name"
-        type="text"
-        placeholder="Ej: VibeLevel Polo"
-    >
-
-    <div class="row">
-
-        <div>
-            <label>Precio</label>
-            <input
-                id="price"
-                type="number"
-                step="0.01"
-                placeholder="25000"
-            >
-        </div>
-
-        <div>
-            <label>Precio anterior</label>
-            <input
-                id="old_price"
-                type="number"
-                step="0.01"
-                placeholder="30000"
-            >
-        </div>
-
-    </div>
-
-    <label>Categoría</label>
-    <select id="category">
-        <option value="TEES">TEES</option>
-        <option value="HOODIES">HOODIES</option>
-        <option value="BOTTOMS">BOTTOMS</option>
-        <option value="JACKETS">JACKETS</option>
-        <option value="ACCESSORIES">ACCESSORIES</option>
-    </select>
-
-    <label>Descripción</label>
-    <textarea
-        id="description"
-        placeholder="Describe el producto..."
-    ></textarea>
-
-    <label>Tallas</label>
-    <input
-        id="sizes"
-        type="text"
-        placeholder="S,M,L,XL,XXL"
-    >
-
-    <label>Stock</label>
-    <input
-        id="stock"
-        type="number"
-        value="1"
-        min="0"
-        placeholder="Cantidad disponible"
-    >
-
-    <label>Foto del producto</label>
-    <input
-        id="image"
-        type="file"
-        accept="image/*"
-    >
-
-    <img
-        id="preview"
-        class="preview"
-        alt="Vista previa"
-    >
-
-    <div class="check">
-        <input id="is_new" type="checkbox">
-        <span>Marcar como NEW</span>
-    </div>
-
-    <div class="check">
-        <input id="is_sale" type="checkbox">
-        <span>Marcar como SALE</span>
-    </div>
-
-    <button id="saveBtn">
-        PUBLICAR PRODUCTO
-    </button>
-
-    <div id="productMessage"></div>
-
-    <hr>
-
-    <button id="logoutBtn" class="logout">
-        CERRAR SESIÓN
-    </button>
-
+<div class="row">
+<div>
+<label>Precio</label>
+<input id="price" type="number" step="0.01" placeholder="25000">
+</div>
+<div>
+<label>Precio anterior</label>
+<input id="old_price" type="number" step="0.01" placeholder="30000">
+</div>
 </div>
 
+<label>Categoría</label>
+<select id="category">
+<option value="TEES">TEES</option>
+<option value="HOODIES">HOODIES</option>
+<option value="BOTTOMS">BOTTOMS</option>
+<option value="JACKETS">JACKETS</option>
+<option value="ACCESSORIES">ACCESSORIES</option>
+</select>
+
+<label>Descripción</label>
+<textarea id="description" placeholder="Describe el producto..."></textarea>
+
+<label>Tallas</label>
+<input id="sizes" type="text" placeholder="S,M,L,XL,XXL">
+
+<label>Stock</label>
+<input id="stock" type="number" value="1" min="0" placeholder="Cantidad disponible">
+
+<label>Foto del producto</label>
+<input id="image" type="file" accept="image/*">
+
+<img id="preview" class="preview" alt="Vista previa">
+
+<div class="check">
+<input id="is_new" type="checkbox">
+<span>Marcar como NEW</span>
 </div>
 
+<div class="check">
+<input id="is_sale" type="checkbox">
+<span>Marcar como SALE</span>
+</div>
+
+<button id="saveBtn">PUBLICAR PRODUCTO</button>
+<div id="productMessage"></div>
+
+<hr>
+
+<h2>PRODUCTOS PUBLICADOS</h2>
+<p class="small">Desde aquí puedes eliminar productos de la tienda.</p>
+<div id="adminProducts" class="productsAdmin">
+<p class="small">Cargando productos...</p>
+</div>
+<div id="deleteMessage"></div>
+
+<hr>
+
+<button id="logoutBtn" class="logout">CERRAR SESIÓN</button>
+</div>
+</div>
 
 <script>
+const SUPABASE_URL="https://yqlyxnlheoiftxhpteyb.supabase.co";
+const SUPABASE_KEY="sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const SUPABASE_URL =
-"https://yqlyxnlheoiftxhpteyb.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
-
-const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
-
-
-/* =========================================================
-   ELEMENTOS
-========================================================= */
-
-const login =
-document.getElementById("login");
-
-const admin =
-document.getElementById("admin");
-
-const loginMessage =
-document.getElementById("loginMessage");
-
-const productMessage =
-document.getElementById("productMessage");
-
-const imageInput =
-document.getElementById("image");
-
-const preview =
-document.getElementById("preview");
-
-
-/* =========================================================
-   COMPROBAR SESIÓN
-========================================================= */
+const login=document.getElementById("login");
+const admin=document.getElementById("admin");
+const loginMessage=document.getElementById("loginMessage");
+const productMessage=document.getElementById("productMessage");
+const deleteMessage=document.getElementById("deleteMessage");
+const imageInput=document.getElementById("image");
+const preview=document.getElementById("preview");
+const adminProducts=document.getElementById("adminProducts");
 
 async function checkSession(){
-
-    const {data,error} =
-        await supabaseClient.auth.getSession();
-
-    if(error){
-        console.error(error);
-        return;
-    }
-
-    if(data.session){
-
-        login.classList.add("hidden");
-        admin.classList.remove("hidden");
-
-    }else{
-
-        login.classList.remove("hidden");
-        admin.classList.add("hidden");
-
-    }
+const {data,error}=await supabaseClient.auth.getSession();
+if(error){console.error(error);return}
+if(data.session){
+login.classList.add("hidden");
+admin.classList.remove("hidden");
+loadAdminProducts();
+}else{
+login.classList.remove("hidden");
+admin.classList.add("hidden");
+}
 }
 
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-document
-.getElementById("loginBtn")
-.addEventListener("click",async()=>{
-
-    const email =
-        document
-        .getElementById("email")
-        .value
-        .trim();
-
-    const password =
-        document
-        .getElementById("password")
-        .value;
-
-    if(!email || !password){
-
-        loginMessage.className =
-            "message error";
-
-        loginMessage.textContent =
-            "❌ Introduce correo y contraseña.";
-
-        return;
-    }
-
-    loginMessage.className =
-        "message";
-
-    loginMessage.textContent =
-        "Comprobando...";
-
-    const {error} =
-        await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
-
-    if(error){
-
-        loginMessage.className =
-            "message error";
-
-        loginMessage.textContent =
-            "❌ " + error.message;
-
-        return;
-    }
-
-    loginMessage.textContent = "";
-
-    login.classList.add("hidden");
-    admin.classList.remove("hidden");
-
+document.getElementById("loginBtn").addEventListener("click",async()=>{
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
+if(!email||!password){
+loginMessage.className="message error";
+loginMessage.textContent="❌ Introduce correo y contraseña.";
+return;
+}
+loginMessage.className="message";
+loginMessage.textContent="Comprobando...";
+const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+if(error){
+loginMessage.className="message error";
+loginMessage.textContent="❌ "+error.message;
+return;
+}
+loginMessage.textContent="";
+login.classList.add("hidden");
+admin.classList.remove("hidden");
+loadAdminProducts();
 });
-
-
-/* =========================================================
-   VISTA PREVIA
-========================================================= */
 
 imageInput.addEventListener("change",()=>{
-
-    const file =
-        imageInput.files[0];
-
-    if(!file){
-
-        preview.style.display="none";
-        preview.src="";
-
-        return;
-    }
-
-    preview.src =
-        URL.createObjectURL(file);
-
-    preview.style.display="block";
-
+const file=imageInput.files[0];
+if(!file){
+preview.style.display="none";
+preview.src="";
+return;
+}
+preview.src=URL.createObjectURL(file);
+preview.style.display="block";
 });
 
-
-/* =========================================================
-   PUBLICAR PRODUCTO
-========================================================= */
-
-document
-.getElementById("saveBtn")
-.addEventListener("click",async()=>{
-
-    productMessage.className =
-        "message";
-
-    productMessage.textContent =
-        "Preparando producto...";
-
-
-    const name =
-        document
-        .getElementById("name")
-        .value
-        .trim();
-
-    const priceValue =
-        document
-        .getElementById("price")
-        .value;
-
-    const oldPriceValue =
-        document
-        .getElementById("old_price")
-        .value;
-
-    const category =
-        document
-        .getElementById("category")
-        .value;
-
-    const description =
-        document
-        .getElementById("description")
-        .value
-        .trim();
-
-    const sizes =
-        document
-        .getElementById("sizes")
-        .value
-        .trim();
-
-    const stockValue =
-        document
-        .getElementById("stock")
-        .value;
-
-    const imageFile =
-        imageInput.files[0];
-
-    const isNew =
-        document
-        .getElementById("is_new")
-        .checked;
-
-    const isSale =
-        document
-        .getElementById("is_sale")
-        .checked;
-
-
-    /* VALIDACIONES */
-
-    if(!name){
-
-        productMessage.className =
-            "message error";
-
-        productMessage.textContent =
-            "❌ Escribe el nombre del producto.";
-
-        return;
-    }
-
-    if(priceValue === ""){
-
-        productMessage.className =
-            "message error";
-
-        productMessage.textContent =
-            "❌ Introduce el precio.";
-
-        return;
-    }
-
-    if(!imageFile){
-
-        productMessage.className =
-            "message error";
-
-        productMessage.textContent =
-            "❌ Selecciona una foto.";
-
-        return;
-    }
-
-
-    /* SESIÓN */
-
-    const {data:sessionData} =
-        await supabaseClient.auth.getSession();
-
-    if(!sessionData.session){
-
-        productMessage.className =
-            "message error";
-
-        productMessage.textContent =
-            "❌ Tu sesión ha caducado. Vuelve a iniciar sesión.";
-
-        return;
-    }
-
-
-    try{
-
-        /* =============================================
-           SUBIR IMAGEN
-        ============================================= */
-
-        productMessage.textContent =
-            "📤 Subiendo imagen...";
-
-
-        const extension =
-            imageFile.name
-            .split(".")
-            .pop()
-            .toLowerCase();
-
-        const fileName =
-            Date.now()
-            + "-"
-            + Math.random()
-                .toString(36)
-                .substring(2)
-            + "."
-            + extension;
-
-        const filePath =
-            "productos/" + fileName;
-
-
-        const upload =
-            await supabaseClient
-            .storage
-            .from("product-images")
-            .upload(
-                filePath,
-                imageFile,
-                {
-                    cacheControl:"3600",
-                    upsert:false,
-                    contentType:imageFile.type
-                }
-            );
-
-
-        if(upload.error){
-
-            throw new Error(
-                "Error al subir la imagen: "
-                + upload.error.message
-            );
-
-        }
-
-
-        /* =============================================
-           URL DE IMAGEN
-        ============================================= */
-
-        const publicUrl =
-            supabaseClient
-            .storage
-            .from("product-images")
-            .getPublicUrl(filePath);
-
-
-        const imageUrl =
-            publicUrl.data.publicUrl;
-
-
-        /* =============================================
-           GUARDAR PRODUCTO
-        ============================================= */
-
-        productMessage.textContent =
-            "💾 Publicando producto...";
-
-
-        const {data,error} =
-            await supabaseClient
-            .from("products")
-            .insert({
-
-                name:name,
-
-                price:Number(priceValue),
-
-                description:description,
-
-                image_url:imageUrl,
-
-                sizes:sizes,
-
-                category:category,
-
-                is_new:isNew,
-
-                is_sale:isSale,
-
-                old_price:
-                    oldPriceValue === ""
-                    ? null
-                    : Number(oldPriceValue),
-
-                stock:
-                    stockValue === ""
-                    ? 0
-                    : Number(stockValue),
-
-                sold_out:
-                    stockValue !== ""
-                    ? Number(stockValue) <= 0
-                    : false
-
-            })
-            .select()
-            .single();
-
-
-        if(error){
-
-            throw new Error(
-                "Error al guardar producto: "
-                + error.message
-            );
-
-        }
-
-
-        /* =============================================
-           ÉXITO
-        ============================================= */
-
-        console.log(
-            "Producto publicado:",
-            data
-        );
-
-
-        productMessage.className =
-            "message success";
-
-        productMessage.textContent =
-            "✅ PRODUCTO PUBLICADO CORRECTAMENTE. Ya está guardado en Supabase.";
-
-
-        /* LIMPIAR */
-
-        document.getElementById("name").value="";
-        document.getElementById("price").value="";
-        document.getElementById("old_price").value="";
-        document.getElementById("description").value="";
-        document.getElementById("sizes").value="";
-        document.getElementById("stock").value="1";
-
-        document.getElementById("is_new").checked=false;
-        document.getElementById("is_sale").checked=false;
-
-        imageInput.value="";
-
-        preview.src="";
-        preview.style.display="none";
-
-
-    }catch(error){
-
-        console.error(error);
-
-        productMessage.className =
-            "message error";
-
-        productMessage.textContent =
-            "❌ " + error.message;
-
-    }
-
+document.getElementById("saveBtn").addEventListener("click",async()=>{
+productMessage.className="message";
+productMessage.textContent="Preparando producto...";
+
+const name=document.getElementById("name").value.trim();
+const priceValue=document.getElementById("price").value;
+const oldPriceValue=document.getElementById("old_price").value;
+const category=document.getElementById("category").value;
+const description=document.getElementById("description").value.trim();
+const sizes=document.getElementById("sizes").value.trim();
+const stockValue=document.getElementById("stock").value;
+const imageFile=imageInput.files[0];
+const isNew=document.getElementById("is_new").checked;
+const isSale=document.getElementById("is_sale").checked;
+
+if(!name){
+productMessage.className="message error";
+productMessage.textContent="❌ Escribe el nombre del producto.";
+return;
+}
+
+if(priceValue===""){
+productMessage.className="message error";
+productMessage.textContent="❌ Introduce el precio.";
+return;
+}
+
+if(!imageFile){
+productMessage.className="message error";
+productMessage.textContent="❌ Selecciona una foto.";
+return;
+}
+
+const {data:sessionData}=await supabaseClient.auth.getSession();
+
+if(!sessionData.session){
+productMessage.className="message error";
+productMessage.textContent="❌ Tu sesión ha caducado. Vuelve a iniciar sesión.";
+return;
+}
+
+try{
+productMessage.textContent="📤 Subiendo imagen...";
+
+const extension=imageFile.name.split(".").pop().toLowerCase();
+const fileName=Date.now()+"-"+Math.random().toString(36).substring(2)+"."+extension;
+const filePath="productos/"+fileName;
+
+const upload=await supabaseClient.storage.from("product-images").upload(
+filePath,
+imageFile,
+{
+cacheControl:"3600",
+upsert:false,
+contentType:imageFile.type
+}
+);
+
+if(upload.error){
+throw new Error("Error al subir la imagen: "+upload.error.message);
+}
+
+const publicUrl=supabaseClient.storage.from("product-images").getPublicUrl(filePath);
+const imageUrl=publicUrl.data.publicUrl;
+
+productMessage.textContent="💾 Publicando producto...";
+
+const {data,error}=await supabaseClient.from("products").insert({
+name:name,
+price:Number(priceValue),
+description:description,
+image_url:imageUrl,
+sizes:sizes,
+category:category,
+is_new:isNew,
+is_sale:isSale,
+old_price:oldPriceValue===""?null:Number(oldPriceValue),
+stock:stockValue===""?0:Number(stockValue),
+sold_out:stockValue!==""?Number(stockValue)<=0:false
+}).select().single();
+
+if(error){
+throw new Error("Error al guardar producto: "+error.message);
+}
+
+console.log("Producto publicado:",data);
+
+productMessage.className="message success";
+productMessage.textContent="✅ PRODUCTO PUBLICADO CORRECTAMENTE. Ya está guardado en Supabase.";
+
+document.getElementById("name").value="";
+document.getElementById("price").value="";
+document.getElementById("old_price").value="";
+document.getElementById("description").value="";
+document.getElementById("sizes").value="";
+document.getElementById("stock").value="1";
+document.getElementById("is_new").checked=false;
+document.getElementById("is_sale").checked=false;
+imageInput.value="";
+preview.src="";
+preview.style.display="none";
+
+loadAdminProducts();
+
+}catch(error){
+console.error(error);
+productMessage.className="message error";
+productMessage.textContent="❌ "+error.message;
+}
 });
 
+async function loadAdminProducts(){
+adminProducts.innerHTML="<p class='small'>Cargando productos...</p>";
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+const {data,error}=await supabaseClient
+.from("products")
+.select("*")
+.order("created_at",{ascending:false});
 
-document
-.getElementById("logoutBtn")
-.addEventListener("click",async()=>{
+if(error){
+adminProducts.innerHTML="<p class='message error'>❌ "+error.message+"</p>";
+return;
+}
 
-    await supabaseClient.auth.signOut();
+if(!data||data.length===0){
+adminProducts.innerHTML="<p class='small'>No hay productos publicados.</p>";
+return;
+}
 
-    location.reload();
+adminProducts.innerHTML=data.map(p=>`
+<div class="productAdmin">
+<img src="${escapeHtml(p.image_url||"")}" alt="">
+<div class="productAdminInfo">
+<strong>${escapeHtml(p.name||"Sin nombre")}</strong>
+<span>${Number(p.price||0).toLocaleString("es-ES")} XAF</span>
+<span>Stock: ${Number(p.stock||0)}</span>
+</div>
+<button class="delete" onclick="deleteProduct('${p.id}')">ELIMINAR</button>
+</div>
+`).join("");
+}
 
+function escapeHtml(value){
+return String(value??"").replace(/[&<>"']/g,function(m){
+return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m];
 });
+}
 
+async function deleteProduct(id){
+const product=await getProduct(id);
 
-/* =========================================================
-   INICIAR
-========================================================= */
+if(!product){
+deleteMessage.className="message error";
+deleteMessage.textContent="❌ No se encontró el producto.";
+return;
+}
+
+const confirmDelete=confirm(
+"⚠️ ¿ESTÁS SEGURO?\n\nVas a eliminar:\n"+product.name+"\n\nEste producto desaparecerá de la tienda."
+);
+
+if(!confirmDelete)return;
+
+deleteMessage.className="message";
+deleteMessage.textContent="🗑️ Eliminando producto...";
+
+try{
+
+if(product.image_url){
+const marker="/storage/v1/object/public/product-images/";
+const position=product.image_url.indexOf(marker);
+
+if(position!==-1){
+const filePath=decodeURIComponent(
+product.image_url.substring(position+marker.length)
+);
+
+if(filePath){
+const removeImage=await supabaseClient
+.storage
+.from("product-images")
+.remove([filePath]);
+
+if(removeImage.error){
+console.warn("No se pudo borrar la imagen:",removeImage.error.message);
+}
+}
+}
+}
+
+const {error}=await supabaseClient
+.from("products")
+.delete()
+.eq("id",id);
+
+if(error){
+throw new Error(error.message);
+}
+
+deleteMessage.className="message success";
+deleteMessage.textContent="✅ PRODUCTO ELIMINADO CORRECTAMENTE.";
+
+loadAdminProducts();
+
+}catch(error){
+console.error(error);
+deleteMessage.className="message error";
+deleteMessage.textContent="❌ Error al eliminar: "+error.message;
+}
+}
+
+async function getProduct(id){
+const {data,error}=await supabaseClient
+.from("products")
+.select("id,name,image_url")
+.eq("id",id)
+.single();
+
+if(error){
+console.error(error);
+return null;
+}
+
+return data;
+}
+
+document.getElementById("logoutBtn").addEventListener("click",async()=>{
+await supabaseClient.auth.signOut();
+location.reload();
+});
 
 checkSession();
-
 </script>
-
 </body>
     </html>
