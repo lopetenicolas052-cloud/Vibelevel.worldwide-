@@ -3,322 +3,256 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
 <title>VibeLevel Admin</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
-
 body{
     margin:0;
     padding:20px;
-    font-family:Arial,sans-serif;
-    background:#111;
+    background:#080808;
     color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
 }
-
-.caja{
-    max-width:520px;
+.box{
+    width:min(600px,100%);
     margin:20px auto;
-    background:#222;
+    background:#111;
+    border:1px solid #292929;
     padding:25px;
-    border-radius:15px;
 }
-
-h1{text-align:center;letter-spacing:2px}
+h1{text-align:center;letter-spacing:3px}
 h2{margin-top:30px}
-
-p{color:#ccc}
-
 label{
     display:block;
     margin-top:18px;
+    margin-bottom:6px;
+    font-size:11px;
     font-weight:bold;
-    font-size:14px;
+    letter-spacing:1px;
 }
-
-input,
-textarea,
-select,
-button{
+input,textarea,select{
     width:100%;
-    box-sizing:border-box;
-    padding:14px;
-    margin-top:10px;
-    border-radius:8px;
-    border:none;
-    font-size:16px;
-}
-
-input,
-textarea,
-select{
+    padding:13px;
     background:#fff;
     color:#000;
+    border:0;
+    outline:none;
+    font-size:14px;
 }
-
 textarea{
     min-height:100px;
     resize:vertical;
 }
-
 button{
+    width:100%;
+    padding:14px;
+    margin-top:15px;
+    border:0;
     background:#fff;
     color:#000;
     font-weight:bold;
     cursor:pointer;
 }
-
-button:hover{
-    opacity:.85;
-}
-
-.botonSalir{
-    background:#333;
+button:hover{opacity:.85}
+.logout{
+    background:#222;
     color:#fff;
-    border:1px solid #555;
+    border:1px solid #444;
 }
-
-#admin{
-    display:none;
-}
-
-#mensaje,
-#mensajeProducto{
+.hidden{display:none}
+.message{
     margin-top:15px;
+    padding:12px;
     text-align:center;
+    font-size:12px;
     line-height:1.5;
 }
-
-.separador{
-    margin:30px 0;
-    border-top:1px solid #444;
-}
-
-#vistaPrevia{
+.success{background:#102510;color:#9cff9c}
+.error{background:#250f0f;color:#ff9999}
+.preview{
     display:none;
     width:100%;
     max-height:350px;
     object-fit:contain;
     margin-top:15px;
-    border-radius:10px;
-    background:#111;
+    background:#000;
 }
-
-.nota{
-    font-size:13px;
-    color:#aaa;
-    margin-top:8px;
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
 }
-
-.estado{
-    margin-top:15px;
-    padding:12px;
-    background:#111;
-    border:1px solid #333;
-    border-radius:8px;
-    font-size:13px;
-    color:#aaa;
+.check{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:18px;
+}
+.check input{
+    width:auto;
+}
+hr{
+    border:0;
+    border-top:1px solid #292929;
+    margin:30px 0;
+}
+.small{
+    color:#777;
+    font-size:11px;
+    line-height:1.5;
+}
+@media(max-width:600px){
+    .row{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<div class="caja">
+<div class="box">
 
-<!-- =========================
-     LOGIN
-========================= -->
-
+<!-- LOGIN -->
 <div id="login">
 
-<h1>VIBELEVEL</h1>
+    <h1>VIBELEVEL</h1>
+    <p class="small">PANEL DE ADMINISTRACIÓN</p>
 
-<p>Panel de administrador</p>
+    <label>Correo electrónico</label>
+    <input
+        id="email"
+        type="email"
+        placeholder="Tu correo"
+        autocomplete="email"
+    >
 
-<input
-id="email"
-type="email"
-placeholder="Correo electrónico"
-autocomplete="email"
->
+    <label>Contraseña</label>
+    <input
+        id="password"
+        type="password"
+        placeholder="Tu contraseña"
+        autocomplete="current-password"
+    >
 
-<input
-id="password"
-type="password"
-placeholder="Contraseña"
-autocomplete="current-password"
->
+    <button id="loginBtn">ENTRAR</button>
 
-<button id="entrar">
-ENTRAR
-</button>
-
-<div id="mensaje"></div>
+    <div id="loginMessage"></div>
 
 </div>
 
 
-<!-- =========================
-     ADMIN
-========================= -->
+<!-- ADMIN -->
+<div id="admin" class="hidden">
 
-<div id="admin">
+    <h1>VIBELEVEL ADMIN</h1>
 
-<h1>VIBELEVEL ADMIN</h1>
+    <p class="small">
+        Publica productos directamente en la tienda.
+    </p>
 
-<p>Publica productos directamente en Supabase.</p>
+    <hr>
 
-<div class="estado" id="estadoConexion">
-Comprobando conexión...
-</div>
+    <h2>AÑADIR PRODUCTO</h2>
 
-<div class="separador"></div>
+    <label>Nombre del producto</label>
+    <input
+        id="name"
+        type="text"
+        placeholder="Ej: VibeLevel Polo"
+    >
 
-<h2>Añadir producto</h2>
+    <div class="row">
 
+        <div>
+            <label>Precio</label>
+            <input
+                id="price"
+                type="number"
+                step="0.01"
+                placeholder="25000"
+            >
+        </div>
 
-<label for="nombre">
-Nombre del producto
-</label>
+        <div>
+            <label>Precio anterior</label>
+            <input
+                id="old_price"
+                type="number"
+                step="0.01"
+                placeholder="30000"
+            >
+        </div>
 
-<input
-id="nombre"
-type="text"
-placeholder="Ej: VibeLevel Polo"
->
+    </div>
 
+    <label>Categoría</label>
+    <select id="category">
+        <option value="TEES">TEES</option>
+        <option value="HOODIES">HOODIES</option>
+        <option value="BOTTOMS">BOTTOMS</option>
+        <option value="JACKETS">JACKETS</option>
+        <option value="ACCESSORIES">ACCESSORIES</option>
+    </select>
 
-<label for="precio">
-Precio
-</label>
+    <label>Descripción</label>
+    <textarea
+        id="description"
+        placeholder="Describe el producto..."
+    ></textarea>
 
-<input
-id="precio"
-type="number"
-step="1"
-placeholder="Ej: 25000"
->
+    <label>Tallas</label>
+    <input
+        id="sizes"
+        type="text"
+        placeholder="S,M,L,XL,XXL"
+    >
 
+    <label>Stock</label>
+    <input
+        id="stock"
+        type="number"
+        value="1"
+        min="0"
+        placeholder="Cantidad disponible"
+    >
 
-<label for="precioAnterior">
-Precio anterior — opcional
-</label>
+    <label>Foto del producto</label>
+    <input
+        id="image"
+        type="file"
+        accept="image/*"
+    >
 
-<input
-id="precioAnterior"
-type="number"
-step="1"
-placeholder="Ej: 30000"
->
+    <img
+        id="preview"
+        class="preview"
+        alt="Vista previa"
+    >
 
+    <div class="check">
+        <input id="is_new" type="checkbox">
+        <span>Marcar como NEW</span>
+    </div>
 
-<label for="categoria">
-Categoría
-</label>
+    <div class="check">
+        <input id="is_sale" type="checkbox">
+        <span>Marcar como SALE</span>
+    </div>
 
-<select id="categoria">
+    <button id="saveBtn">
+        PUBLICAR PRODUCTO
+    </button>
 
-<option value="TEES">TEES</option>
-<option value="HOODIES">HOODIES</option>
-<option value="BOTTOMS">BOTTOMS</option>
-<option value="JACKETS">JACKETS</option>
-<option value="ACCESSORIES">ACCESSORIES</option>
+    <div id="productMessage"></div>
 
-</select>
+    <hr>
 
-
-<label for="descripcion">
-Descripción
-</label>
-
-<textarea
-id="descripcion"
-placeholder="Describe el producto..."
-></textarea>
-
-
-<label for="imagen">
-Foto del producto
-</label>
-
-<input
-id="imagen"
-type="file"
-accept="image/*"
->
-
-<div class="nota">
-Selecciona una foto desde la galería de tu teléfono.
-</div>
-
-<img
-id="vistaPrevia"
-alt="Vista previa"
->
-
-
-<label for="tallas">
-Tallas disponibles
-</label>
-
-<input
-id="tallas"
-type="text"
-placeholder="Ej: S,M,L,XL,XXL"
->
-
-
-<label for="stock">
-Stock
-</label>
-
-<input
-id="stock"
-type="number"
-value="1"
-min="0"
->
-
-
-<label>
-Novedad
-</label>
-
-<select id="esNuevo">
-<option value="false">NO</option>
-<option value="true">SÍ</option>
-</select>
-
-
-<label>
-Oferta
-</label>
-
-<select id="esOferta">
-<option value="false">NO</option>
-<option value="true">SÍ</option>
-</select>
-
-
-<button id="guardar">
-AÑADIR PRODUCTO
-</button>
-
-<div id="mensajeProducto"></div>
-
-
-<div class="separador"></div>
-
-
-<button
-id="salir"
-class="botonSalir"
->
-CERRAR SESIÓN
-</button>
+    <button id="logoutBtn" class="logout">
+        CERRAR SESIÓN
+    </button>
 
 </div>
 
@@ -327,9 +261,9 @@ CERRAR SESIÓN
 
 <script>
 
-/* =========================================
+/* =========================================================
    SUPABASE
-========================================= */
+========================================================= */
 
 const SUPABASE_URL =
 "https://yqlyxnlheoiftxhpteyb.supabase.co";
@@ -337,16 +271,16 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
 
-const cliente =
+const supabaseClient =
 window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
 
 
-/* =========================================
+/* =========================================================
    ELEMENTOS
-========================================= */
+========================================================= */
 
 const login =
 document.getElementById("login");
@@ -354,272 +288,231 @@ document.getElementById("login");
 const admin =
 document.getElementById("admin");
 
-const mensaje =
-document.getElementById("mensaje");
+const loginMessage =
+document.getElementById("loginMessage");
 
-const mensajeProducto =
-document.getElementById("mensajeProducto");
+const productMessage =
+document.getElementById("productMessage");
 
-const imagen =
-document.getElementById("imagen");
+const imageInput =
+document.getElementById("image");
 
-const vistaPrevia =
-document.getElementById("vistaPrevia");
-
-const estadoConexion =
-document.getElementById("estadoConexion");
+const preview =
+document.getElementById("preview");
 
 
-/* =========================================
-   VISTA PREVIA
-========================================= */
+/* =========================================================
+   COMPROBAR SESIÓN
+========================================================= */
 
-imagen.addEventListener("change",function(){
+async function checkSession(){
 
-    const archivo =
-    imagen.files[0];
+    const {data,error} =
+        await supabaseClient.auth.getSession();
 
-    if(!archivo){
-
-        vistaPrevia.style.display="none";
-
+    if(error){
+        console.error(error);
         return;
     }
 
-    const url =
-    URL.createObjectURL(archivo);
+    if(data.session){
 
-    vistaPrevia.src=url;
+        login.classList.add("hidden");
+        admin.classList.remove("hidden");
 
-    vistaPrevia.style.display="block";
+    }else{
 
-});
+        login.classList.remove("hidden");
+        admin.classList.add("hidden");
+
+    }
+}
 
 
-/* =========================================
+/* =========================================================
    LOGIN
-========================================= */
+========================================================= */
 
 document
-.getElementById("entrar")
-.addEventListener("click",async function(){
+.getElementById("loginBtn")
+.addEventListener("click",async()=>{
 
     const email =
-    document
-    .getElementById("email")
-    .value
-    .trim();
+        document
+        .getElementById("email")
+        .value
+        .trim();
 
     const password =
-    document
-    .getElementById("password")
-    .value;
-
+        document
+        .getElementById("password")
+        .value;
 
     if(!email || !password){
 
-        mensaje.textContent =
-        "❌ Introduce el correo y la contraseña.";
+        loginMessage.className =
+            "message error";
+
+        loginMessage.textContent =
+            "❌ Introduce correo y contraseña.";
 
         return;
     }
 
+    loginMessage.className =
+        "message";
 
-    mensaje.textContent =
-    "Comprobando acceso...";
+    loginMessage.textContent =
+        "Comprobando...";
 
-
-    try{
-
-        const {data,error} =
-        await cliente.auth.signInWithPassword({
-
-            email:email,
-
-            password:password
-
+    const {error} =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
         });
 
+    if(error){
 
-        if(error){
+        loginMessage.className =
+            "message error";
 
-            mensaje.textContent =
-            "❌ "+error.message;
+        loginMessage.textContent =
+            "❌ " + error.message;
 
-            return;
-        }
-
-
-        if(!data.session){
-
-            mensaje.textContent =
-            "❌ No se pudo iniciar sesión.";
-
-            return;
-        }
-
-
-        login.style.display="none";
-
-        admin.style.display="block";
-
-        estadoConexion.textContent =
-        "✅ Conectado a Supabase";
-
-
-    }catch(error){
-
-        mensaje.textContent =
-        "❌ Error de conexión: "+error.message;
-
+        return;
     }
+
+    loginMessage.textContent = "";
+
+    login.classList.add("hidden");
+    admin.classList.remove("hidden");
 
 });
 
 
-/* =========================================
-   COMPROBAR SESIÓN AL ABRIR
-========================================= */
+/* =========================================================
+   VISTA PREVIA
+========================================================= */
 
-async function comprobarSesion(){
+imageInput.addEventListener("change",()=>{
 
-    try{
+    const file =
+        imageInput.files[0];
 
-        const {data} =
-        await cliente.auth.getSession();
+    if(!file){
 
-        if(data.session){
+        preview.style.display="none";
+        preview.src="";
 
-            login.style.display="none";
-
-            admin.style.display="block";
-
-            estadoConexion.textContent =
-            "✅ Sesión activa · Supabase conectado";
-
-        }else{
-
-            estadoConexion.textContent =
-            "Inicia sesión para administrar.";
-
-        }
-
-    }catch(error){
-
-        estadoConexion.textContent =
-        "❌ Error de conexión con Supabase.";
-
+        return;
     }
 
-}
+    preview.src =
+        URL.createObjectURL(file);
 
-comprobarSesion();
+    preview.style.display="block";
+
+});
 
 
-/* =========================================
+/* =========================================================
    PUBLICAR PRODUCTO
-========================================= */
+========================================================= */
 
 document
-.getElementById("guardar")
-.addEventListener("click",async function(){
+.getElementById("saveBtn")
+.addEventListener("click",async()=>{
 
-    mensajeProducto.textContent="";
+    productMessage.className =
+        "message";
 
-
-    const nombre =
-    document
-    .getElementById("nombre")
-    .value
-    .trim();
+    productMessage.textContent =
+        "Preparando producto...";
 
 
-    const precio =
-    Number(
+    const name =
         document
-        .getElementById("precio")
+        .getElementById("name")
         .value
-    );
+        .trim();
 
-
-    const precioAnterior =
-    Number(
+    const priceValue =
         document
-        .getElementById("precioAnterior")
+        .getElementById("price")
+        .value;
+
+    const oldPriceValue =
+        document
+        .getElementById("old_price")
+        .value;
+
+    const category =
+        document
+        .getElementById("category")
+        .value;
+
+    const description =
+        document
+        .getElementById("description")
         .value
-    ) || 0;
+        .trim();
 
+    const sizes =
+        document
+        .getElementById("sizes")
+        .value
+        .trim();
 
-    const categoria =
-    document
-    .getElementById("categoria")
-    .value;
-
-
-    const descripcion =
-    document
-    .getElementById("descripcion")
-    .value
-    .trim();
-
-
-    const archivoImagen =
-    document
-    .getElementById("imagen")
-    .files[0];
-
-
-    const tallas =
-    document
-    .getElementById("tallas")
-    .value
-    .trim();
-
-
-    const stock =
-    Number(
+    const stockValue =
         document
         .getElementById("stock")
-        .value
-    ) || 0;
+        .value;
 
+    const imageFile =
+        imageInput.files[0];
 
-    const esNuevo =
-    document
-    .getElementById("esNuevo")
-    .value === "true";
+    const isNew =
+        document
+        .getElementById("is_new")
+        .checked;
 
-
-    const esOferta =
-    document
-    .getElementById("esOferta")
-    .value === "true";
+    const isSale =
+        document
+        .getElementById("is_sale")
+        .checked;
 
 
     /* VALIDACIONES */
 
-    if(!nombre){
+    if(!name){
 
-        mensajeProducto.textContent =
-        "❌ Escribe el nombre del producto.";
+        productMessage.className =
+            "message error";
 
-        return;
-    }
-
-
-    if(!precio || precio < 0){
-
-        mensajeProducto.textContent =
-        "❌ Introduce un precio válido.";
+        productMessage.textContent =
+            "❌ Escribe el nombre del producto.";
 
         return;
     }
 
+    if(priceValue === ""){
 
-    if(!archivoImagen){
+        productMessage.className =
+            "message error";
 
-        mensajeProducto.textContent =
-        "❌ Selecciona una foto del producto.";
+        productMessage.textContent =
+            "❌ Introduce el precio.";
+
+        return;
+    }
+
+    if(!imageFile){
+
+        productMessage.className =
+            "message error";
+
+        productMessage.textContent =
+            "❌ Selecciona una foto.";
 
         return;
     }
@@ -627,14 +520,16 @@ document
 
     /* SESIÓN */
 
-    const {data:sesionData} =
-    await cliente.auth.getSession();
+    const {data:sessionData} =
+        await supabaseClient.auth.getSession();
 
+    if(!sessionData.session){
 
-    if(!sesionData.session){
+        productMessage.className =
+            "message error";
 
-        mensajeProducto.textContent =
-        "❌ Tu sesión ha caducado. Vuelve a entrar.";
+        productMessage.textContent =
+            "❌ Tu sesión ha caducado. Vuelve a iniciar sesión.";
 
         return;
     }
@@ -642,195 +537,204 @@ document
 
     try{
 
-        /* ================================
-           SUBIR FOTO
-        ================================= */
+        /* =============================================
+           SUBIR IMAGEN
+        ============================================= */
 
-        mensajeProducto.textContent =
-        "📤 Subiendo imagen...";
+        productMessage.textContent =
+            "📤 Subiendo imagen...";
 
 
         const extension =
-        archivoImagen.name
-        .split(".")
-        .pop()
-        .toLowerCase();
+            imageFile.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+        const fileName =
+            Date.now()
+            + "-"
+            + Math.random()
+                .toString(36)
+                .substring(2)
+            + "."
+            + extension;
+
+        const filePath =
+            "productos/" + fileName;
 
 
-        const nombreArchivo =
-        Date.now()
-        + "-"
-        + Math.random()
-        .toString(36)
-        .substring(2)
-        + "."
-        + extension;
+        const upload =
+            await supabaseClient
+            .storage
+            .from("product-images")
+            .upload(
+                filePath,
+                imageFile,
+                {
+                    cacheControl:"3600",
+                    upsert:false,
+                    contentType:imageFile.type
+                }
+            );
 
 
-        const ruta =
-        "productos/"+nombreArchivo;
+        if(upload.error){
 
+            throw new Error(
+                "Error al subir la imagen: "
+                + upload.error.message
+            );
 
-        const subida =
-        await cliente
-        .storage
-        .from("product-images")
-        .upload(
-            ruta,
-            archivoImagen,
-            {
-                cacheControl:"3600",
-                upsert:false,
-                contentType:archivoImagen.type
-            }
-        );
-
-
-        if(subida.error){
-
-            mensajeProducto.textContent =
-            "❌ Error al subir la foto: "
-            +subida.error.message;
-
-            return;
         }
 
 
-        /* ================================
-           URL PÚBLICA
-        ================================= */
+        /* =============================================
+           URL DE IMAGEN
+        ============================================= */
 
         const publicUrl =
-        cliente
-        .storage
-        .from("product-images")
-        .getPublicUrl(ruta)
-        .data
-        .publicUrl;
+            supabaseClient
+            .storage
+            .from("product-images")
+            .getPublicUrl(filePath);
 
 
-        /* ================================
-           GUARDAR EN PRODUCTS
-        ================================= */
-
-        mensajeProducto.textContent =
-        "💾 Guardando producto en Supabase...";
+        const imageUrl =
+            publicUrl.data.publicUrl;
 
 
-        const resultado =
-  await cliente
-    .from("products")
-    .insert([
-      {
-        name: nombre,
-        price:
-          precio === ""
-            ? null
-            : Number(precio),
-        description: descripcion,
-        image_url: imageUrl,
-        sizes: tallas
-      }
-    ]);
-        .select();
+        /* =============================================
+           GUARDAR PRODUCTO
+        ============================================= */
+
+        productMessage.textContent =
+            "💾 Publicando producto...";
+
+
+        const {data,error} =
+            await supabaseClient
+            .from("products")
+            .insert({
+
+                name:name,
+
+                price:Number(priceValue),
+
+                description:description,
+
+                image_url:imageUrl,
+
+                sizes:sizes,
+
+                category:category,
+
+                is_new:isNew,
+
+                is_sale:isSale,
+
+                old_price:
+                    oldPriceValue === ""
+                    ? null
+                    : Number(oldPriceValue),
+
+                stock:
+                    stockValue === ""
+                    ? 0
+                    : Number(stockValue),
+
+                sold_out:
+                    stockValue !== ""
+                    ? Number(stockValue) <= 0
+                    : false
+
+            })
+            .select()
+            .single();
 
 
         if(error){
 
-            console.error(error);
+            throw new Error(
+                "Error al guardar producto: "
+                + error.message
+            );
 
-            mensajeProducto.textContent =
-            "❌ Error al guardar en products: "
-            +error.message;
-
-            return;
         }
 
 
-        /* ================================
+        /* =============================================
            ÉXITO
-        ================================= */
+        ============================================= */
 
         console.log(
-            "Producto guardado:",
+            "Producto publicado:",
             data
         );
 
 
-        mensajeProducto.textContent =
-        "✅ PRODUCTO PUBLICADO CORRECTAMENTE.";
+        productMessage.className =
+            "message success";
+
+        productMessage.textContent =
+            "✅ PRODUCTO PUBLICADO CORRECTAMENTE. Ya está guardado en Supabase.";
 
 
         /* LIMPIAR */
 
-        document
-        .getElementById("nombre")
-        .value="";
+        document.getElementById("name").value="";
+        document.getElementById("price").value="";
+        document.getElementById("old_price").value="";
+        document.getElementById("description").value="";
+        document.getElementById("sizes").value="";
+        document.getElementById("stock").value="1";
 
-        document
-        .getElementById("precio")
-        .value="";
+        document.getElementById("is_new").checked=false;
+        document.getElementById("is_sale").checked=false;
 
-        document
-        .getElementById("precioAnterior")
-        .value="";
+        imageInput.value="";
 
-        document
-        .getElementById("descripcion")
-        .value="";
-
-        document
-        .getElementById("imagen")
-        .value="";
-
-        document
-        .getElementById("tallas")
-        .value="";
-
-        document
-        .getElementById("stock")
-        .value="1";
-
-        document
-        .getElementById("esNuevo")
-        .value="false";
-
-        document
-        .getElementById("esOferta")
-        .value="false";
-
-        vistaPrevia.src="";
-
-        vistaPrevia.style.display="none";
+        preview.src="";
+        preview.style.display="none";
 
 
     }catch(error){
 
         console.error(error);
 
-        mensajeProducto.textContent =
-        "❌ Error: "+error.message;
+        productMessage.className =
+            "message error";
+
+        productMessage.textContent =
+            "❌ " + error.message;
 
     }
 
 });
 
 
-/* =========================================
-   CERRAR SESIÓN
-========================================= */
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 document
-.getElementById("salir")
-.addEventListener("click",async function(){
+.getElementById("logoutBtn")
+.addEventListener("click",async()=>{
 
-    await cliente.auth.signOut();
+    await supabaseClient.auth.signOut();
 
     location.reload();
 
 });
 
+
+/* =========================================================
+   INICIAR
+========================================================= */
+
+checkSession();
+
 </script>
 
 </body>
-  </html>
+    </html>
