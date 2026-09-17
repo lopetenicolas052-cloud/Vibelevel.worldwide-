@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000000">
 
 <title>VIBELEVEL WORLDWIDE</title>
@@ -34,14 +34,14 @@ button{
     cursor:pointer;
 }
 
-/* ================= HEADER ================= */
+/* HEADER */
 
 header{
     position:sticky;
     top:0;
     z-index:1000;
     height:70px;
-    background:rgba(0,0,0,.97);
+    background:rgba(0,0,0,.96);
     border-bottom:1px solid #222;
     display:flex;
     align-items:center;
@@ -57,35 +57,26 @@ header{
     letter-spacing:3px;
 }
 
-.header-right{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.icon-btn{
+.cart-button{
     position:relative;
+    width:44px;
+    height:44px;
+    border-radius:50%;
     border:1px solid #333;
     background:#111;
     color:#fff;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:19px;
+    font-size:20px;
 }
 
 .cart-count{
     position:absolute;
-    top:-6px;
-    right:-6px;
-    background:#fff;
-    color:#000;
+    right:-4px;
+    top:-4px;
     min-width:19px;
     height:19px;
     border-radius:50%;
+    background:#fff;
+    color:#000;
     font-size:10px;
     font-weight:bold;
     display:flex;
@@ -93,7 +84,7 @@ header{
     justify-content:center;
 }
 
-/* ================= HERO ================= */
+/* HERO */
 
 .hero{
     min-height:390px;
@@ -102,47 +93,45 @@ header{
     justify-content:center;
     text-align:center;
     padding:60px 20px;
-    border-bottom:1px solid #1c1c1c;
     background:
-        radial-gradient(circle at center,#181818 0%,#090909 40%,#000 75%);
+        radial-gradient(circle at center,#191919 0%,#090909 42%,#000 78%);
+    border-bottom:1px solid #1d1d1d;
 }
 
 .hero h1{
     font-size:clamp(42px,10vw,90px);
-    font-weight:1000;
+    font-weight:900;
     letter-spacing:7px;
     line-height:.95;
 }
 
 .hero p{
     margin-top:20px;
-    color:#aaa;
-    font-size:13px;
+    color:#999;
+    font-size:12px;
     letter-spacing:3px;
 }
 
-/* ================= CONTROLS ================= */
+/* CONTROLES */
 
 .controls{
-    padding:25px 18px;
     max-width:1300px;
     margin:auto;
+    padding:25px 18px 15px;
 }
 
 .controls-top{
     display:flex;
     gap:10px;
-    margin-bottom:15px;
 }
 
 .search{
     flex:1;
     background:#111;
-    border:1px solid #333;
     color:#fff;
-    padding:14px 16px;
+    border:1px solid #333;
+    padding:14px;
     outline:none;
-    border-radius:4px;
 }
 
 .refresh{
@@ -150,7 +139,6 @@ header{
     color:#000;
     border:0;
     padding:0 18px;
-    border-radius:4px;
     font-weight:bold;
 }
 
@@ -158,7 +146,7 @@ header{
     display:flex;
     gap:8px;
     overflow-x:auto;
-    padding-bottom:5px;
+    padding:15px 0 5px;
 }
 
 .category{
@@ -175,7 +163,7 @@ header{
     color:#000;
 }
 
-/* ================= COLLECTION ================= */
+/* COLLECTION */
 
 .collection{
     max-width:1300px;
@@ -185,8 +173,8 @@ header{
 
 .section-title{
     display:flex;
-    align-items:end;
     justify-content:space-between;
+    align-items:end;
     margin-bottom:20px;
 }
 
@@ -197,10 +185,8 @@ header{
 
 .section-title span{
     color:#777;
-    font-size:13px;
+    font-size:12px;
 }
-
-/* ================= PRODUCTS ================= */
 
 .products{
     display:grid;
@@ -208,24 +194,31 @@ header{
     gap:16px;
 }
 
+@media(max-width:950px){
+    .products{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:650px){
+    .products{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+}
+
+/* PRODUCT */
+
 .product{
     background:#0d0d0d;
     border:1px solid #1d1d1d;
     overflow:hidden;
-    position:relative;
-    transition:.2s;
-}
-
-.product:hover{
-    border-color:#444;
-    transform:translateY(-2px);
 }
 
 .product-image{
     aspect-ratio:3/4;
     background:#151515;
     position:relative;
-    overflow:hidden;
 }
 
 .product-image img{
@@ -260,7 +253,7 @@ header{
 }
 
 .badge.sold{
-    background:#777;
+    background:#666;
     color:#fff;
 }
 
@@ -281,14 +274,20 @@ header{
     margin-bottom:8px;
 }
 
+.description{
+    color:#888;
+    font-size:11px;
+    line-height:1.4;
+    margin-bottom:8px;
+}
+
 .prices{
     display:flex;
-    align-items:center;
     gap:8px;
+    align-items:center;
 }
 
 .price{
-    font-size:15px;
     font-weight:bold;
 }
 
@@ -300,54 +299,38 @@ header{
 
 .sizes{
     display:flex;
+    flex-wrap:wrap;
     gap:4px;
     margin-top:10px;
-    flex-wrap:wrap;
 }
 
 .size{
     border:1px solid #333;
-    padding:4px 6px;
     color:#aaa;
+    padding:4px 6px;
     font-size:9px;
 }
 
 .add{
     width:100%;
     margin-top:12px;
-    border:1px solid #fff;
+    padding:10px;
     background:#fff;
     color:#000;
-    padding:10px;
+    border:1px solid #fff;
     font-size:11px;
     font-weight:bold;
-    letter-spacing:1px;
-}
-
-.add:hover{
-    background:#000;
-    color:#fff;
 }
 
 .add:disabled{
     background:#222;
     color:#666;
     border-color:#222;
-    cursor:not-allowed;
 }
 
-/* ================= STATES ================= */
+/* ESTADOS */
 
-.loading{
-    grid-column:1/-1;
-    min-height:200px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#777;
-    letter-spacing:2px;
-}
-
+.loading,
 .empty{
     grid-column:1/-1;
     text-align:center;
@@ -358,19 +341,19 @@ header{
 .error{
     grid-column:1/-1;
     padding:25px;
-    border:1px solid #662222;
     background:#160909;
+    border:1px solid #662222;
     color:#ff9999;
     line-height:1.6;
 }
 
-/* ================= CART ================= */
+/* CART */
 
 .cart-overlay{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.7);
     z-index:2000;
+    background:rgba(0,0,0,.75);
     display:none;
 }
 
@@ -382,8 +365,8 @@ header{
     position:absolute;
     right:0;
     top:0;
-    height:100%;
     width:min(430px,100%);
+    height:100%;
     background:#0b0b0b;
     border-left:1px solid #333;
     display:flex;
@@ -407,19 +390,13 @@ header{
     background:none;
     border:0;
     color:#fff;
-    font-size:25px;
+    font-size:26px;
 }
 
 .cart-items{
     flex:1;
     overflow-y:auto;
     padding:15px;
-}
-
-.cart-empty{
-    text-align:center;
-    color:#777;
-    padding:60px 20px;
 }
 
 .cart-item{
@@ -433,7 +410,6 @@ header{
     width:70px;
     height:85px;
     object-fit:cover;
-    background:#151515;
 }
 
 .cart-item-info{
@@ -466,8 +442,8 @@ header{
     width:25px;
     height:25px;
     background:#171717;
-    border:1px solid #333;
     color:#fff;
+    border:1px solid #333;
 }
 
 .remove{
@@ -475,6 +451,7 @@ header{
     border:0;
     color:#777;
     font-size:11px;
+    margin-top:5px;
 }
 
 .cart-bottom{
@@ -508,17 +485,16 @@ header{
     color:#000;
     border:0;
     font-weight:bold;
-    letter-spacing:1px;
 }
 
-/* ================= CHECKOUT ================= */
+/* CHECKOUT */
 
 .checkout-form{
-    display:none;
     position:fixed;
-    z-index:3000;
     inset:0;
-    background:rgba(0,0,0,.8);
+    z-index:3000;
+    background:rgba(0,0,0,.85);
+    display:none;
     align-items:center;
     justify-content:center;
     padding:15px;
@@ -572,27 +548,26 @@ header{
 .form-buttons{
     display:flex;
     gap:10px;
-    margin-top:18px;
 }
 
 .cancel{
     flex:1;
+    padding:13px;
     background:#111;
     color:#fff;
     border:1px solid #333;
-    padding:13px;
 }
 
 .whatsapp{
     flex:2;
+    padding:13px;
     background:#fff;
     color:#000;
     border:0;
-    padding:13px;
     font-weight:bold;
 }
 
-/* ================= FOOTER ================= */
+/* FOOTER */
 
 footer{
     border-top:1px solid #222;
@@ -602,34 +577,6 @@ footer{
     font-size:11px;
     letter-spacing:2px;
 }
-
-/* ================= MOBILE ================= */
-
-@media(max-width:950px){
-    .products{
-        grid-template-columns:repeat(3,1fr);
-    }
-}
-
-@media(max-width:650px){
-    .products{
-        grid-template-columns:repeat(2,1fr);
-        gap:10px;
-    }
-
-    .product-name{
-        font-size:13px;
-    }
-
-    .price{
-        font-size:13px;
-    }
-
-    .collection{
-        padding-left:10px;
-        padding-right:10px;
-    }
-}
 </style>
 </head>
 
@@ -637,318 +584,231 @@ footer{
 
 <header>
 
-<a href="#" class="logo">
-VIBELEVEL
-</a>
+    <a href="#" class="logo">VIBELEVEL</a>
 
-<div class="header-right">
-
-<button class="icon-btn" onclick="openCart()">
-🛒
-<span class="cart-count" id="cartCount">0</span>
-</button>
-
-</div>
+    <button class="cart-button" onclick="openCart()">
+        🛒
+        <span id="cartCount" class="cart-count">0</span>
+    </button>
 
 </header>
 
 
 <section class="hero">
 
-<div>
-
-<h1>VIBELEVEL</h1>
-
-<p>
-WORLDWIDE STREETWEAR
-</p>
-
-</div>
+    <div>
+        <h1>VIBELEVEL</h1>
+        <p>WORLDWIDE STREETWEAR</p>
+    </div>
 
 </section>
 
 
 <section class="controls">
 
-<div class="controls-top">
+    <div class="controls-top">
 
-<input
-id="search"
-class="search"
-type="text"
-placeholder="Buscar producto..."
-oninput="renderProducts()"
->
+        <input
+            id="search"
+            class="search"
+            type="text"
+            placeholder="Buscar producto..."
+            oninput="renderProducts()"
+        >
 
-<button
-class="refresh"
-onclick="loadProducts()"
->
-↻
-</button>
+        <button
+            class="refresh"
+            onclick="loadProducts()"
+        >
+            ↻
+        </button>
 
-</div>
+    </div>
 
-
-<div
-class="categories"
-id="categories"
->
-
-<button
-class="category active"
-onclick="setCategory('ALL',this)"
->
-TODOS
-</button>
-
-</div>
+    <div
+        id="categories"
+        class="categories"
+    ></div>
 
 </section>
 
 
 <main class="collection">
 
-<div class="section-title">
+    <div class="section-title">
 
-<h2>
-COLECCIÓN
-</h2>
+        <h2>COLECCIÓN</h2>
 
-<span id="productCount">
-0 productos
-</span>
+        <span id="productCount">
+            0 productos
+        </span>
 
-</div>
+    </div>
 
-
-<div
-class="products"
-id="products"
->
-
-<div class="loading">
-CARGANDO PRODUCTOS...
-</div>
-
-</div>
+    <div
+        id="products"
+        class="products"
+    >
+        <div class="loading">
+            CARGANDO PRODUCTOS...
+        </div>
+    </div>
 
 </main>
 
 
 <footer>
-VIBELEVEL WORLDWIDE · STREETWEAR
+    VIBELEVEL WORLDWIDE · STREETWEAR
 </footer>
 
 
-<!-- ================= CART ================= -->
+<!-- CARRITO -->
 
 <div
-class="cart-overlay"
-id="cartOverlay"
-onclick="closeCartOutside(event)"
+    id="cartOverlay"
+    class="cart-overlay"
+    onclick="closeCartOutside(event)"
 >
 
-<aside class="cart">
+    <aside class="cart">
 
-<div class="cart-header">
+        <div class="cart-header">
 
-<h3>
-MI CARRITO
-</h3>
+            <h3>MI CARRITO</h3>
 
-<button
-class="close"
-onclick="closeCart()"
->
-×
-</button>
+            <button
+                class="close"
+                onclick="closeCart()"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div
+            id="cartItems"
+            class="cart-items"
+        ></div>
+
+        <div class="cart-bottom">
+
+            <div class="total-row">
+                <span>Subtotal</span>
+                <strong id="subtotal">0 XAF</strong>
+            </div>
+
+            <div class="total-row shipping">
+                <span>Envío</span>
+                <strong id="shipping">0 XAF</strong>
+            </div>
+
+            <div class="total-row final">
+                <span>TOTAL</span>
+                <strong id="total">0 XAF</strong>
+            </div>
+
+            <button
+                class="checkout"
+                onclick="openCheckout()"
+            >
+                FINALIZAR COMPRA
+            </button>
+
+        </div>
+
+    </aside>
 
 </div>
 
+
+<!-- CHECKOUT -->
 
 <div
-class="cart-items"
-id="cartItems"
->
-</div>
-
-
-<div class="cart-bottom">
-
-<div class="total-row">
-
-<span>
-Subtotal
-</span>
-
-<strong id="subtotal">
-0 XAF
-</strong>
-
-</div>
-
-
-<div class="total-row shipping">
-
-<span>
-Envío
-</span>
-
-<strong id="shipping">
-0 XAF
-</strong>
-
-</div>
-
-
-<div class="total-row final">
-
-<span>
-TOTAL
-</span>
-
-<strong id="total">
-0 XAF
-</strong>
-
-</div>
-
-
-<button
-class="checkout"
-onclick="openCheckout()"
->
-FINALIZAR COMPRA
-</button>
-
-</div>
-
-</aside>
-
-</div>
-
-
-<!-- ================= CHECKOUT ================= -->
-
-<div
-class="checkout-form"
-id="checkoutForm"
+    id="checkoutForm"
+    class="checkout-form"
 >
 
-<div class="checkout-box">
+    <div class="checkout-box">
 
-<h2>
-FINALIZAR PEDIDO
-</h2>
+        <h2>FINALIZAR PEDIDO</h2>
 
+        <div class="field">
+            <label>Nombre</label>
+            <input
+                id="customerName"
+                type="text"
+                placeholder="Tu nombre"
+            >
+        </div>
 
-<div class="field">
+        <div class="field">
+            <label>Teléfono</label>
+            <input
+                id="customerPhone"
+                type="tel"
+                placeholder="Tu número"
+            >
+        </div>
 
-<label>
-Nombre
-</label>
+        <div class="field">
+            <label>Dirección</label>
+            <textarea
+                id="customerAddress"
+                placeholder="Dirección de entrega"
+            ></textarea>
+        </div>
 
-<input
-id="customerName"
-type="text"
-placeholder="Tu nombre"
->
+        <div class="field">
+            <label>Método de envío</label>
 
-</div>
+            <select
+                id="shippingMethod"
+                onchange="updateCart()"
+            >
+                <option value="0">
+                    Recogida / acordar
+                </option>
 
+                <option value="2000">
+                    Envío local — 2.000 XAF
+                </option>
 
-<div class="field">
+                <option value="5000">
+                    Envío — 5.000 XAF
+                </option>
+            </select>
 
-<label>
-Teléfono
-</label>
+        </div>
 
-<input
-id="customerPhone"
-type="tel"
-placeholder="Tu número"
->
+        <div class="field">
+            <label>Notas</label>
 
-</div>
+            <textarea
+                id="orderNotes"
+                placeholder="Talla, color u otra información"
+            ></textarea>
 
+        </div>
 
-<div class="field">
+        <div class="form-buttons">
 
-<label>
-Dirección
-</label>
+            <button
+                class="cancel"
+                onclick="closeCheckout()"
+            >
+                CANCELAR
+            </button>
 
-<textarea
-id="customerAddress"
-placeholder="Dirección de entrega"
-></textarea>
+            <button
+                class="whatsapp"
+                onclick="finishOrder()"
+            >
+                PEDIR POR WHATSAPP
+            </button>
 
-</div>
+        </div>
 
-
-<div class="field">
-
-<label>
-Método de envío
-</label>
-
-<select
-id="shippingMethod"
-onchange="updateCart()"
->
-
-<option value="0">
-Recogida / acordar
-</option>
-
-<option value="2000">
-Envío local — 2.000 XAF
-</option>
-
-<option value="5000">
-Envío — 5.000 XAF
-</option>
-
-</select>
-
-</div>
-
-
-<div class="field">
-
-<label>
-Notas
-</label>
-
-<textarea
-id="orderNotes"
-placeholder="Talla, color u otra información"
-></textarea>
-
-</div>
-
-
-<div class="form-buttons">
-
-<button
-class="cancel"
-onclick="closeCheckout()"
->
-CANCELAR
-</button>
-
-
-<button
-class="whatsapp"
-onclick="finishOrder()"
->
-PEDIR POR WHATSAPP
-</button>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
@@ -980,44 +840,8 @@ const WHATSAPP =
 "240555626619";
 
 let allProducts = [];
-
 let cart = [];
-
 let currentCategory = "ALL";
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHtml(value){
-
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-}
-
-
-function escapeAttribute(value){
-
-    return escapeHtml(value)
-        .replace(/`/g,"&#096;");
-}
-
-
-/* =========================================================
-   PRECIO
-========================================================= */
-
-function formatPrice(value){
-
-    return Number(value || 0)
-        .toLocaleString("es-ES")
-        + " XAF";
-}
 
 
 /* =========================================================
@@ -1037,10 +861,12 @@ async function loadProducts(){
 
     try{
 
-        const response =
+        const result =
             await db
             .from("products")
-            .select("*")
+            .select(
+                "id,name,description,category,price,old_price,image_url,sizes,stock,sold_out,is_new,is_sale,created_at"
+            )
             .order(
                 "created_at",
                 {
@@ -1049,24 +875,21 @@ async function loadProducts(){
             );
 
 
-        if(response.error){
+        if(result.error){
 
             console.error(
-                "Supabase:",
-                response.error
+                "SUPABASE ERROR:",
+                result.error
             );
 
             container.innerHTML = `
                 <div class="error">
-                    <strong>
-                    No se pudieron cargar los productos.
-                    </strong>
-
+                    <strong>ERROR AL CARGAR PRODUCTOS</strong>
                     <br><br>
-
-                    ${escapeHtml(
-                        response.error.message
-                    )}
+                    ${escapeHtml(result.error.message)}
+                    <br><br>
+                    Código:
+                    ${escapeHtml(result.error.code || "")}
                 </div>
             `;
 
@@ -1075,8 +898,7 @@ async function loadProducts(){
 
 
         allProducts =
-            response.data || [];
-
+            result.data || [];
 
         buildCategories();
 
@@ -1089,7 +911,7 @@ async function loadProducts(){
 
         container.innerHTML = `
             <div class="error">
-                Error de conexión con Supabase.
+                <strong>ERROR DE CONEXIÓN</strong>
                 <br><br>
                 ${escapeHtml(error.message)}
             </div>
@@ -1107,44 +929,29 @@ async function loadProducts(){
 function buildCategories(){
 
     const box =
-        document.getElementById(
-            "categories"
-        );
-
+        document.getElementById("categories");
 
     const categories = [
         ...new Set(
             allProducts
-            .map(
-                product =>
-                    product.category
-            )
+            .map(product => product.category)
             .filter(Boolean)
         )
     ];
 
-
     box.innerHTML = `
         <button
-            class="category ${
-                currentCategory === "ALL"
-                ? "active"
-                : ""
-            }"
+            class="category ${currentCategory === "ALL" ? "active" : ""}"
             onclick="setCategory('ALL',this)"
         >
             TODOS
         </button>
     `;
 
-
     categories.forEach(category => {
 
         const button =
-            document.createElement(
-                "button"
-            );
-
+            document.createElement("button");
 
         button.className =
             "category " +
@@ -1154,22 +961,14 @@ function buildCategories(){
                 : ""
             );
 
-
         button.textContent =
-            String(category)
-            .toUpperCase();
-
+            String(category).toUpperCase();
 
         button.onclick =
-            function(){
-
-                setCategory(
-                    category,
-                    button
-                );
-
-            };
-
+            () => setCategory(
+                category,
+                button
+            );
 
         box.appendChild(button);
 
@@ -1178,35 +977,18 @@ function buildCategories(){
 }
 
 
-/* =========================================================
-   CATEGORÍA
-========================================================= */
-
-function setCategory(
-    category,
-    button
-){
+function setCategory(category,button){
 
     currentCategory =
         category;
 
-
     document
-    .querySelectorAll(".category")
-    .forEach(
-        b =>
-            b.classList.remove(
-                "active"
-            )
-    );
-
-
-    if(button){
-        button.classList.add(
-            "active"
+        .querySelectorAll(".category")
+        .forEach(button =>
+            button.classList.remove("active")
         );
-    }
 
+    button.classList.add("active");
 
     renderProducts();
 
@@ -1214,16 +996,13 @@ function setCategory(
 
 
 /* =========================================================
-   RENDER PRODUCTS
+   MOSTRAR PRODUCTOS
 ========================================================= */
 
 function renderProducts(){
 
     const container =
-        document.getElementById(
-            "products"
-        );
-
+        document.getElementById("products");
 
     const search =
         document
@@ -1234,59 +1013,43 @@ function renderProducts(){
 
 
     const products =
-        allProducts.filter(
-            product => {
+        allProducts.filter(product => {
 
-                const name =
-                    String(
-                        product.name || ""
-                    ).toLowerCase();
+            const name =
+                String(product.name || "")
+                .toLowerCase();
 
+            const description =
+                String(product.description || "")
+                .toLowerCase();
 
-                const description =
-                    String(
-                        product.description || ""
-                    ).toLowerCase();
-
-
-                const category =
-                    String(
-                        product.category || ""
-                    );
+            const category =
+                String(product.category || "")
+                .toLowerCase();
 
 
-                const categoryOK =
-                    currentCategory === "ALL" ||
-                    category === currentCategory;
+            const categoryOK =
+                currentCategory === "ALL" ||
+                String(product.category || "") ===
+                currentCategory;
 
 
-                const searchOK =
-                    !search ||
-                    name.includes(search) ||
-                    description.includes(search) ||
-                    category
-                    .toLowerCase()
-                    .includes(search);
+            const searchOK =
+                !search ||
+                name.includes(search) ||
+                description.includes(search) ||
+                category.includes(search);
 
 
-                return (
-                    categoryOK &&
-                    searchOK
-                );
+            return categoryOK && searchOK;
 
-            }
-        );
+        });
 
 
     document
-    .getElementById("productCount")
-    .textContent =
-        products.length +
-        (
-            products.length === 1
-            ? " producto"
-            : " productos"
-        );
+        .getElementById("productCount")
+        .textContent =
+        `${products.length} producto${products.length === 1 ? "" : "s"}`;
 
 
     if(!products.length){
@@ -1303,75 +1066,100 @@ function renderProducts(){
 
     container.innerHTML =
         products
-        .map(
-            product =>
-                productCard(product)
-        )
+        .map(product => productCard(product))
         .join("");
 
 }
 
 
 /* =========================================================
-   PRODUCT CARD
+   TARJETA
 ========================================================= */
 
 function productCard(product){
 
-    const id =
-        product.id;
-
-
-    const name =
-        product.name ||
-        "Producto";
-
-
-    const category =
-        product.category ||
-        "";
-
-
     const price =
-        Number(
-            product.price || 0
-        );
-
+        Number(product.price || 0);
 
     const oldPrice =
-        Number(
-            product.old_price || 0
-        );
-
+        Number(product.old_price || 0);
 
     const stock =
-        Number(
-            product.stock || 0
-        );
-
+        Number(product.stock || 0);
 
     const soldOut =
         product.sold_out === true ||
         stock <= 0;
 
 
-    const image =
-        product.image_url ||
-        "";
-
-
     let sizes = [];
-
 
     if(Array.isArray(product.sizes)){
 
         sizes =
             product.sizes;
 
-    }else if(
-        typeof product.sizes === "string"
-    ){
+    }else if(typeof product.sizes === "string"){
 
         sizes =
             product.sizes
-  
+            .split(",")
+            .map(size => size.trim())
+            .filter(Boolean);
+
+    }
+
+
+    const image =
+        product.image_url ||
+        "https://via.placeholder.com/700x900/111111/ffffff?text=VIBELEVEL";
+
+
+    return `
+
+        <article class="product">
+
+            <div class="product-image">
+
+                <img
+                    src="${escapeAttribute(image)}"
+                    alt="${escapeAttribute(product.name || "VibeLevel")}"
+                    loading="lazy"
+                    onerror="this.onerror=null;this.src='https://via.placeholder.com/700x900/111111/ffffff?text=VIBELEVEL'"
+                >
+
+                <div class="badges">
+
+                    ${
+                        product.is_new
+                        ? `<span class="badge">NEW</span>`
+                        : ""
+                    }
+
+                    ${
+                        product.is_sale
+                        ? `<span class="badge sale">SALE</span>`
+                        : ""
+                    }
+
+                    ${
+                        soldOut
+                        ? `<span class="badge sold">SOLD OUT</span>`
+                        : ""
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="product-info">
+
+                <div class="product-category">
+                    ${escapeHtml(product.category || "")}
+                </div>
+
+                <div class="product-name">
+                    ${escapeHtml(product.name || "Producto")}
+    </div>
+    
