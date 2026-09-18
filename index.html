@@ -154,7 +154,80 @@ footer{border-top:1px solid #222;margin-top:50px;padding:40px 20px;text-align:ce
 <input id="customerPhone" placeholder="Teléfono">
 <textarea id="customerAddress" placeholder="Dirección / lugar de entrega"></textarea>
 </div>
-<button class="buy" onclick="checkoutWhatsApp()">COMPRAR POR WHATSAPP</button>
+<button class="buy" onclick="checkoutWhatsApp()">COMPRAR POR WHATSAPP</button><!-- =========================
+     CHECKOUT / PAGO
+========================= -->
+
+<div id="paymentCheckout" style="display:none;margin-top:20px;border-top:1px solid #333;padding-top:20px">
+
+<h3>FINALIZAR PEDIDO</h3>
+
+<p style="color:#888;font-size:12px">
+Completa tus datos y selecciona el método de pago.
+</p>
+
+<div class="form">
+
+<input id="checkoutName" placeholder="Nombre completo">
+
+<input id="checkoutPhone" placeholder="Teléfono">
+
+<textarea id="checkoutAddress" placeholder="Dirección / lugar de entrega"></textarea>
+
+<select id="paymentMethod" onchange="showPaymentInfo()">
+
+<option value="">Selecciona método de pago</option>
+
+<option value="BANGE">BANGE</option>
+
+<option value="MUNI_DINERO">MUNI DINERO</option>
+
+</select>
+
+</div>
+
+<div
+id="paymentInfo"
+style="
+display:none;
+margin-top:15px;
+padding:15px;
+background:#080808;
+border:1px solid #333;
+font-size:13px;
+line-height:1.7
+">
+</div>
+
+<div class="form">
+
+<input
+id="paymentReference"
+placeholder="Número / referencia de la transferencia"
+>
+
+<label style="font-size:11px;color:#aaa">
+FOTO DEL COMPROBANTE DE PAGO
+</label>
+
+<input
+id="paymentProof"
+type="file"
+accept="image/*"
+>
+
+</div>
+
+<button
+class="buy"
+onclick="submitOrder()"
+>
+CONFIRMAR PEDIDO Y ENVIAR COMPROBANTE
+</button>
+
+<div id="orderMessage"></div>
+
+  </div>
 </div>
 </div>
 </div>
@@ -355,7 +428,454 @@ window.addEventListener("storage",()=>{cart=JSON.parse(localStorage.getItem("vib
 updateCartCount();
 loadReviews();
 loadProducts();
+/* =========================
+   SISTEMA DE PEDIDOS Y PAGOS
+========================= */
 
+function showPaymentInfo(){
+
+const method=
+document.getElementById("paymentMethod").value;
+
+const box=
+document.getElementById("paymentInfo");
+
+if(!method){
+
+box.style.display="none";
+box.innerHTML="";
+return;
+
+}
+
+box.style.display="block";
+
+if(method==="BANGE"){
+
+box.innerHTML=`
+
+<strong>🏦 PAGO POR BANGE</strong>
+
+<br>
+
+<strong>Número de cuenta:</strong>
+38816123501-21
+
+<br>
+
+<strong>Titular:</strong>
+Nicolás Salvador Lopete Sima
+
+<br><br>
+
+Realiza el pago y después introduce la referencia
+y sube una foto del comprobante.
+
+`;
+
+}
+
+if(method==="MUNI_DINERO"){
+
+box.innerHTML=`
+
+<strong>📱 PAGO POR MUNI DINERO</strong>
+
+<br>
+
+<strong>Teléfono:</strong>
++240 555626619
+
+<br>
+
+<strong>Titular:</strong>
+Nicolás Salvador Lopete Sima
+
+<br><br>
+
+Realiza el pago y después introduce la referencia
+y sube una foto del comprobante.
+
+`;
+
+}
+
+}
+
+
+/* =========================
+   CREAR PEDIDO
+========================= */
+
+async function submitOrder(){
+
+if(!cart.length){
+
+alert("El carrito está vacío.");
+
+return;
+
+}
+
+const name=
+document.getElementById("checkoutName").value.trim();
+
+const phone=
+document.getElementById("checkoutPhone").value.trim();
+
+const address=
+document.getElementById("checkoutAddress").value.trim();
+
+const paymentMethod=
+document.getElementById("paymentMethod").value;
+
+const paymentReference=
+document.getElementById("paymentReference").value.trim();
+
+const proofFile=
+document.getElementById("paymentProof").files[0];
+
+const message=
+document.getElementById("orderMessage");
+
+
+if(!name||!phone||!address){
+
+message.className="message error";
+
+message.textContent=
+"❌ Completa nombre, teléfono y dirección.";
+
+return;
+
+}
+
+
+if(!paymentMethod){
+
+message.className="message error";
+
+message.textContent=
+"❌ Selecciona un método de pago.";
+
+return;
+
+}
+
+
+if(!paymentReference){
+
+message.className="message error";
+
+message.textContent=
+"❌ Introduce la referencia del pago.";
+
+return;
+
+}
+
+
+if(!proofFile){
+
+message.className="message error";
+
+message.textContent=
+"❌ Sube una foto del comprobante.";
+
+return;
+
+}
+
+
+message.className="message";
+
+message.textContent=
+"📦 Preparando pedido...";
+
+
+let subtotal=0;
+
+const orderItems=[];
+
+
+for(const item of cart){
+
+const product=
+products.find(
+p=>String(p.id)===String(item.id)
+);
+
+if(!product){
+
+message.className="message error";
+
+message.textContent=
+"❌ Uno de los productos ya no está disponible.";
+
+return;
+
+}
+
+
+const lineTotal=
+Number(product.price)*Number(item.qty);
+
+subtotal+=lineTotal;
+
+
+orderItems.push({
+
+product_id:String(product.id),
+
+product_name:product.name,
+
+quantity:Number(item.qty),
+
+size:item.size||"",
+
+unit_price:Number(product.price),
+
+line_total:lineTotal
+
+});
+
+}
+
+
+const shipping=
+Number(
+document.querySelector(
+'input[name="shipping"]:checked'
+)?.value||0
+);
+
+
+const total=
+subtotal+shipping;
+
+
+const orderNumber=
+"VL-"+Date.now();
+
+
+try{
+
+
+/* =========================
+   SUBIR COMPROBANTE
+========================= */
+
+message.textContent=
+"📤 Subiendo comprobante...";
+
+
+const extension=
+proofFile.name
+.split(".")
+.pop()
+.toLowerCase();
+
+
+const fileName=
+Date.now()+
+"-"+
+Math.random()
+.toString(36)
+.substring(2)+
+"."+
+extension;
+
+
+const filePath=
+"comprobantes/"+
+orderNumber+
+"-"+
+fileName;
+
+
+const upload=
+await db.storage
+.from("payment-proofs")
+.upload(
+filePath,
+proofFile,
+{
+cacheControl:"3600",
+upsert:false,
+contentType:proofFile.type
+}
+);
+
+
+if(upload.error){
+
+throw new Error(
+"Error al subir comprobante: "+
+upload.error.message
+);
+
+}
+
+
+/* =========================
+   GUARDAR PEDIDO
+========================= */
+
+message.textContent=
+"💾 Guardando pedido...";
+
+
+const {data:order,error:orderError}=
+await db
+.from("orders")
+.insert({
+
+order_number:orderNumber,
+
+customer_name:name,
+
+customer_phone:phone,
+
+customer_address:address,
+
+payment_method:paymentMethod,
+
+payment_reference:paymentReference,
+
+payment_proof_url:filePath,
+
+shipping_method:
+shipping===0
+?"LOCAL"
+:"DELIVERY",
+
+shipping_cost:shipping,
+
+subtotal:subtotal,
+
+total:total,
+
+payment_status:"PENDING",
+
+order_status:"NEW"
+
+})
+.select()
+.single();
+
+
+if(orderError){
+
+throw new Error(
+"Error al guardar pedido: "+
+orderError.message
+);
+
+}
+
+
+/* =========================
+   GUARDAR PRODUCTOS
+========================= */
+
+message.textContent=
+"🛍️ Guardando productos...";
+
+
+const itemsToInsert=
+orderItems.map(item=>({
+
+order_id:order.id,
+
+product_id:item.product_id,
+
+product_name:item.product_name,
+
+quantity:item.quantity,
+
+size:item.size,
+
+unit_price:item.unit_price,
+
+line_total:item.line_total
+
+}));
+
+
+const {error:itemsError}=
+await db
+.from("order_items")
+.insert(itemsToInsert);
+
+
+if(itemsError){
+
+throw new Error(
+"Error al guardar productos: "+
+itemsError.message
+);
+
+}
+
+
+/* =========================
+   ÉXITO
+========================= */
+
+message.className=
+"message success";
+
+message.innerHTML=
+`
+✅ <strong>PEDIDO RECIBIDO</strong>
+
+<br><br>
+
+Número de pedido:
+<strong>${escapeHtml(orderNumber)}</strong>
+
+<br><br>
+
+Tu pago queda
+<strong>PENDIENTE DE VERIFICACIÓN</strong>.
+
+<br>
+
+VibeLevel comprobará el ingreso
+antes de confirmar el pago.
+`;
+
+
+/* =========================
+   LIMPIAR
+========================= */
+
+cart=[];
+
+saveCart();
+
+document.getElementById("paymentReference").value="";
+
+document.getElementById("paymentProof").value="";
+
+document.getElementById("paymentMethod").value="";
+
+document.getElementById("paymentInfo").style.display="none";
+
+
+}catch(error){
+
+console.error(error);
+
+message.className=
+"message error";
+
+message.textContent=
+"❌ "+error.message;
+
+}
+
+  }
 setInterval(loadProducts,30000);
 </script>
 </body>
