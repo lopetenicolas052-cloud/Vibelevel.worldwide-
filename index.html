@@ -352,24 +352,77 @@ openCart();
 }
 
 function addToCart(id,size=""){
-const p=products.find(x=>String(x.id)===String(id));
-if(!p||p.sold_out||Number(p.stock)<=0){alert("Este producto está agotado.");return}
-if(!size&&p.sizes)size=String(p.sizes).split(",")[0].trim();
-const key=String(id)+"_"+size;
-const item=cart.find(x=>x.key===key);
-if(item)item.qty++;
-else cart.push({key,id:String(id),qty:1,size:size});
-saveCart();
+
+const p=
+products.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p||p.sold_out||Number(p.stock)<=0){
+
+alert("Este producto está agotado.");
+
+return;
+
 }
 
-function changeQty(key,n){
-const item=cart.find(x=>x.key===key);
-if(!item)return;
-item.qty+=n;
-if(item.qty<=0)cart=cart.filter(x=>x.key!==key);
-saveCart();
-updateCart();
+if(!size&&p.sizes){
+
+size=
+String(p.sizes)
+.split(",")[0]
+.trim();
+
 }
+
+const key=
+String(id)+"_"+size;
+
+const item=
+cart.find(
+x=>x.key===key
+);
+
+const stock=
+Number(p.stock||0);
+
+if(item){
+
+if(item.qty>=stock){
+
+alert(
+"Solo hay "+
+stock+
+" unidades disponibles de este producto."
+);
+
+return;
+
+}
+
+item.qty++;
+
+}else{
+
+cart.push({
+
+key:key,
+
+id:String(id),
+
+qty:1,
+
+size:size
+
+});
+
+}
+
+saveCart();
+
+updateCart();
+
+     }
 
 function removeItem(key){cart=cart.filter(x=>x.key!==key);saveCart();updateCart()}
 
