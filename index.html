@@ -843,10 +843,23 @@ line_total:item.line_total
 }));
 
 
-const {error:itemsError}=
-await db
+const {data:itemsData,error:itemsError}=await db
 .from("order_items")
-.insert(itemsToInsert);
+.insert(itemsToInsert)
+.select();
+
+console.log("ITEMS:",itemsToInsert);
+console.log("RESPUESTA:",itemsData);
+console.log("ERROR:",itemsError);
+
+if(itemsError){
+    throw new Error(
+        "Error al guardar productos: "+
+        itemsError.message+
+        " | Código: "+
+        (itemsError.code||"sin código")
+    );
+}
 
 
 if(itemsError){
