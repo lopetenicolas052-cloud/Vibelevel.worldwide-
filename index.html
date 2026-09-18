@@ -564,7 +564,26 @@ const total=sub+shipping;
 text+=`%0A%0ASubtotal: ${encodeURIComponent(money(sub))}%0AEnvío: ${encodeURIComponent(money(shipping))}%0A*TOTAL: ${encodeURIComponent(money(total))}*%0A%0ANombre: ${encodeURIComponent(name)}%0ATeléfono: ${encodeURIComponent(phone)}%0ADirección: ${encodeURIComponent(address)}`;
 window.open("https://wa.me/"+WHATSAPP+"?text="+text,"_blank");
 }
+function notifyAdminWhatsApp(orderNumber, name, phone, address, paymentMethod, paymentReference, items, subtotal, shipping, total){
+  let text = `VIBELEVEL - NUEVO PEDIDO PAGADO%0A%0A`;
+  text += `*Numero:* ${encodeURIComponent(orderNumber)}%0A`;
+  text += `*Cliente:* ${encodeURIComponent(name)}%0A`;
+  text += `*Telefono:* ${encodeURIComponent(phone)}%0A`;
+  text += `*Direccion:* ${encodeURIComponent(address)}%0A`;
+  text += `*Metodo:* ${encodeURIComponent(paymentMethod)}%0A`;
+  text += `*Referencia:* ${encodeURIComponent(paymentReference)}%0A%0A`;
+  text += `*PRODUCTOS:*%0A`;
+  
+  items.forEach(item => {
+    text += `• ${encodeURIComponent(item.product_name)} - Talla: ${encodeURIComponent(item.size)} - x${item.quantity} - ${encodeURIComponent(money(item.line_total))}%0A`;
+  });
+  
+  text += `%0ASubtotal: ${encodeURIComponent(money(subtotal))}%0A`;
+  text += `Envio: ${encodeURIComponent(money(shipping))}%0A`;
+  text += `*TOTAL PAGADO: ${encodeURIComponent(money(total))}*`;
 
+  window.open("https://wa.me/"+WHATSAPP+"?text="+text, "_blank");
+     }
 function rateProduct(n){
 selectedRating=n;
 document.querySelectorAll("#detailStars .star").forEach((s,i)=>s.classList.toggle("active",i<n));
@@ -1026,6 +1045,7 @@ VibeLevel comprobará el ingreso
 antes de confirmar el pago.
 `;
 
+     notifyAdminWhatsApp(orderNumber, name, phone, address, paymentMethod, paymentReference, orderItems, subtotal, shipping, total);
 
 /* =========================
    LIMPIAR
