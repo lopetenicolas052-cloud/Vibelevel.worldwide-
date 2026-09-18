@@ -259,7 +259,25 @@ try{
 const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
 if(error){box.innerHTML="<div class='empty'>ERROR: "+escapeHtml(error.message)+"</div>";return}
 products=data||[];
+
+if(products.length){
+
+    const validIds=new Set(
+        products.map(p=>String(p.id))
+    );
+
+    const cleanedCart=cart.filter(item =>
+        validIds.has(String(item.id))
+    );
+
+    if(cleanedCart.length!==cart.length){
+        cart=cleanedCart;
+        saveCart();
+    }
+}
+
 renderProducts();
+updateCart();
 }catch(e){box.innerHTML="<div class='empty'>ERROR: "+escapeHtml(e.message)+"</div>"}
 }
 
