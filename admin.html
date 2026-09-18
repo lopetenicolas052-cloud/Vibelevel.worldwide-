@@ -242,6 +242,8 @@ if(data.session){
 login.classList.add("hidden");
 admin.classList.remove("hidden");
 loadAdminProducts();
+loadOrders();
+    
 }else{
 login.classList.remove("hidden");
 admin.classList.add("hidden");
@@ -268,6 +270,7 @@ loginMessage.textContent="";
 login.classList.add("hidden");
 admin.classList.remove("hidden");
 loadAdminProducts();
+ loadOrders();
 });
 
 imageInput.addEventListener("change",()=>{
