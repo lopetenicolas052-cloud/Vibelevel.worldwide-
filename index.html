@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+mi<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -423,7 +423,77 @@ saveCart();
 updateCart();
 
      }
+function changeQty(key,n){
 
+const item=
+cart.find(
+x=>x.key===key
+);
+
+if(!item)return;
+
+const product=
+products.find(
+x=>String(x.id)===String(item.id)
+);
+
+if(!product)return;
+
+const stock=
+Number(product.stock||0);
+
+const newQty=
+item.qty+n;
+
+
+/* =========================
+   ELIMINAR DEL CARRITO
+========================= */
+
+if(newQty<=0){
+
+cart=
+cart.filter(
+x=>x.key!==key
+);
+
+saveCart();
+
+updateCart();
+
+return;
+
+}
+
+
+/* =========================
+   LÍMITE DE STOCK
+========================= */
+
+if(newQty>stock){
+
+alert(
+"Solo hay "+
+stock+
+" unidades disponibles de este producto."
+);
+
+return;
+
+}
+
+
+/* =========================
+   ACTUALIZAR CANTIDAD
+========================= */
+
+item.qty=newQty;
+
+saveCart();
+
+updateCart();
+
+     }
 function removeItem(key){cart=cart.filter(x=>x.key!==key);saveCart();updateCart()}
 
 function updateCart(){
