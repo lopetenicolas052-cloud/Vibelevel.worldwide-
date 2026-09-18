@@ -289,6 +289,7 @@ const list=products.filter(p=>(cat==="ALL"||p.category===cat)&&((p.name||"").toL
 if(!list.length){box.innerHTML="<div class='empty'>NO SE ENCONTRARON PRODUCTOS.</div>";return}
 box.innerHTML=list.map(p=>{
 const fav=favorites.includes(String(p.id));
+     const isOutOfStock = (p.stock||0) <= 0;
 return `<article class="card">
 <div class="badges">${p.is_new?'<span class="badge">NEW</span>':''}${p.is_sale?'<span class="badge">SALE</span>':''}</div>
 <button class="fav ${fav?'active':''}" onclick="toggleFavorite('${p.id}')">${fav?'♥':'♡'}</button>
@@ -299,7 +300,7 @@ return `<article class="card">
 <div class="price">${money(p.price)} ${p.old_price?`<span class="old">${money(p.old_price)}</span>`:""}</div>
 <div class="cardActions">
 <button onclick="openProduct('${p.id}')">VER PRODUCTO</button>
-<button class="more" onclick="addToCart('${p.id}')">${p.sold_out||Number(p.stock)<=0?'AGOTADO':'AÑADIR AL CARRITO'}</button>
+<button class="more" onclick="addToCart('${p.id}')" ${isOutOfStock?'disabled':''} style="${isOutOfStock?'background:#ccc;cursor:not-allowed':''}">${isOutOfStock?'AGOTADO':'AÑADIR'}</button>
 </div>
 </div>
 </article>`
