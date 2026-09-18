@@ -1,4 +1,4 @@
-mi<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -832,6 +832,10 @@ try{
 message.textContent=
 "📤 Subiendo comprobante...";
 
+console.log("BUCKET:", "payment-proofs");
+console.log("ARCHIVO:", proofFile);
+console.log("TIPO:", proofFile.type);
+console.log("TAMAÑO:", proofFile.size);
 
 const extension=
 proofFile.name
