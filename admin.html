@@ -121,7 +121,102 @@ hr{border:0;border-top:1px solid #292929;margin:30px 0}
 <div id="deleteMessage"></div>
 
 <hr>
+<hr>
 
+<h2>📦 PEDIDOS Y PAGOS</h2>
+
+<p class="small">
+Aquí aparecen los pedidos realizados desde la tienda.
+Comprueba manualmente el ingreso en BANGE o Muni Dinero antes de confirmar el pago.
+</p>
+
+<div class="row">
+
+<div>
+<label>FILTRAR PAGO</label>
+
+<select id="paymentFilter">
+<option value="ALL">TODOS</option>
+<option value="PENDING">PENDIENTE DE VERIFICACIÓN</option>
+<option value="PAID">PAGADO / CONFIRMADO</option>
+<option value="NOT_PAID">NO PAGADO / NO CONFIRMADO</option>
+</select>
+</div>
+
+<div>
+<label>FILTRAR PEDIDO</label>
+
+<select id="orderFilter">
+<option value="ALL">TODOS</option>
+<option value="NEW">NUEVO</option>
+<option value="PREPARING">EN PREPARACIÓN</option>
+<option value="SHIPPED">ENVIADO</option>
+<option value="COMPLETED">COMPLETADO</option>
+</select>
+</div>
+
+</div>
+
+<button id="refreshOrdersBtn">
+🔄 ACTUALIZAR PEDIDOS
+</button>
+
+<div id="ordersAdmin"></div>
+
+<div id="ordersMessage"></div>
+
+<!-- MODAL COMPROBANTE -->
+
+<div id="proofModal"
+style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.92);
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px;
+z-index:9999;
+">
+
+<div
+style="
+width:min(900px,100%);
+max-height:95vh;
+overflow:auto;
+background:#111;
+border:1px solid #333;
+padding:15px;
+">
+
+<h3>COMPROBANTE DE PAGO</h3>
+
+<img
+id="proofImage"
+src=""
+alt="Comprobante de pago"
+style="
+width:100%;
+max-height:75vh;
+object-fit:contain;
+background:#000;
+">
+
+<button
+id="closeProofBtn"
+style="
+background:#222;
+color:#fff;
+border:1px solid #444;
+">
+
+CERRAR
+
+</button>
+
+</div>
+
+    </div>
 <button id="logoutBtn" class="logout">CERRAR SESIÓN</button>
 </div>
 </div>
@@ -289,7 +384,7 @@ preview.src="";
 preview.style.display="none";
 
 loadAdminProducts();
-
+load0rders();
 }catch(error){
 console.error(error);
 productMessage.className="message error";
@@ -389,7 +484,7 @@ deleteMessage.className="message success";
 deleteMessage.textContent="✅ PRODUCTO ELIMINADO CORRECTAMENTE.";
 
 loadAdminProducts();
-
+load0rders();
 }catch(error){
 console.error(error);
 deleteMessage.className="message error";
@@ -411,7 +506,619 @@ return null;
 
 return data;
 }
+/* =========================
+   PEDIDOS Y PAGOS
+========================= */
 
+const ordersAdmin=document.getElementById("ordersAdmin");
+const ordersMessage=document.getElementById("ordersMessage");
+const paymentFilter=document.getElementById("paymentFilter");
+const orderFilter=document.getElementById("orderFilter");
+const proofModal=document.getElementById("proofModal");
+const proofImage=document.getElementById("proofImage");
+
+let allOrders=[];
+
+
+/* =========================
+   CARGAR PEDIDOS
+========================= */
+
+async function loadOrders(){
+
+ordersAdmin.innerHTML=
+'<p class="small">📦 Cargando pedidos...</p>';
+
+const {data,error}=await supabaseClient
+.from("orders")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+ordersAdmin.innerHTML=
+'<p class="message error">❌ Error cargando pedidos: '+
+escapeHtml(error.message)+
+'</p>';
+
+return;
+
+}
+
+allOrders=data||[];
+
+renderOrders();
+
+}
+
+
+/* =========================
+   MOSTRAR PEDIDOS
+========================= */
+
+function renderOrders(){
+
+const paymentValue=paymentFilter.value;
+const orderValue=orderFilter.value;
+
+let filtered=allOrders;
+
+if(paymentValue!=="ALL"){
+
+filtered=filtered.filter(
+o=>(o.payment_status||"PENDING")===paymentValue
+);
+
+}
+
+if(orderValue!=="ALL"){
+
+filtered=filtered.filter(
+o=>(o.order_status||"NEW")===orderValue
+);
+
+}
+
+if(filtered.length===0){
+
+ordersAdmin.innerHTML=
+'<p class="small">No hay pedidos con estos filtros.</p>';
+
+return;
+
+}
+
+ordersAdmin.innerHTML=
+filtered.map(order=>createOrderCard(order)).join("");
+
+filtered.forEach(order=>{
+loadOrderItems(order.id);
+});
+
+}
+
+
+/* =========================
+   TARJETA DE PEDIDO
+========================= */
+
+function createOrderCard(order){
+
+const paymentStatus=
+order.payment_status||"PENDING";
+
+const orderStatus=
+order.order_status||"NEW";
+
+let paymentText=
+"🟡 PENDIENTE DE VERIFICACIÓN";
+
+if(paymentStatus==="PAID")
+paymentText="🟢 PAGADO / CONFIRMADO";
+
+if(paymentStatus==="NOT_PAID")
+paymentText="🔴 NO PAGADO / NO CONFIRMADO";
+
+const paymentMethod=
+String(order.payment_method||"")
+.toUpperCase();
+
+const date=
+order.created_at
+?new Date(order.created_at)
+.toLocaleString("es-ES")
+:"";
+
+const proofExists=
+!!order.payment_proof_url;
+
+return `
+
+<div
+style="
+background:#080808;
+border:1px solid #292929;
+padding:18px;
+margin-top:15px;
+">
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap;
+border-bottom:1px solid #292929;
+padding-bottom:15px;
+">
+
+<div>
+
+<strong style="font-size:18px">
+PEDIDO ${escapeHtml(order.order_number||"SIN NÚMERO")}
+</strong>
+
+<div class="small">
+${escapeHtml(date)}
+</div>
+
+</div>
+
+<strong>
+${paymentText}
+</strong>
+
+</div>
+
+
+<div class="row">
+
+
+<div>
+
+<label>CLIENTE</label>
+
+<div>
+${escapeHtml(order.customer_name||"—")}
+</div>
+
+</div>
+
+
+<div>
+
+<label>TELÉFONO</label>
+
+<div>
+${escapeHtml(order.customer_phone||"—")}
+</div>
+
+</div>
+
+
+<div>
+
+<label>DIRECCIÓN</label>
+
+<div>
+${escapeHtml(order.customer_address||"—")}
+</div>
+
+</div>
+
+
+<div>
+
+<label>MÉTODO DE PAGO</label>
+
+<div>
+${escapeHtml(paymentMethod||"—")}
+</div>
+
+</div>
+
+
+<div>
+
+<label>REFERENCIA DE PAGO</label>
+
+<div>
+${escapeHtml(order.payment_reference||"—")}
+</div>
+
+</div>
+
+
+<div>
+
+<label>ENVÍO</label>
+
+<div>
+${escapeHtml(order.shipping_method||"—")}
+</div>
+
+</div>
+
+
+<div>
+
+<label>COSTE DE ENVÍO</label>
+
+<div>
+${Number(order.shipping_cost||0).toLocaleString("es-ES")} XAF
+</div>
+
+</div>
+
+
+<div>
+
+<label>TOTAL</label>
+
+<div>
+<strong>
+${Number(order.total||0).toLocaleString("es-ES")} XAF
+</strong>
+</div>
+
+</div>
+
+</div>
+
+
+<hr>
+
+<div>
+
+<strong>🛍️ PRODUCTOS</strong>
+
+<div id="items-${escapeHtml(order.id)}"
+class="small"
+style="margin-top:10px">
+
+Cargando productos...
+
+</div>
+
+</div>
+
+
+<hr>
+
+<div>
+
+<strong>🧾 COMPROBANTE</strong>
+
+<p class="small">
+
+${
+proofExists
+?"El cliente ha enviado un comprobante."
+:"El cliente todavía no ha enviado comprobante."
+}
+
+</p>
+
+${
+proofExists
+?
+`
+<button
+onclick="viewProof('${escapeHtml(order.payment_proof_url)}')"
+>
+📷 VER COMPROBANTE
+</button>
+`
+:""
+}
+
+</div>
+
+
+<hr>
+
+
+<label>ESTADO DEL PAGO</label>
+
+<select id="payment-${escapeHtml(order.id)}">
+
+<option value="PENDING"
+${paymentStatus==="PENDING"?"selected":""}>
+PENDIENTE DE VERIFICACIÓN
+</option>
+
+<option value="PAID"
+${paymentStatus==="PAID"?"selected":""}>
+PAGADO / CONFIRMADO
+</option>
+
+<option value="NOT_PAID"
+${paymentStatus==="NOT_PAID"?"selected":""}>
+NO PAGADO / NO CONFIRMADO
+</option>
+
+</select>
+
+
+<label>ESTADO DEL PEDIDO</label>
+
+<select id="status-${escapeHtml(order.id)}">
+
+<option value="NEW"
+${orderStatus==="NEW"?"selected":""}>
+NUEVO
+</option>
+
+<option value="PREPARING"
+${orderStatus==="PREPARING"?"selected":""}>
+EN PREPARACIÓN
+</option>
+
+<option value="SHIPPED"
+${orderStatus==="SHIPPED"?"selected":""}>
+ENVIADO
+</option>
+
+<option value="COMPLETED"
+${orderStatus==="COMPLETED"?"selected":""}>
+COMPLETADO
+</option>
+
+</select>
+
+
+<button
+onclick="saveOrder('${escapeHtml(order.id)}')"
+>
+💾 GUARDAR CAMBIOS DEL PEDIDO
+</button>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================
+   PRODUCTOS DEL PEDIDO
+========================= */
+
+async function loadOrderItems(orderId){
+
+const container=
+document.getElementById("items-"+orderId);
+
+if(!container)return;
+
+const {data,error}=
+await supabaseClient
+.from("order_items")
+.select("*")
+.eq("order_id",orderId)
+.order("created_at",{ascending:true});
+
+if(error){
+
+container.innerHTML=
+"❌ Error cargando productos: "+
+escapeHtml(error.message);
+
+return;
+
+}
+
+if(!data||data.length===0){
+
+container.innerHTML=
+"Sin productos.";
+
+return;
+
+}
+
+container.innerHTML=data.map(item=>`
+
+<div
+style="
+padding:10px 0;
+border-bottom:1px solid #222;
+"
+>
+
+<strong>
+${escapeHtml(item.product_name||"Producto")}
+</strong>
+
+<div class="small">
+
+Cantidad:
+${Number(item.quantity||0)}
+
+|
+
+Talla:
+${escapeHtml(item.size||"—")}
+
+|
+
+Precio:
+${Number(item.unit_price||0).toLocaleString("es-ES")}
+XAF
+
+|
+
+Total:
+${Number(item.line_total||0).toLocaleString("es-ES")}
+XAF
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+   GUARDAR CAMBIOS
+========================= */
+
+async function saveOrder(orderId){
+
+const paymentStatus=
+document.getElementById(
+"payment-"+orderId
+).value;
+
+const orderStatus=
+document.getElementById(
+"status-"+orderId
+).value;
+
+ordersMessage.className="message";
+
+ordersMessage.textContent=
+"💾 Guardando cambios...";
+
+const {error}=
+await supabaseClient
+.from("orders")
+.update({
+payment_status:paymentStatus,
+order_status:orderStatus
+})
+.eq("id",orderId);
+
+if(error){
+
+ordersMessage.className=
+"message error";
+
+ordersMessage.textContent=
+"❌ Error: "+error.message;
+
+return;
+
+}
+
+ordersMessage.className=
+"message success";
+
+ordersMessage.textContent=
+"✅ PEDIDO ACTUALIZADO CORRECTAMENTE.";
+
+await loadOrders();
+
+}
+
+
+/* =========================
+   VER COMPROBANTE
+========================= */
+
+async function viewProof(path){
+
+if(!path)return;
+
+proofImage.src="";
+proofModal.style.display="flex";
+
+try{
+
+let url=path;
+
+if(path.startsWith("http")){
+
+url=path;
+
+}else{
+
+const {data,error}=
+await supabaseClient
+.storage
+.from("payment-proofs")
+.createSignedUrl(path,3600);
+
+if(error)
+throw new Error(error.message);
+
+url=data.signedUrl;
+
+}
+
+proofImage.src=url;
+
+}catch(error){
+
+proofModal.style.display="none";
+
+ordersMessage.className=
+"message error";
+
+ordersMessage.textContent=
+"❌ No se pudo abrir el comprobante: "+
+error.message;
+
+}
+
+}
+
+
+/* =========================
+   CERRAR COMPROBANTE
+========================= */
+
+document
+.getElementById("closeProofBtn")
+.addEventListener("click",()=>{
+
+proofModal.style.display="none";
+proofImage.src="";
+
+});
+
+
+proofModal.addEventListener("click",e=>{
+
+if(e.target===proofModal){
+
+proofModal.style.display="none";
+proofImage.src="";
+
+}
+
+});
+
+
+/* =========================
+   FILTROS
+========================= */
+
+paymentFilter.addEventListener(
+"change",
+renderOrders
+);
+
+orderFilter.addEventListener(
+"change",
+renderOrders
+);
+
+
+/* =========================
+   ACTUALIZAR
+========================= */
+
+document
+.getElementById("refreshOrdersBtn")
+.addEventListener(
+"click",
+loadOrders
+);
 document.getElementById("logoutBtn").addEventListener("click",async()=>{
 await supabaseClient.auth.signOut();
 location.reload();
