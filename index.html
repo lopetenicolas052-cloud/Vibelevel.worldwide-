@@ -232,7 +232,6 @@ CONFIRMAR PEDIDO Y ENVIAR COMPROBANTE
 
 <div id="orderMessage"></div>
 
-  </div>
 </div>
 </div>
 </div>
@@ -388,7 +387,26 @@ document.getElementById("total").textContent=money(sub+shipping);
 function openCart(){updateCart();document.getElementById("cartModal").classList.add("show")}
 function closeModal(id){document.getElementById(id).classList.remove("show")}
 
+function openPaymentCheckout(){
+
+if(!cart.length){
+alert("El carrito está vacío.");
+return;
+}
+
+const checkout=document.getElementById("paymentCheckout");
+
+checkout.style.display="block";
+
+checkout.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
+
+}
+
 function checkoutWhatsApp(){
+
 if(!cart.length){alert("El carrito está vacío.");return}
 const name=document.getElementById("customerName").value.trim();
 const phone=document.getElementById("customerPhone").value.trim();
