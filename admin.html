@@ -69,17 +69,7 @@ hr{border:0;border-top:1px solid #292929;margin:30px 0}
 <label>Precio</label>
 <input id="price" type="number" step="0.01" placeholder="25000">
 </div>
-    <label>
-    Stock disponible
-</label>
-
-<input
-    type="number"
-    id="productStock"
-    min="0"
-    step="1"
-    value="0"
-    placeholder="Cantidad disponible"
+    
 >
 <div>
 <label>Precio anterior</label>
@@ -995,11 +985,42 @@ document.getElementById(
 ).value;
 
 ordersMessage.className="message";
+ordersMessage.textContent="💾 Guardando cambios...";
 
-ordersMessage.textContent=
-"💾 Guardando cambios...";
+try{
 
-const {error}=
+/* =========================================
+   1. OBTENER EL PEDIDO ACTUAL
+========================================= */
+
+const {data:order,error:orderError}=
+await supabaseClient
+.from("orders")
+.select("*")
+.eq("id",orderId)
+.single();
+
+if(orderError){
+throw new Error(
+"No se pudo obtener el pedido: "+
+orderError.message
+);
+}
+
+
+/* =========================================
+   2. COMPROBAR SI YA ESTABA PAGADO
+========================================= */
+
+const wasAlreadyPaid=
+order.payment_status==="PAID";
+
+
+/* =========================================
+   3. ACTUALIZAR ESTADO DEL PEDIDO
+========================================= */
+
+const {error:updateError}=
 await supabaseClient
 .from("orders")
 .update({
@@ -1008,28 +1029,184 @@ order_status:orderStatus
 })
 .eq("id",orderId);
 
-if(error){
+if(updateError){
+throw new Error(
+"Error guardando el pedido: "+
+updateError.message
+);
+}
 
-ordersMessage.className=
-"message error";
 
-ordersMessage.textContent=
-"❌ Error: "+error.message;
+/* =========================================
+   4. DESCONTAR STOCK
+   SOLO CUANDO PASA A PAGADO
+========================================= */
 
-return;
+if(
+paymentStatus==="PAID" &&
+!wasAlreadyPaid
+){
+
+const {data:items,error:itemsError}=
+await supabaseClient
+.from("order_items")
+.select("*")
+.eq("order_id",orderId);
+
+if(itemsError){
+throw new Error(
+"No se pudieron obtener los productos del pedido: "+
+itemsError.message
+);
+}
+
+
+if(!items || items.length===0){
+
+throw new Error(
+"El pedido no tiene productos registrados."
+);
 
 }
 
-ordersMessage.className=
-"message success";
+
+/* =========================================
+   RECORRER LOS PRODUCTOS
+========================================= */
+
+for(const item of items){
+
+const {data:product,error:productError}=
+await supabaseClient
+.from("products")
+.select("id,name,stock")
+.eq("id",item.product_id)
+.single();
+
+if(productError || !product){
+
+throw new Error(
+"No se encontró el producto: "+
+item.product_name
+);
+
+}
+
+
+/* =========================================
+   STOCK ACTUAL
+========================================= */
+
+const currentStock=
+Number(product.stock||0);
+
+const quantity=
+Number(item.quantity||0);
+
+
+/* =========================================
+   COMPROBAR STOCK
+========================================= */
+
+if(currentStock<quantity){
+
+throw new Error(
+"Stock insuficiente para "+
+item.product_name+
+". Disponible: "+
+currentStock+
+". Solicitado: "+
+quantity
+);
+
+}
+
+
+/* =========================================
+   CALCULAR NUEVO STOCK
+========================================= */
+
+const newStock=
+currentStock-quantity;
+
+
+/* =========================================
+   ACTUALIZAR STOCK
+========================================= */
+
+const {error:stockError}=
+await supabaseClient
+.from("products")
+.update({
+stock:newStock,
+sold_out:newStock<=0
+})
+.eq("id",item.product_id);
+
+if(stockError){
+
+throw new Error(
+"Error actualizando el stock de "+
+item.product_name+
+": "+
+stockError.message
+);
+
+}
+
+}
+
+}
+
+
+/* =========================================
+   5. MENSAJE FINAL
+========================================= */
+
+ordersMessage.className="message success";
+
+if(
+paymentStatus==="PAID" &&
+!wasAlreadyPaid
+){
 
 ordersMessage.textContent=
-"✅ PEDIDO ACTUALIZADO CORRECTAMENTE.";
+"✅ PAGO CONFIRMADO. STOCK ACTUALIZADO CORRECTAMENTE.";
+
+}else{
+
+ordersMessage.textContent=
+"✅ CAMBIOS GUARDADOS CORRECTAMENTE.";
+
+}
+
+
+/* =========================================
+   6. ACTUALIZAR PEDIDOS
+========================================= */
 
 await loadOrders();
 
+
+/* =========================================
+   7. ACTUALIZAR PRODUCTOS DEL ADMIN
+========================================= */
+
+await loadAdminProducts();
+
+
+}catch(error){
+
+console.error(error);
+
+ordersMessage.className="message error";
+
+ordersMessage.textContent=
+"❌ "+error.message;
+
 }
 
+    }
 
 /* =========================
    VER COMPROBANTE
