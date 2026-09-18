@@ -1046,7 +1046,23 @@ VibeLevel comprobará el ingreso
 antes de confirmar el pago.
 `;
 
-     notifyAdminWhatsApp(orderNumber, name, phone, address, paymentMethod, paymentReference, orderItems, subtotal, shipping, total);
+function notifyAdminWhatsApp(order, items){
+  const MI_NUMERO = "240555626619"; // <-- AQUI PON TU NUMERO REAL
+
+  let texto = `🔔 *NUEVO PEDIDO LOPETE* 🔔\n\n`;
+  texto += `*Cliente:* ${order.customer_name}\n`;
+  texto += `*Tel:* ${order.customer_phone}\n`;
+  texto += `*Ciudad:* ${order.customer_city}\n`;
+  texto += `*Direccion:* ${order.customer_address}\n\n`;
+  texto += `*Pedido:*\n`;
+  items.forEach(i => {
+    texto += `- ${i.name} x${i.quantity} = ${i.price * i.quantity} XAF\n`;
+  });
+  texto += `\n*TOTAL: ${order.total} XAF*\n`;
+
+  const url = `https://wa.me/${MI_NUMERO}?text=${encodeURIComponent(texto)}`;
+  window.open(url, '_blank');
+     }     
 
 /* =========================
    LIMPIAR
