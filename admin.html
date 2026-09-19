@@ -592,6 +592,7 @@ Precio unitario: ${money(item.unit_price)}
 `).join("");
 }
 
+
 async function saveOrder(orderId){
 
 const paymentStatus=document.getElementById("payment-"+orderId).value;
@@ -614,6 +615,25 @@ throw new Error("No se pudo obtener el pedido: "+orderError.message);
 
 const wasAlreadyPaid=order.payment_status==="PAID";
 
+if(paymentStatus==="PAID"&&!wasAlreadyPaid){
+
+ordersMessage.textContent="💳 Confirmando pago y comprobando stock...";
+
+const {data:result,error:confirmError}=await supabaseClient
+.rpc("confirm_order_payment",{
+p_order_id:orderId
+});
+
+if(confirmError){
+throw new Error(confirmError.message);
+}
+
+if(!result||result.success!==true){
+throw new Error("No se pudo confirmar el pago.");
+}
+
+}
+
 const {error:updateError}=await supabaseClient
 .from("orders")
 .update({
@@ -623,77 +643,24 @@ order_status:orderStatus
 .eq("id",orderId);
 
 if(updateError){
-throw new Error("Error guardando el pedido: "+updateError.message);
-}
-
-if(paymentStatus==="PAID"&&!wasAlreadyPaid){
-
-const {data:items,error:itemsError}=await supabaseClient
-.from("order_items")
-.select("*")
-.eq("order_id",orderId);
-
-if(itemsError){
-throw new Error("No se pudieron obtener los productos del pedido: "+itemsError.message);
-}
-
-if(!items||items.length===0){
-throw new Error("El pedido no tiene productos registrados.");
-}
-
-for(const item of items){
-
-const {data:product,error:productError}=await supabaseClient
-.from("products")
-.select("id,name,stock")
-.eq("id",item.product_id)
-.single();
-
-if(productError||!product){
-throw new Error("No se encontró el producto: "+item.product_name);
-}
-
-const currentStock=Number(product.stock||0);
-const quantity=Number(item.quantity||0);
-
-if(currentStock<quantity){
 throw new Error(
-"Stock insuficiente para "+
-item.product_name+
-". Disponible: "+
-currentStock+
-". Solicitado: "+
-quantity
+"Error guardando el pedido: "+
+updateError.message
 );
-}
-
-const newStock=currentStock-quantity;
-
-const {error:stockError}=await supabaseClient
-.from("products")
-.update({
-stock:newStock,
-sold_out:newStock<=0
-})
-.eq("id",item.product_id);
-
-if(stockError){
-throw new Error(
-"Error actualizando el stock de "+
-item.product_name+
-": "+
-stockError.message
-);
-}
-}
 }
 
 ordersMessage.className="message success";
 
 if(paymentStatus==="PAID"&&!wasAlreadyPaid){
-ordersMessage.textContent="✅ PAGO CONFIRMADO. STOCK ACTUALIZADO CORRECTAMENTE.";
+
+ordersMessage.textContent=
+"✅ PAGO CONFIRMADO. STOCK ACTUALIZADO CORRECTAMENTE.";
+
 }else{
-ordersMessage.textContent="✅ CAMBIOS GUARDADOS CORRECTAMENTE.";
+
+ordersMessage.textContent=
+"✅ CAMBIOS GUARDADOS CORRECTAMENTE.";
+
 }
 
 await loadOrders();
@@ -702,11 +669,16 @@ await loadAdminProducts();
 }catch(error){
 
 console.error(error);
+
 ordersMessage.className="message error";
-ordersMessage.textContent="❌ "+error.message;
+
+ordersMessage.textContent=
+"❌ "+
+(error.message||"Ha ocurrido un error.");
 
 }
-}
+
+    }
 
 async function viewProof(path){
 
