@@ -1488,35 +1488,29 @@ ${escapeHtml(r.text||"")}
 
 function setRating(n){
 
-selectedRating=n;
+selectedRating=Math.min(5,Math.max(1,Number(n)));
 
 document.getElementById("ratingStars")
 .textContent=
 [1,2,3,4,5]
-.map(x=>x<=n?"★":"☆")
+.map(x=>x<=selectedRating?"★":"☆")
 .join(" ");
 }
 
 document.getElementById("ratingStars")
-.onclick=e=>{
+.onclick=function(e){
 
-const rect=
-e.currentTarget.getBoundingClientRect();
+const rect=this.getBoundingClientRect();
 
-const x=
-e.clientX-rect.left;
+const x=e.clientX-rect.left;
 
-setRating(
-Math.min(
-5,
-Math.max(
-1,
-Math.ceil(
-x/(rect.width/5)
-)
-)
-)
+let n=Math.ceil(
+(x/rect.width)*5
 );
+
+n=Math.max(1,Math.min(5,n));
+
+setRating(n);
 };
 
 async function submitReview(){
