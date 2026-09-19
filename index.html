@@ -9,200 +9,301 @@
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:#fff;color:#000;font-family:Arial,sans-serif}
-header{background:#000;color:#fff;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{font-weight:900;letter-spacing:3px;font-size:22px}
-nav a{color:#fff;text-decoration:none;margin-left:20px;font-size:13px}
-.hero{background:#000;color:#fff;padding:80px 5%;min-height:420px;display:flex;align-items:center}
-.hero h1{font-size:clamp(45px,9vw,100px);line-height:.85;margin:0;font-weight:900}
-.hero p{letter-spacing:4px;margin-top:25px}
-section{padding:55px 5%}
-.section-title{font-size:30px;margin-bottom:25px}
-.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
-input,select,textarea,button{font:inherit}
-input,select,textarea{padding:13px;border:1px solid #ccc;border-radius:4px;width:100%}
-.controls input{max-width:400px}
-.controls select{max-width:220px}
-button{border:0;background:#000;color:#fff;padding:13px 18px;cursor:pointer;border-radius:4px}
-button:disabled{opacity:.45;cursor:not-allowed}
-.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
-.product{border:1px solid #ddd;background:#fff;position:relative}
-.product img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-.product-info{padding:14px}
-.product-name{font-weight:700}
-.price{font-weight:700;margin-top:8px}
-.badge{position:absolute;top:10px;left:10px;background:#000;color:#fff;padding:6px 9px;font-size:11px}
-.fav{position:absolute;right:10px;top:10px;background:#fff;color:#000;border-radius:50%;width:34px;height:34px;padding:0}
-footer{background:#000;color:#fff;padding:40px 5%;margin-top:30px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;overflow:auto;padding:20px}
-.modal-content{background:#fff;max-width:650px;margin:30px auto;padding:25px;position:relative}
-.close{position:absolute;right:15px;top:10px;background:none;color:#000;font-size:25px;padding:5px}
-.detail-img{width:100%;max-height:500px;object-fit:contain}
-.sizes{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
-.size-btn{background:#fff;color:#000;border:1px solid #000}
-.size-btn.active{background:#000;color:#fff}
-.cart-item{display:flex;gap:12px;border-bottom:1px solid #ddd;padding:12px 0;align-items:center}
-.cart-item img{width:70px;height:70px;object-fit:cover}
-.qty{display:flex;align-items:center;gap:8px}
-.qty button{padding:5px 10px}
-.total{font-size:20px;font-weight:700;margin:20px 0}
-.form-group{margin-bottom:15px}
-.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
-.payment-box{border:1px solid #ddd;padding:15px;margin:15px 0;background:#fafafa}
-.review{border-bottom:1px solid #ddd;padding:15px 0}
-.stars{letter-spacing:2px}
+body{margin:0;background:#f4f4f1;color:#080808;font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.header{position:sticky;top:0;z-index:50;background:rgba(244,244,241,.94);backdrop-filter:blur(15px);border-bottom:1px solid #111}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.logo{font-size:22px;font-weight:900;letter-spacing:5px}
+.navlinks{display:flex;gap:28px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.navlinks a:hover{text-decoration:underline}
+.navright{display:flex;align-items:center;gap:16px}
+.cartbtn{border:1px solid #111;background:#111;color:#fff;padding:10px 15px;font-size:11px;font-weight:800;letter-spacing:1px}
+.cartcount{margin-left:5px}
+.menuBtn{display:none;background:none;border:0;font-size:24px}
+.hero{min-height:calc(100vh - 72px);background:#050505;color:#fff;display:grid;grid-template-columns:1.15fr .85fr;overflow:hidden}
+.heroText{display:flex;flex-direction:column;justify-content:center;padding:7vw}
+.heroEyebrow{font-size:10px;letter-spacing:4px;font-weight:800;margin-bottom:25px}
+.heroTitle{font-size:clamp(55px,10vw,145px);line-height:.78;letter-spacing:-7px;font-weight:900;margin:0;text-transform:uppercase}
+.heroTitle span{display:block}
+.heroSub{max-width:430px;margin-top:35px;color:#aaa;font-size:13px;line-height:1.7}
+.heroBtn{display:inline-block;margin-top:30px;background:#fff;color:#000;padding:16px 25px;font-size:11px;font-weight:900;letter-spacing:2px;width:max-content}
+.heroVisual{position:relative;min-height:600px;background:#111}
+.heroVisual:before{content:"VL";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:min(40vw,430px);font-weight:900;color:#181818;letter-spacing:-25px}
+.heroVisual:after{content:"WORLDWIDE / 001";position:absolute;right:25px;bottom:25px;font-size:9px;letter-spacing:3px;color:#777}
+.section{padding:90px 28px}
+.sectionHead{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid #111;padding-bottom:18px;margin-bottom:30px}
+.kicker{font-size:10px;letter-spacing:3px;font-weight:900}
+.sectionTitle{font-size:clamp(30px,5vw,65px);line-height:.9;margin:8px 0 0;font-weight:900;letter-spacing:-3px;text-transform:uppercase}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter{border:1px solid #111;background:transparent;padding:10px 14px;font-size:10px;font-weight:900;letter-spacing:1px}
+.filter.active,.filter:hover{background:#111;color:#fff}
+.search{width:100%;border:0;border-bottom:1px solid #111;background:transparent;padding:15px 0;font-size:15px;outline:0;margin-bottom:28px}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.product{position:relative;background:#e8e8e5;overflow:hidden;cursor:pointer}
+.productImg{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:transform .5s}
+.product:hover .productImg{transform:scale(1.035)}
+.productInfo{padding:14px 12px 18px}
+.productName{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.5px}
+.productMeta{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:11px}
+.old{text-decoration:line-through;color:#888}
+.badge{position:absolute;top:10px;left:10px;background:#000;color:#fff;padding:7px 9px;font-size:8px;font-weight:900;letter-spacing:1px;z-index:2}
+.sold{position:absolute;top:10px;right:10px;background:#fff;color:#000;padding:7px 9px;font-size:8px;font-weight:900;z-index:2}
+.empty{text-align:center;padding:80px 20px;border:1px solid #111;font-size:12px}
+.manifest{background:#050505;color:#fff;display:grid;grid-template-columns:repeat(3,1fr)}
+.manifestItem{padding:45px 28px;border-right:1px solid #333}
+.manifestItem:last-child{border:0}
+.manifestNum{font-size:10px;color:#777;letter-spacing:3px}
+.manifestTitle{font-size:25px;font-weight:900;margin-top:20px}
+.manifestText{color:#999;font-size:11px;line-height:1.7;margin-top:10px}
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.review{border:1px solid #111;padding:22px;background:#eee}
+.stars{letter-spacing:3px;font-size:12px}
+.reviewName{font-weight:900;font-size:12px;margin-top:14px}
+.reviewText{font-size:11px;line-height:1.7;margin-top:10px;color:#555}
+.reviewForm{max-width:600px;margin-top:35px}
+.reviewForm input,.reviewForm textarea{width:100%;border:1px solid #111;background:transparent;padding:13px;margin-bottom:10px;outline:0}
+.reviewForm textarea{min-height:100px}
+.blackBtn{background:#000;color:#fff;border:1px solid #000;padding:14px 20px;font-size:10px;font-weight:900;letter-spacing:1px}
+.footer{background:#050505;color:#fff;padding:60px 28px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}
+.footerLogo{font-size:35px;font-weight:900;letter-spacing:5px}
+.footer p{color:#777;font-size:10px;line-height:1.7}
+.footer h4{font-size:10px;letter-spacing:2px}
+.footer a{display:block;color:#aaa;font-size:11px;margin:10px 0}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:none}
+.overlay.show{display:block}
+.modal{position:fixed;z-index:101;background:#f4f4f1;color:#080808;top:50%;left:50%;transform:translate(-50%,-50%);width:min(900px,94vw);max-height:92vh;overflow:auto;display:none}
+.modal.show{display:block}
+.close{position:absolute;right:15px;top:12px;background:#000;color:#fff;border:0;width:34px;height:34px;font-size:18px;z-index:3}
+.detail{display:grid;grid-template-columns:1fr 1fr}
+.detailImg{width:100%;height:100%;min-height:500px;object-fit:cover;background:#ddd}
+.detailInfo{padding:45px 35px}
+.detailName{font-size:35px;font-weight:900;line-height:.95;text-transform:uppercase;letter-spacing:-2px}
+.detailPrice{font-size:18px;margin:22px 0}
+.detailDesc{font-size:12px;line-height:1.8;color:#555}
+.sizeTitle{font-size:9px;font-weight:900;letter-spacing:2px;margin-top:30px}
+.sizes{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.size{min-width:45px;padding:11px;border:1px solid #111;background:transparent;font-size:10px;font-weight:900}
+.size.selected,.size:hover{background:#111;color:#fff}
+.buy{width:100%;margin-top:25px;background:#000;color:#fff;border:0;padding:17px;font-size:11px;font-weight:900;letter-spacing:2px}
+.cart{padding:35px}
+.cartTitle{font-size:35px;font-weight:900;letter-spacing:-2px;text-transform:uppercase}
+.cartItem{display:grid;grid-template-columns:75px 1fr auto;gap:15px;align-items:center;border-bottom:1px solid #ccc;padding:15px 0}
+.cartItem img{width:75px;height:95px;object-fit:cover}
+.cartItemName{font-weight:900;font-size:12px}
+.cartItemMeta{font-size:10px;color:#666;margin-top:5px}
+.qty{display:flex;align-items:center;gap:7px;margin-top:8px}
+.qty button{border:1px solid #111;background:transparent;width:27px;height:27px}
+.remove{background:none;border:0;text-decoration:underline;font-size:9px}
+.cartTotal{border-top:1px solid #111;margin-top:25px;padding-top:20px}
+.totalLine{display:flex;justify-content:space-between;font-size:12px;margin:8px 0}
+.totalLine.big{font-size:18px;font-weight:900;margin-top:18px}
+.checkout{padding:35px}
+.checkoutTitle{font-size:32px;font-weight:900;letter-spacing:-2px;text-transform:uppercase}
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-top:15px}
+.field label{display:block;font-size:9px;font-weight:900;letter-spacing:1px;margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #111;background:#fff;padding:13px;outline:0}
+.field textarea{min-height:85px}
+.paymentBox{margin-top:25px;border:1px solid #111;padding:20px}
+.paymentBox h3{font-size:11px;letter-spacing:2px}
+.paymentInfo{background:#eee;padding:12px;font-size:11px;line-height:1.7;margin-top:10px}
+.proof{border:1px dashed #111;padding:15px;font-size:10px}
+.orderMsg{margin-top:15px;font-size:11px;line-height:1.7}
+@media(max-width:900px){
+.products{grid-template-columns:repeat(2,1fr)}
+.hero{grid-template-columns:1fr}
+.heroVisual{min-height:330px}
+.reviews{grid-template-columns:1fr}
+.manifest{grid-template-columns:1fr}
+.manifestItem{border-right:0;border-bottom:1px solid #333}
+.footer{grid-template-columns:1fr 1fr}
+}
 @media(max-width:600px){
-header{padding:15px}
-nav a{margin-left:10px;font-size:11px}
-.hero{padding:60px 5%}
-.products{grid-template-columns:repeat(2,1fr);gap:10px}
-.product-info{padding:10px}
+.nav{padding:0 15px}
+.navlinks{display:none}
+.menuBtn{display:block}
+.logo{font-size:17px;letter-spacing:3px}
+.heroText{padding:65px 22px}
+.heroTitle{font-size:68px;letter-spacing:-5px}
+.section{padding:60px 15px}
+.sectionHead{display:block}
+.filters{margin-top:20px}
+.products{grid-template-columns:repeat(2,1fr);gap:8px}
+.productInfo{padding:10px 8px 14px}
+.productName{font-size:10px}
+.detail{grid-template-columns:1fr}
+.detailImg{min-height:370px}
+.detailInfo{padding:30px 20px}
+.formGrid{grid-template-columns:1fr}
+.cart,.checkout{padding:25px 18px}
+.footer{grid-template-columns:1fr;padding:45px 20px}
 }
 </style>
 </head>
 <body>
 
-<header>
-<div class="logo">VIBELEVEL</div>
-<nav>
-<a href="#collection">COLLECTION</a>
-<a href="#reviews">REVIEWS</a>
-<button onclick="openCart()">CART (<span id="cartCount">0</span>)</button>
+<header class="header">
+<div class="nav">
+<a href="#" class="logo">VIBELEVEL</a>
+<nav class="navlinks">
+<a href="#collection">Collection</a>
+<a href="#manifest">Worldwide</a>
+<a href="#reviews">Reviews</a>
 </nav>
+<div class="navright">
+<button class="cartbtn" onclick="openCart()">CART <span class="cartcount" id="cartCount">0</span></button>
+<button class="menuBtn" onclick="openCart()">☰</button>
+</div>
+</div>
 </header>
 
-<div class="hero">
-<div>
-<h1>VIBELEVEL</h1>
-<p>WORLDWIDE STREETWEAR</p>
+<main>
+<section class="hero">
+<div class="heroText">
+<div class="heroEyebrow">VIBELEVEL WORLDWIDE / 001</div>
+<h1 class="heroTitle"><span>MOVE</span><span>YOUR</span><span>LEVEL.</span></h1>
+<p class="heroSub">Streetwear built around identity, movement and individuality. No noise. No limits. Just your level.</p>
+<a href="#collection" class="heroBtn">SHOP THE COLLECTION →</a>
 </div>
-</div>
+<div class="heroVisual"></div>
+</section>
 
-<section id="collection">
-<h2 class="section-title">COLLECTION</h2>
-<div class="controls">
-<input id="search" placeholder="Buscar producto...">
-<select id="category">
-<option value="">Todas las categorías</option>
-<option value="NEW">NEW</option>
-<option value="SALE">SALE</option>
-</select>
+<section class="section" id="collection">
+<div class="sectionHead">
+<div>
+<div class="kicker">VIBELEVEL / COLLECTION</div>
+<h2 class="sectionTitle">Latest Drop</h2>
 </div>
+<div class="filters">
+<button class="filter active" onclick="setCategory('ALL',this)">ALL</button>
+<button class="filter" onclick="setCategory('NEW',this)">NEW</button>
+<button class="filter" onclick="setCategory('SALE',this)">SALE</button>
+</div>
+</div>
+<input id="searchInput" class="search" placeholder="SEARCH THE COLLECTION..." oninput="renderProducts()">
 <div id="products" class="products"></div>
 </section>
 
-<section id="reviews">
-<h2 class="section-title">REVIEWS</h2>
-<div id="reviewsList"></div>
-<div style="margin-top:25px">
-<h3>Deja tu reseña</h3>
-<input id="reviewName" placeholder="Tu nombre">
-<textarea id="reviewText" placeholder="Tu opinión..." style="margin-top:10px"></textarea>
-<div class="sizes" id="ratingButtons">
-<button class="size-btn" onclick="setRating(1)">★</button>
-<button class="size-btn" onclick="setRating(2)">★★</button>
-<button class="size-btn" onclick="setRating(3)">★★★</button>
-<button class="size-btn" onclick="setRating(4)">★★★★</button>
-<button class="size-btn" onclick="setRating(5)">★★★★★</button>
-</div>
-<button onclick="addReview()">Publicar reseña</button>
-</div>
+<section class="manifest" id="manifest">
+<div class="manifestItem"><div class="manifestNum">01 / IDENTITY</div><div class="manifestTitle">WEAR YOUR LEVEL.</div><div class="manifestText">Cada pieza representa una forma de moverte, pensar y destacar.</div></div>
+<div class="manifestItem"><div class="manifestNum">02 / WORLDWIDE</div><div class="manifestTitle">NO BORDERS.</div><div class="manifestText">VibeLevel nace para moverse más allá de un lugar.</div></div>
+<div class="manifestItem"><div class="manifestNum">03 / STREET</div><div class="manifestTitle">STAY DIFFERENT.</div><div class="manifestText">Una estética limpia, agresiva y reconocible sin necesidad de exceso.</div></div>
 </section>
 
-<footer>
-<div class="logo">VIBELEVEL WORLDWIDE</div>
-<p>Streetwear without limits.</p>
+<section class="section" id="reviews">
+<div class="sectionHead"><div><div class="kicker">COMMUNITY</div><h2 class="sectionTitle">Reviews</h2></div></div>
+<div id="reviewsList" class="reviews"></div>
+<div class="reviewForm">
+<input id="reviewName" placeholder="TU NOMBRE">
+<textarea id="reviewText" placeholder="ESCRIBE TU EXPERIENCIA"></textarea>
+<div style="margin:10px 0"><span class="kicker">RATING</span><div id="ratingStars" style="margin-top:8px;font-size:22px;cursor:pointer">☆ ☆ ☆ ☆ ☆</div></div>
+<button class="blackBtn" onclick="submitReview()">PUBLICAR REVIEW</button>
+<div id="reviewMessage"></div>
+</div>
+</section>
+</main>
+
+<footer class="footer">
+<div><div class="footerLogo">VIBELEVEL</div><p>VIBELEVEL WORLDWIDE.<br>STREETWEAR / IDENTITY / MOVEMENT.</p></div>
+<div><h4>EXPLORE</h4><a href="#collection">Collection</a><a href="#manifest">Worldwide</a><a href="#reviews">Reviews</a></div>
+<div><h4>CONTACT</h4><a href="https://wa.me/240555626619" target="_blank">WhatsApp</a><a href="#">Instagram</a></div>
 </footer>
 
+<div id="overlay" class="overlay" onclick="closeAllModals()"></div>
+
 <div id="detailModal" class="modal">
-<div class="modal-content">
-<button class="close" onclick="closeModal('detailModal')">×</button>
-<div id="detailContent"></div>
+<button class="close" onclick="closeAllModals()">×</button>
+<div class="detail">
+<img id="detailImg" class="detailImg">
+<div class="detailInfo">
+<div id="detailName" class="detailName"></div>
+<div id="detailPrice" class="detailPrice"></div>
+<div id="detailDesc" class="detailDesc"></div>
+<div class="sizeTitle">SELECT SIZE</div>
+<div id="detailSizes" class="sizes"></div>
+<button class="buy" onclick="addDetailToCart()">ADD TO CART</button>
+</div>
 </div>
 </div>
 
 <div id="cartModal" class="modal">
-<div class="modal-content">
-<button class="close" onclick="closeModal('cartModal')">×</button>
-<h2>Tu carrito</h2>
+<button class="close" onclick="closeAllModals()">×</button>
+<div class="cart">
+<div class="kicker">VIBELEVEL / BAG</div>
+<h2 class="cartTitle">Your Cart</h2>
 <div id="cartItems"></div>
-<div id="cartSummary"></div>
-
-<div class="form-group">
-<label>Envío</label>
-<label><input type="radio" name="shipping" value="0" checked onchange="updateCart()"> Local — 0 XAF</label>
-<label><input type="radio" name="shipping" value="50000" onchange="updateCart()"> Estándar — 50.000 XAF</label>
-<label><input type="radio" name="shipping" value="70000" onchange="updateCart()"> Express — 70.000 XAF</label>
+<div class="cartTotal">
+<div class="totalLine"><span>SUBTOTAL</span><strong id="cartSubtotal">0 XAF</strong></div>
+<button class="buy" onclick="openCheckout()">CHECKOUT →</button>
+</div>
+</div>
 </div>
 
-<div class="form-group">
-<label>Nombre completo</label>
-<input id="customerName" placeholder="Nombre">
-</div>
-<div class="form-group">
-<label>Teléfono</label>
-<input id="customerPhone" placeholder="Número de teléfono">
-</div>
-<div class="form-group">
-<label>Dirección</label>
-<textarea id="customerAddress" placeholder="Dirección de entrega"></textarea>
+<div id="checkoutModal" class="modal">
+<button class="close" onclick="closeAllModals()">×</button>
+<div class="checkout">
+<div class="kicker">VIBELEVEL / CHECKOUT</div>
+<h2 class="checkoutTitle">Complete Order</h2>
+
+<div class="formGrid">
+<div class="field"><label>FULL NAME</label><input id="checkoutName"></div>
+<div class="field"><label>PHONE NUMBER</label><input id="checkoutPhone" placeholder="+240..."></div>
 </div>
 
-<button onclick="checkoutWhatsApp()">Pedir por WhatsApp</button>
-<button onclick="openPaymentCheckout()" style="margin-top:10px">Continuar al pago</button>
+<div class="field"><label>DELIVERY ADDRESS</label><textarea id="checkoutAddress"></textarea></div>
 
-<div id="paymentCheckout" style="display:none;margin-top:25px">
-<h2>Pago</h2>
-
-<div class="form-group">
-<label>Nombre completo</label>
-<input id="checkoutName">
-</div>
-<div class="form-group">
-<label>Teléfono</label>
-<input id="checkoutPhone">
-</div>
-<div class="form-group">
-<label>Dirección</label>
-<textarea id="checkoutAddress"></textarea>
+<div class="field">
+<label>SHIPPING</label>
+<select id="shippingSelect" onchange="updateCheckoutTotals()">
+<option value="0">LOCAL PICKUP — 0 XAF</option>
+<option value="50000">DELIVERY — 50.000 XAF</option>
+</select>
 </div>
 
-<div class="form-group">
-<label>Método de pago</label>
+<div class="paymentBox">
+<h3>PAYMENT METHOD</h3>
+<div class="field">
 <select id="paymentMethod" onchange="showPaymentInfo()">
-<option value="">Selecciona un método</option>
+<option value="">SELECT PAYMENT METHOD</option>
 <option value="BANGE">BANGE</option>
 <option value="MUNI DINERO">MUNI DINERO</option>
 </select>
 </div>
+<div id="paymentInfo" class="paymentInfo"></div>
 
-<div id="paymentInfo" class="payment-box"></div>
+<div class="field"><label>PAYMENT REFERENCE / CODE</label><input id="paymentReference" placeholder="Código o referencia del pago"></div>
 
-<div class="form-group">
-<label>Referencia del pago</label>
-<input id="paymentReference" placeholder="Referencia / número de operación">
-</div>
-
-<div class="form-group">
-<label>Comprobante de pago</label>
+<div class="field">
+<label>PAYMENT PROOF</label>
+<div class="proof">
 <input id="paymentProof" type="file" accept="image/*">
+<div style="margin-top:7px;color:#666">Sube una foto clara del comprobante. Máximo 8 MB.</div>
+</div>
+</div>
 </div>
 
-<button onclick="submitOrder()">Confirmar pedido</button>
-<div id="orderMessage" style="margin-top:15px"></div>
+<div class="cartTotal">
+<div class="totalLine"><span>PRODUCTS</span><strong id="checkoutSubtotal">0 XAF</strong></div>
+<div class="totalLine"><span>SHIPPING</span><strong id="checkoutShipping">0 XAF</strong></div>
+<div class="totalLine big"><span>TOTAL</span><strong id="checkoutTotal">0 XAF</strong></div>
 </div>
+
+<button class="buy" onclick="submitOrder()">CONFIRM ORDER →</button>
+<div id="orderMessage" class="orderMsg"></div>
 </div>
 </div>
 
 <script>
 const SUPABASE_URL="https://yqlyxnlheoiftxhpteyb.supabase.co";
 const SUPABASE_KEY="sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const WHATSAPP="240555626619";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let products=[];
 let cart=JSON.parse(localStorage.getItem("vibelevel_cart")||"[]");
-let favorites=JSON.parse(localStorage.getItem("vibelevel_favorites")||"[]");
+let activeCategory="ALL";
 let selectedProduct=null;
 let selectedSize="";
 let selectedRating=0;
@@ -210,289 +311,223 @@ let selectedRating=0;
 function money(n){
 return Number(n||0).toLocaleString("es-ES")+" XAF";
 }
-
-function escapeHtml(s){
-return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+function escapeHtml(v){
+return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 }
-
 function saveCart(){
 localStorage.setItem("vibelevel_cart",JSON.stringify(cart));
 updateCartCount();
 }
-
 function updateCartCount(){
-document.getElementById("cartCount").textContent=cart.reduce((a,b)=>a+b.quantity,0);
+document.getElementById("cartCount").textContent=cart.reduce((a,i)=>a+Number(i.quantity||0),0);
 }
-
+function openModal(id){
+document.getElementById("overlay").classList.add("show");
+document.getElementById(id).classList.add("show");
+}
+function closeAllModals(){
+document.querySelectorAll(".modal").forEach(x=>x.classList.remove("show"));
+document.getElementById("overlay").classList.remove("show");
+}
+function openCart(){
+renderCart();
+openModal("cartModal");
+}
+function setCategory(c,btn){
+activeCategory=c;
+document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+if(btn)btn.classList.add("active");
+renderProducts();
+}
+<script>
 async function loadProducts(){
+const box=document.getElementById("products");
+box.innerHTML='<div class="empty">LOADING COLLECTION...</div>';
 const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
 if(error){
 console.error(error);
-document.getElementById("products").innerHTML="<p>No se pudieron cargar los productos.</p>";
+box.innerHTML='<div class="empty">NO SE PUDO CARGAR LA COLECCIÓN.</div>';
 return;
 }
 products=data||[];
-const validIds=products.map(p=>String(p.id));
-cart=cart.filter(i=>validIds.includes(String(i.id)));
-saveCart();
 renderProducts();
 }
 
 function renderProducts(){
-const q=document.getElementById("search").value.toLowerCase().trim();
-const cat=document.getElementById("category").value;
-let list=products.filter(p=>{
-const text=(p.name+" "+(p.description||"")+" "+(p.category||"")).toLowerCase();
-const searchOk=!q||text.includes(q);
-const catOk=!cat||(cat==="NEW"?p.is_new:cat==="SALE"?p.is_sale:true);
-return searchOk&&catOk;
-});
 const box=document.getElementById("products");
+const q=(document.getElementById("searchInput").value||"").toLowerCase().trim();
+let list=products.filter(p=>{
+const text=(p.name+" "+(p.category||"")+" "+(p.description||"")).toLowerCase();
+const search=!q||text.includes(q);
+const cat=activeCategory==="ALL"||(
+activeCategory==="NEW"?p.is_new:
+activeCategory==="SALE"?p.is_sale:true
+);
+return search&&cat;
+});
 if(!list.length){
-box.innerHTML="<p>No hay productos.</p>";
+box.innerHTML='<div class="empty">NO PRODUCTS FOUND.</div>';
 return;
 }
 box.innerHTML=list.map(p=>{
-const fav=favorites.includes(String(p.id));
-const sold=!!p.sold_out||Number(p.stock||0)<=0;
-return `<div class="product">
-${p.is_new?'<div class="badge">NEW</div>':p.is_sale?'<div class="badge">SALE</div>':''}
-<button class="fav" onclick="toggleFavorite('${p.id}')">${fav?"♥":"♡"}</button>
-<img src="${escapeHtml(p.image_url||"")}" alt="${escapeHtml(p.name)}" onclick="openProduct('${p.id}')">
-<div class="product-info">
-<div class="product-name">${escapeHtml(p.name)}</div>
-<div class="price">${money(p.price)}</div>
-<button onclick="openProduct('${p.id}')" style="margin-top:10px" ${sold?"disabled":""}>${sold?"Agotado":"Ver producto"}</button>
-</div>
-</div>`;
+const sold=Number(p.stock||0)<=0||p.sold_out;
+return `<article class="product" onclick="openProduct('${p.id}')">
+${p.is_new?'<div class="badge">NEW</div>':""}
+${sold?'<div class="sold">SOLD OUT</div>':""}
+<img class="productImg" src="${escapeHtml(p.image_url||p.image||"")}" alt="${escapeHtml(p.name)}">
+<div class="productInfo">
+<div class="productName">${escapeHtml(p.name)}</div>
+<div class="productMeta"><span>${money(p.price)}</span>${p.old_price?`<span class="old">${money(p.old_price)}</span>`:""}</div>
+</div></article>`;
 }).join("");
-}
-
-function toggleFavorite(id){
-id=String(id);
-favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
-localStorage.setItem("vibelevel_favorites",JSON.stringify(favorites));
-renderProducts();
 }
 
 function openProduct(id){
 selectedProduct=products.find(p=>String(p.id)===String(id));
-if(!selectedProduct)return;
 selectedSize="";
-const p=selectedProduct;
-const sizes=Array.isArray(p.sizes)?p.sizes:(p.sizes||"").split(",").map(x=>x.trim()).filter(Boolean);
-document.getElementById("detailContent").innerHTML=`
-<img class="detail-img" src="${escapeHtml(p.image_url||"")}" alt="${escapeHtml(p.name)}">
-<h2>${escapeHtml(p.name)}</h2>
-<p>${escapeHtml(p.description||"")}</p>
-<div class="price">${money(p.price)}</div>
-<p>Stock: ${Number(p.stock||0)}</p>
-<div class="sizes">${sizes.map(s=>`<button class="size-btn" onclick="selectSize('${escapeHtml(s)}',this)">${escapeHtml(s)}</button>`).join("")}</div>
-<button onclick="addSelectedToCart()" ${p.sold_out||Number(p.stock||0)<=0?"disabled":""}>Añadir al carrito</button>`;
-document.getElementById("detailModal").style.display="block";
-}
-
-function selectSize(size,btn){
-selectedSize=size;
-document.querySelectorAll("#detailContent .size-btn").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-}
-
-function addSelectedToCart(){
 if(!selectedProduct)return;
-addToCart(selectedProduct,selectedSize);
+document.getElementById("detailImg").src=selectedProduct.image_url||selectedProduct.image||"";
+document.getElementById("detailName").textContent=selectedProduct.name||"";
+document.getElementById("detailPrice").textContent=money(selectedProduct.price);
+document.getElementById("detailDesc").textContent=selectedProduct.description||"";
+let sizes=Array.isArray(selectedProduct.sizes)?selectedProduct.sizes:
+String(selectedProduct.sizes||"S,M,L,XL,XXL").split(",").map(x=>x.trim()).filter(Boolean);
+document.getElementById("detailSizes").innerHTML=sizes.map(s=>`<button class="size" onclick="selectSize(this,'${escapeHtml(s)}')">${escapeHtml(s)}</button>`).join("");
+openModal("detailModal");
 }
 
-function addToCart(p,size){
-if(p.sold_out||Number(p.stock||0)<=0){
-alert("Producto agotado.");
-return;
+function selectSize(btn,size){
+selectedSize=size;
+document.querySelectorAll("#detailSizes .size").forEach(x=>x.classList.remove("selected"));
+btn.classList.add("selected");
 }
-const sizes=Array.isArray(p.sizes)?p.sizes:(p.sizes||"").split(",").map(x=>x.trim()).filter(Boolean);
-if(!size)size=sizes[0]||"Única";
-const key=String(p.id)+"_"+size;
-const item=cart.find(x=>x.key===key);
-if(item){
-if(item.quantity>=Number(p.stock||0)){
-alert("No hay más stock disponible.");
-return;
-}
-item.quantity++;
-}else{
-cart.push({
-key,
-id:p.id,
-name:p.name,
-price:Number(p.price||0),
-image_url:p.image_url||"",
-size,
+
+function addDetailToCart(){
+if(!selectedProduct)return;
+let sold=Number(selectedProduct.stock||0)<=0||selectedProduct.sold_out;
+if(sold){alert("Este producto está agotado.");return;}
+let sizes=Array.isArray(selectedProduct.sizes)?selectedProduct.sizes:
+String(selectedProduct.sizes||"").split(",").map(x=>x.trim()).filter(Boolean);
+if(sizes.length&&!selectedSize){alert("Selecciona una talla.");return;}
+const existing=cart.find(i=>String(i.product_id)===String(selectedProduct.id)&&i.size===selectedSize);
+if(existing)existing.quantity++;
+else cart.push({
+product_id:selectedProduct.id,
+product_name:selectedProduct.name,
+image_url:selectedProduct.image_url||selectedProduct.image||"",
+size:selectedSize||"N/A",
 quantity:1,
-stock:Number(p.stock||0)
+unit_price:Number(selectedProduct.price||0),
+line_total:Number(selectedProduct.price||0)
 });
-}
 saveCart();
-closeModal("detailModal");
+closeAllModals();
 openCart();
 }
 
-function changeQty(key,delta){
-const item=cart.find(x=>x.key===key);
-if(!item)return;
-item.quantity+=delta;
-if(item.quantity<=0)cart=cart.filter(x=>x.key!==key);
-else if(item.quantity>item.stock)item.quantity=item.stock;
-saveCart();
-updateCart();
+function cartSubtotal(){
+return cart.reduce((a,i)=>a+Number(i.unit_price||0)*Number(i.quantity||0),0);
 }
 
-function removeItem(key){
-cart=cart.filter(x=>x.key!==key);
-saveCart();
-updateCart();
-}
-
-function updateCart(){
+function renderCart(){
 const box=document.getElementById("cartItems");
 if(!cart.length){
-box.innerHTML="<p>Tu carrito está vacío.</p>";
-document.getElementById("cartSummary").innerHTML="";
+box.innerHTML='<div class="empty">YOUR BAG IS EMPTY.</div>';
+document.getElementById("cartSubtotal").textContent=money(0);
 return;
 }
-let subtotal=0;
-box.innerHTML=cart.map(i=>{
-const line=i.price*i.quantity;
-subtotal+=line;
-return `<div class="cart-item">
-<img src="${escapeHtml(i.image_url)}">
-<div style="flex:1">
-<strong>${escapeHtml(i.name)}</strong>
-<div>Talla: ${escapeHtml(i.size)}</div>
-<div>${money(i.price)}</div>
+box.innerHTML=cart.map((i,index)=>`
+<div class="cartItem">
+<img src="${escapeHtml(i.image_url||"")}">
+<div>
+<div class="cartItemName">${escapeHtml(i.product_name)}</div>
+<div class="cartItemMeta">SIZE: ${escapeHtml(i.size)} · ${money(i.unit_price)}</div>
 <div class="qty">
-<button onclick="changeQty('${i.key}',-1)">−</button>
-<span>${i.quantity}</span>
-<button onclick="changeQty('${i.key}',1)">+</button>
-<button onclick="removeItem('${i.key}')">×</button>
+<button onclick="changeQty(${index},-1)">−</button>
+<strong>${i.quantity}</strong>
+<button onclick="changeQty(${index},1)">+</button>
+<button class="remove" onclick="removeCart(${index})">REMOVE</button>
 </div>
 </div>
-<div>${money(line)}</div>
-</div>`;
-}).join("");
-const shipping=Number(document.querySelector('input[name="shipping"]:checked')?.value||0);
-document.getElementById("cartSummary").innerHTML=`
-<div>Subtotal: ${money(subtotal)}</div>
-<div>Envío: ${money(shipping)}</div>
-<div class="total">Total: ${money(subtotal+shipping)}</div>`;
+<strong>${money(Number(i.unit_price)*Number(i.quantity))}</strong>
+</div>`).join("");
+document.getElementById("cartSubtotal").textContent=money(cartSubtotal());
 }
 
-function openCart(){
-document.getElementById("cartModal").style.display="block";
-document.getElementById("paymentCheckout").style.display="none";
-updateCart();
+function changeQty(index,n){
+if(!cart[index])return;
+cart[index].quantity=Math.max(1,Number(cart[index].quantity)+n);
+cart[index].line_total=Number(cart[index].unit_price)*cart[index].quantity;
+saveCart();
+renderCart();
 }
-
-function closeModal(id){
-document.getElementById(id).style.display="none";
-}
-
-function openPaymentCheckout(){
-if(!cart.length){
-alert("El carrito está vacío.");
-return;
-}
-const checkout=document.getElementById("paymentCheckout");
-checkout.style.display="block";
-checkout.scrollIntoView({behavior:"smooth",block:"start"});
-}
-
-function checkoutWhatsApp(){
-if(!cart.length){
-alert("El carrito está vacío.");
-return;
-}
-const name=document.getElementById("customerName").value.trim();
-const phone=document.getElementById("customerPhone").value.trim();
-const address=document.getElementById("customerAddress").value.trim();
-const shipping=Number(document.querySelector('input[name="shipping"]:checked')?.value||0);
-let subtotal=0;
-let lines=cart.map(i=>{
-const line=i.price*i.quantity;
-subtotal+=line;
-return `• ${i.name} | Talla: ${i.size} | Cantidad: ${i.quantity} | ${money(line)}`;
-}).join("\n");
-const total=subtotal+shipping;
-const msg=`VIBELEVEL WORLDWIDE
-PEDIDO
-
-Cliente: ${name||"No indicado"}
-Teléfono: ${phone||"No indicado"}
-Dirección: ${address||"No indicada"}
-
-${lines}
-
-Subtotal: ${money(subtotal)}
-Envío: ${money(shipping)}
-TOTAL: ${money(total)}`;
-window.open("https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(msg),"_blank");
-}
-
-function showPaymentInfo(){
-const method=document.getElementById("paymentMethod").value;
-const box=document.getElementById("paymentInfo");
-if(method==="BANGE"){
-box.innerHTML="<strong>BANGE</strong><br>Número de cuenta: 38816123501-21<br>Titular: Nicolás Salvador Lopete Sima";
-}else if(method==="MUNI DINERO"){
-box.innerHTML="<strong>MUNI DINERO</strong><br>Teléfono: +240 555626619<br>Titular: Nicolás Salvador Lopete Sima";
-}else box.innerHTML="";
+function removeCart(index){
+cart.splice(index,1);
+saveCart();
+renderCart();
 }
 
 function buildOrderItems(){
-let subtotal=0;
-const orderItems=cart.map(i=>{
-const line=i.price*i.quantity;
-subtotal+=line;
-return{
-product_id:i.id,
-product_name:i.name,
-quantity:i.quantity,
+return {
+orderItems:cart.map(i=>({
+product_id:i.product_id,
+product_name:i.product_name,
+quantity:Number(i.quantity),
 size:i.size,
-unit_price:i.price,
-line_total:line
+unit_price:Number(i.unit_price),
+line_total:Number(i.unit_price)*Number(i.quantity)
+})),
+subtotal:cartSubtotal()
 };
-});
-return{orderItems,subtotal};
 }
 
-function buildAdminWhatsAppUrl(orderNumber,name,phone,address,paymentMethod,paymentReference,orderItems,subtotal,shipping,total){
+function openCheckout(){
+if(!cart.length){alert("El carrito está vacío.");return;}
+closeAllModals();
+updateCheckoutTotals();
+openModal("checkoutModal");
+}
+
+function updateCheckoutTotals(){
+const subtotal=cartSubtotal();
+const shipping=Number(document.getElementById("shippingSelect").value||0);
+document.getElementById("checkoutSubtotal").textContent=money(subtotal);
+document.getElementById("checkoutShipping").textContent=money(shipping);
+document.getElementById("checkoutTotal").textContent=money(subtotal+shipping);
+}
+
+function showPaymentInfo(){
+const m=document.getElementById("paymentMethod").value;
+const box=document.getElementById("paymentInfo");
+if(m==="BANGE"){
+box.innerHTML="<strong>BANGE</strong><br>Cuenta: 38816123501-21<br>Titular: Nicolás Salvador Lopete Sima";
+}else if(m==="MUNI DINERO"){
+box.innerHTML="<strong>MUNI DINERO</strong><br>Teléfono: +240 555626619<br>Titular: Nicolás Salvador Lopete Sima";
+}else{
+box.innerHTML="Selecciona un método de pago.";
+}
+}
+
+function buildAdminWhatsAppUrl(orderNumber,name,phone,orderItems,shipping,total){
 const quantityTotal=orderItems.reduce((a,i)=>a+Number(i.quantity||0),0);
-const lines=orderItems.map(i=>`• ${i.product_name} | Talla: ${i.size} | Cantidad: ${i.quantity} | ${money(i.line_total)}`).join("\n");
-const msg=`VIBELEVEL WORLDWIDE
-NUEVO PEDIDO
+const msg=`VIBELEVEL — NUEVO PEDIDO
 
 Pedido: ${orderNumber}
+
 Cliente: ${name}
 Teléfono: ${phone}
-Dirección: ${address}
 
-Método de pago: ${paymentMethod}
-Referencia: ${paymentReference}
-
-PRODUCTOS:
-${lines}
-
-Cantidad total de productos: ${quantityTotal}
-Subtotal: ${money(subtotal)}
+Productos: ${quantityTotal}
 Envío: ${money(shipping)}
-TOTAL: ${money(total)}
+Total: ${money(total)}
 
-Estado del pedido: EN PROCESO
-Pago: PENDIENTE DE VERIFICACIÓN`;
+Revisar en VibeLevel Admin.`;
 return "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(msg);
 }
-     async function submitOrder(){
+
+async function submitOrder(){
 const message=document.getElementById("orderMessage");
 message.innerHTML="";
-
 if(!cart.length){
 alert("El carrito está vacío.");
 return;
@@ -504,17 +539,16 @@ const address=document.getElementById("checkoutAddress").value.trim();
 const paymentMethod=document.getElementById("paymentMethod").value;
 const paymentReference=document.getElementById("paymentReference").value.trim();
 const proof=document.getElementById("paymentProof").files[0];
+const shipping=Number(document.getElementById("shippingSelect").value||0);
 
 if(!name||!phone||!address||!paymentMethod||!paymentReference||!proof){
 message.innerHTML="<p>Completa todos los campos y sube el comprobante.</p>";
 return;
 }
-
 if(!proof.type.startsWith("image/")){
 message.innerHTML="<p>El comprobante debe ser una imagen.</p>";
 return;
 }
-
 if(proof.size>8*1024*1024){
 message.innerHTML="<p>El comprobante no puede superar 8 MB.</p>";
 return;
@@ -526,36 +560,18 @@ try{
 whatsappWindow=window.open("about:blank","_blank");
 
 const {orderItems,subtotal}=buildOrderItems();
-
-const shipping=Number(
-document.querySelector('input[name="shipping"]:checked')?.value||0
-);
-
 const total=subtotal+shipping;
 const orderNumber="VL-"+Date.now();
-
 const extension=(proof.name.split(".").pop()||"jpg").toLowerCase();
-const filePath=
-"comprobantes/"+orderNumber+"-"+Math.random().toString(36).slice(2)+"."+extension;
+const filePath="comprobantes/"+orderNumber+"-"+Math.random().toString(36).slice(2)+"."+extension;
 
-const {error:uploadError}=await db
-.storage
-.from("payment-proofs")
-.upload(filePath,proof,{
+const {error:uploadError}=await db.storage.from("payment-proofs").upload(filePath,proof,{
 contentType:proof.type,
 upsert:false
 });
+if(uploadError)throw new Error("Error al subir comprobante: "+uploadError.message);
 
-if(uploadError){
-throw new Error(
-"Error al subir comprobante: "+
-uploadError.message
-);
-}
-
-const {data:orderData,error:orderError}=await db
-.from("orders")
-.insert({
+const {data:orderData,error:orderError}=await db.from("orders").insert({
 order_number:orderNumber,
 customer_name:name,
 customer_phone:phone,
@@ -569,18 +585,9 @@ subtotal:subtotal,
 total:total,
 payment_status:"PENDING",
 order_status:"NEW"
-})
-.select()
-.single();
+}).select().single();
 
-if(orderError){
-throw new Error(
-"Error al crear pedido: "+
-orderError.message+
-" | Código: "+
-(orderError.code||"sin código")
-);
-}
+if(orderError)throw new Error("Error al crear pedido: "+orderError.message+" | Código: "+(orderError.code||"sin código"));
 
 const itemsToInsert=orderItems.map(i=>({
 order_id:orderData.id,
@@ -592,30 +599,17 @@ unit_price:i.unit_price,
 line_total:i.line_total
 }));
 
-const {
-data:itemsData,
-error:itemsError
-}=await db
-.from("order_items")
-.insert(itemsToInsert)
-.select();
+const {data:itemsData,error:itemsError}=await db.from("order_items").insert(itemsToInsert).select();
 
 console.log("ITEMS:",itemsToInsert);
 console.log("RESPUESTA:",itemsData);
 console.log("ERROR:",itemsError);
 
-if(itemsError){
-throw new Error(
-"Error al guardar productos: "+
-itemsError.message+
-" | Código: "+
-(itemsError.code||"sin código")
-);
-}
+if(itemsError)throw new Error("Error al guardar productos: "+itemsError.message+" | Código: "+(itemsError.code||"sin código"));
 
 message.innerHTML=`
-<div style="padding:15px;border:1px solid #000">
-<strong>Pedido recibido correctamente.</strong><br><br>
+<div style="padding:15px;border:1px solid #111">
+<strong>PEDIDO RECIBIDO CORRECTAMENTE.</strong><br><br>
 Número de pedido: <strong>${escapeHtml(orderNumber)}</strong><br>
 Estado: <strong>EN PROCESO</strong><br>
 Pago: <strong>PENDIENTE DE VERIFICACIÓN</strong>
@@ -625,11 +619,7 @@ const whatsappUrl=buildAdminWhatsAppUrl(
 orderNumber,
 name,
 phone,
-address,
-paymentMethod,
-paymentReference,
 orderItems,
-subtotal,
 shipping,
 total
 );
@@ -653,93 +643,77 @@ document.getElementById("paymentInfo").innerHTML="";
 
 }catch(error){
 console.error(error);
-
 if(whatsappWindow)whatsappWindow.close();
-
-message.innerHTML=`
-<p style="color:#c00">
-No se pudo completar el pedido.<br>
-${escapeHtml(error.message)}
-</p>`;
+message.innerHTML=`<p style="color:#c00">No se pudo completar el pedido.<br>${escapeHtml(error.message)}</p>`;
 }
      }
-     function setRating(rating){
-selectedRating=rating;
-document.querySelectorAll("#ratingButtons .size-btn").forEach((b,i)=>{
-b.classList.toggle("active",i+1===rating);
-});
+     <script>
+async function loadReviews(){
+const box=document.getElementById("reviewsList");
+const {data,error}=await db.from("reviews").select("*").order("created_at",{ascending:false});
+if(error){
+box.innerHTML='<div class="empty">REVIEWS UNAVAILABLE.</div>';
+return;
+}
+box.innerHTML=(data||[]).map(r=>`
+<div class="review">
+<div class="stars">${"★".repeat(Number(r.rating||0))}${"☆".repeat(5-Number(r.rating||0))}</div>
+<div class="reviewName">${escapeHtml(r.name||"Anonymous")}</div>
+<div class="reviewText">${escapeHtml(r.text||"")}</div>
+</div>`).join("")||'<div class="empty">BE THE FIRST TO REVIEW.</div>';
 }
 
-function addReview(){
+function setRating(n){
+selectedRating=n;
+document.getElementById("ratingStars").textContent=
+[1,2,3,4,5].map(x=>x<=n?"★":"☆").join(" ");
+}
+
+document.getElementById("ratingStars").onclick=e=>{
+const rect=e.currentTarget.getBoundingClientRect();
+const x=e.clientX-rect.left;
+setRating(Math.min(5,Math.max(1,Math.ceil(x/(rect.width/5)))));
+};
+
+async function submitReview(){
 const name=document.getElementById("reviewName").value.trim();
 const text=document.getElementById("reviewText").value.trim();
+const msg=document.getElementById("reviewMessage");
 
 if(!name||!text||!selectedRating){
-alert("Completa tu nombre, opinión y valoración.");
+msg.textContent="Completa nombre, opinión y valoración.";
 return;
 }
 
-const reviews=JSON.parse(
-localStorage.getItem("vibelevel_reviews")||"[]"
-);
-
-reviews.unshift({
+const {error}=await db.from("reviews").insert({
 name:name,
 text:text,
-rating:selectedRating,
-date:new Date().toLocaleDateString("es-ES")
+rating:selectedRating
 });
 
-localStorage.setItem(
-"vibelevel_reviews",
-JSON.stringify(reviews)
-);
+if(error){
+console.error(error);
+msg.textContent="No se pudo publicar la review.";
+return;
+}
 
 document.getElementById("reviewName").value="";
 document.getElementById("reviewText").value="";
 selectedRating=0;
-
-document.querySelectorAll("#ratingButtons .size-btn")
-.forEach(b=>b.classList.remove("active"));
-
+setRating(0);
+msg.textContent="Review publicada correctamente.";
 loadReviews();
 }
 
-function loadReviews(){
-const reviews=JSON.parse(
-localStorage.getItem("vibelevel_reviews")||"[]"
-);
+window.addEventListener("storage",updateCartCount);
+window.addEventListener("resize",updateCartCount);
 
-const box=document.getElementById("reviewsList");
-
-if(!reviews.length){
-box.innerHTML="<p>Aún no hay reseñas.</p>";
-return;
-}
-
-box.innerHTML=reviews.map(r=>`
-<div class="review">
-<strong>${escapeHtml(r.name)}</strong>
-<div class="stars">${"★".repeat(Number(r.rating||0))}</div>
-<p>${escapeHtml(r.text)}</p>
-<small>${escapeHtml(r.date||"")}</small>
-</div>
-`).join("");
-}
-
-document.getElementById("search")
-.addEventListener("input",renderProducts);
-
-document.getElementById("category")
-.addEventListener("change",renderProducts);
-
-window.addEventListener("storage",()=>{
-loadReviews();
-});
-
-loadReviews();
+document.addEventListener("DOMContentLoaded",()=>{
 updateCartCount();
 loadProducts();
+loadReviews();
+updateCheckoutTotals();
+});
 
 setInterval(loadProducts,30000);
 </script>
