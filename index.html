@@ -1036,8 +1036,8 @@ antes de confirmar el pago.
 /* =========================
    LIMPIAR
 ========================= */
-     try{notifyAdminWhatsApp({customer_name: document.getElementById("customerName").value, customer_phone: document.getElementById("customerPhone").value, customer_city: document.getElementById("customerCity").value, customer_address: document.getElementById("customerAddress").value, total: (typeof total !== 'undefined' ? total : document.getElementById("orderTotal")?.innerText || '')}, cart);}catch(e){console.log("Error WhatsApp",e);}
-     
+         let o={customer_name:customerName,customer_phone:customerPhone,customer_city:customerCity,customer_address:customerAddress,total:total};
+    try{notifyAdminWhatsApp(o,cart)}catch(e){}
 cart=[];
 
 saveCart();
