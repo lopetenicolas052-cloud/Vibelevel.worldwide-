@@ -50,6 +50,8 @@ a{text-decoration:none;color:inherit}
 .old{text-decoration:line-through;color:#888}
 .badge{position:absolute;top:10px;left:10px;background:#000;color:#fff;padding:7px 9px;font-size:8px;font-weight:900;letter-spacing:1px;z-index:2}
 .sold{position:absolute;top:10px;right:10px;background:#fff;color:#000;padding:7px 9px;font-size:8px;font-weight:900;z-index:2}
+.stockLabel{font-size:9px;color:#666;margin-top:7px;font-weight:700}
+.stockOut{color:#000;font-weight:900}
 .empty{text-align:center;padding:80px 20px;border:1px solid #111;font-size:12px}
 .manifest{background:#050505;color:#fff;display:grid;grid-template-columns:repeat(3,1fr)}
 .manifestItem{padding:45px 28px;border-right:1px solid #333}
@@ -86,7 +88,9 @@ a{text-decoration:none;color:inherit}
 .sizes{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 .size{min-width:45px;padding:11px;border:1px solid #111;background:transparent;font-size:10px;font-weight:900}
 .size.selected,.size:hover{background:#111;color:#fff}
+.stockDetail{font-size:10px;font-weight:800;margin-top:20px}
 .buy{width:100%;margin-top:25px;background:#000;color:#fff;border:0;padding:17px;font-size:11px;font-weight:900;letter-spacing:2px}
+.buy:disabled{background:#999;cursor:not-allowed}
 .cart{padding:35px}
 .cartTitle{font-size:35px;font-weight:900;letter-spacing:-2px;text-transform:uppercase}
 .cartItem{display:grid;grid-template-columns:75px 1fr auto;gap:15px;align-items:center;border-bottom:1px solid #ccc;padding:15px 0}
@@ -95,7 +99,9 @@ a{text-decoration:none;color:inherit}
 .cartItemMeta{font-size:10px;color:#666;margin-top:5px}
 .qty{display:flex;align-items:center;gap:7px;margin-top:8px}
 .qty button{border:1px solid #111;background:transparent;width:27px;height:27px}
+.qty button:disabled{opacity:.35;cursor:not-allowed}
 .remove{background:none;border:0;text-decoration:underline;font-size:9px}
+.stockWarning{font-size:9px;font-weight:800;margin-top:7px}
 .cartTotal{border-top:1px solid #111;margin-top:25px;padding-top:20px}
 .totalLine{display:flex;justify-content:space-between;font-size:12px;margin:8px 0}
 .totalLine.big{font-size:18px;font-weight:900;margin-top:18px}
@@ -148,24 +154,25 @@ a{text-decoration:none;color:inherit}
 <div class="nav">
 <a href="#" class="logo">VIBELEVEL</a>
 <nav class="navlinks">
-<a href="#collection">Collection</a>
+<a href="#collection">Colección</a>
 <a href="#manifest">Worldwide</a>
-<a href="#reviews">Reviews</a>
+<a href="#reviews">Opiniones</a>
 </nav>
 <div class="navright">
-<button class="cartbtn" onclick="openCart()">CART <span class="cartcount" id="cartCount">0</span></button>
+<button class="cartbtn" onclick="openCart()">CARRITO <span class="cartcount" id="cartCount">0</span></button>
 <button class="menuBtn" onclick="openCart()">☰</button>
 </div>
 </div>
 </header>
 
 <main>
+
 <section class="hero">
 <div class="heroText">
 <div class="heroEyebrow">VIBELEVEL WORLDWIDE / 001</div>
-<h1 class="heroTitle"><span>MOVE</span><span>YOUR</span><span>LEVEL.</span></h1>
-<p class="heroSub">Streetwear built around identity, movement and individuality. No noise. No limits. Just your level.</p>
-<a href="#collection" class="heroBtn">SHOP THE COLLECTION →</a>
+<h1 class="heroTitle"><span>WEAR</span><span>YOUR</span><span>LEGACY.</span></h1>
+<p class="heroSub">Streetwear construido alrededor de identidad, movimiento e individualidad. Sin ruido. Sin límites. Solo tu nivel.</p>
+<a href="#collection" class="heroBtn">VER COLECCIÓN →</a>
 </div>
 <div class="heroVisual"></div>
 </section>
@@ -173,132 +180,218 @@ a{text-decoration:none;color:inherit}
 <section class="section" id="collection">
 <div class="sectionHead">
 <div>
-<div class="kicker">VIBELEVEL / COLLECTION</div>
-<h2 class="sectionTitle">Latest Drop</h2>
+<div class="kicker">VIBELEVEL / COLECCIÓN</div>
+<h2 class="sectionTitle">Último Drop</h2>
 </div>
 <div class="filters">
-<button class="filter active" onclick="setCategory('ALL',this)">ALL</button>
-<button class="filter" onclick="setCategory('NEW',this)">NEW</button>
-<button class="filter" onclick="setCategory('SALE',this)">SALE</button>
+<button class="filter active" onclick="setCategory('ALL',this)">TODOS</button>
+<button class="filter" onclick="setCategory('NEW',this)">NUEVOS</button>
+<button class="filter" onclick="setCategory('SALE',this)">OFERTAS</button>
 </div>
 </div>
-<input id="searchInput" class="search" placeholder="SEARCH THE COLLECTION..." oninput="renderProducts()">
+
+<input id="searchInput" class="search" placeholder="BUSCAR EN LA COLECCIÓN..." oninput="renderProducts()">
+
 <div id="products" class="products"></div>
 </section>
 
 <section class="manifest" id="manifest">
-<div class="manifestItem"><div class="manifestNum">01 / IDENTITY</div><div class="manifestTitle">WEAR YOUR LEVEL.</div><div class="manifestText">Cada pieza representa una forma de moverte, pensar y destacar.</div></div>
-<div class="manifestItem"><div class="manifestNum">02 / WORLDWIDE</div><div class="manifestTitle">NO BORDERS.</div><div class="manifestText">VibeLevel nace para moverse más allá de un lugar.</div></div>
-<div class="manifestItem"><div class="manifestNum">03 / STREET</div><div class="manifestTitle">STAY DIFFERENT.</div><div class="manifestText">Una estética limpia, agresiva y reconocible sin necesidad de exceso.</div></div>
+<div class="manifestItem">
+<div class="manifestNum">01 / IDENTIDAD</div>
+<div class="manifestTitle">WEAR YOUR LEVEL.</div>
+<div class="manifestText">Cada pieza representa una forma de moverte, pensar y destacar.</div>
+</div>
+<div class="manifestItem">
+<div class="manifestNum">02 / WORLDWIDE</div>
+<div class="manifestTitle">SIN FRONTERAS.</div>
+<div class="manifestText">VibeLevel nace para moverse más allá de un lugar.</div>
+</div>
+<div class="manifestItem">
+<div class="manifestNum">03 / STREET</div>
+<div class="manifestTitle">MANTENTE DIFERENTE.</div>
+<div class="manifestText">Una estética limpia, agresiva y reconocible sin necesidad de exceso.</div>
+</div>
 </section>
 
 <section class="section" id="reviews">
-<div class="sectionHead"><div><div class="kicker">COMMUNITY</div><h2 class="sectionTitle">Reviews</h2></div></div>
+<div class="sectionHead">
+<div>
+<div class="kicker">COMUNIDAD</div>
+<h2 class="sectionTitle">Opiniones</h2>
+</div>
+</div>
+
 <div id="reviewsList" class="reviews"></div>
+
 <div class="reviewForm">
 <input id="reviewName" placeholder="TU NOMBRE">
 <textarea id="reviewText" placeholder="ESCRIBE TU EXPERIENCIA"></textarea>
-<div style="margin:10px 0"><span class="kicker">RATING</span><div id="ratingStars" style="margin-top:8px;font-size:22px;cursor:pointer">☆ ☆ ☆ ☆ ☆</div></div>
-<button class="blackBtn" onclick="submitReview()">PUBLICAR REVIEW</button>
+
+<div style="margin:10px 0">
+<span class="kicker">VALORACIÓN</span>
+<div id="ratingStars" style="margin-top:8px;font-size:22px;cursor:pointer">☆ ☆ ☆ ☆ ☆</div>
+</div>
+
+<button class="blackBtn" onclick="submitReview()">PUBLICAR OPINIÓN</button>
 <div id="reviewMessage"></div>
 </div>
 </section>
+
 </main>
 
 <footer class="footer">
-<div><div class="footerLogo">VIBELEVEL</div><p>VIBELEVEL WORLDWIDE.<br>STREETWEAR / IDENTITY / MOVEMENT.</p></div>
-<div><h4>EXPLORE</h4><a href="#collection">Collection</a><a href="#manifest">Worldwide</a><a href="#reviews">Reviews</a></div>
-<div><h4>CONTACT</h4><a href="https://wa.me/240555626619" target="_blank">WhatsApp</a><a href="#">Instagram</a></div>
+<div>
+<div class="footerLogo">VIBELEVEL</div>
+<p>VIBELEVEL WORLDWIDE.<br>STREETWEAR / IDENTIDAD / MOVIMIENTO.</p>
+</div>
+
+<div>
+<h4>EXPLORAR</h4>
+<a href="#collection">Colección</a>
+<a href="#manifest">Worldwide</a>
+<a href="#reviews">Opiniones</a>
+</div>
+
+<div>
+<h4>CONTACTO</h4>
+<a href="https://wa.me/240555626619" target="_blank">WhatsApp</a>
+<a href="#">Instagram</a>
+</div>
 </footer>
 
 <div id="overlay" class="overlay" onclick="closeAllModals()"></div>
 
 <div id="detailModal" class="modal">
 <button class="close" onclick="closeAllModals()">×</button>
+
 <div class="detail">
 <img id="detailImg" class="detailImg">
+
 <div class="detailInfo">
 <div id="detailName" class="detailName"></div>
 <div id="detailPrice" class="detailPrice"></div>
 <div id="detailDesc" class="detailDesc"></div>
-<div class="sizeTitle">SELECT SIZE</div>
+
+<div id="detailStock" class="stockDetail"></div>
+
+<div class="sizeTitle">SELECCIONA TALLA</div>
 <div id="detailSizes" class="sizes"></div>
-<button class="buy" onclick="addDetailToCart()">ADD TO CART</button>
+
+<button id="detailBuyBtn" class="buy" onclick="addDetailToCart()">AÑADIR AL CARRITO</button>
 </div>
 </div>
 </div>
 
 <div id="cartModal" class="modal">
 <button class="close" onclick="closeAllModals()">×</button>
+
 <div class="cart">
-<div class="kicker">VIBELEVEL / BAG</div>
-<h2 class="cartTitle">Your Cart</h2>
+<div class="kicker">VIBELEVEL / CARRITO</div>
+<h2 class="cartTitle">Tu Carrito</h2>
+
 <div id="cartItems"></div>
+
 <div class="cartTotal">
-<div class="totalLine"><span>SUBTOTAL</span><strong id="cartSubtotal">0 XAF</strong></div>
-<button class="buy" onclick="openCheckout()">CHECKOUT →</button>
+<div class="totalLine">
+<span>SUBTOTAL</span>
+<strong id="cartSubtotal">0 XAF</strong>
+</div>
+
+<button class="buy" onclick="openCheckout()">FINALIZAR PEDIDO →</button>
 </div>
 </div>
 </div>
 
 <div id="checkoutModal" class="modal">
 <button class="close" onclick="closeAllModals()">×</button>
+
 <div class="checkout">
-<div class="kicker">VIBELEVEL / CHECKOUT</div>
-<h2 class="checkoutTitle">Complete Order</h2>
+<div class="kicker">VIBELEVEL / PEDIDO</div>
+<h2 class="checkoutTitle">Completar Pedido</h2>
 
 <div class="formGrid">
-<div class="field"><label>FULL NAME</label><input id="checkoutName"></div>
-<div class="field"><label>PHONE NUMBER</label><input id="checkoutPhone" placeholder="+240..."></div>
+<div class="field">
+<label>NOMBRE COMPLETO</label>
+<input id="checkoutName">
 </div>
 
-<div class="field"><label>DELIVERY ADDRESS</label><textarea id="checkoutAddress"></textarea></div>
+<div class="field">
+<label>NÚMERO DE TELÉFONO</label>
+<input id="checkoutPhone" placeholder="+240...">
+</div>
+</div>
 
 <div class="field">
-<label>SHIPPING</label>
+<label>DIRECCIÓN DE ENTREGA</label>
+<textarea id="checkoutAddress"></textarea>
+</div>
+
+<div class="field">
+<label>ENVÍO</label>
 <select id="shippingSelect" onchange="updateCheckoutTotals()">
-<option value="0">LOCAL PICKUP — 0 XAF</option>
-<option value="50000">DELIVERY — 50.000 XAF</option>
+<option value="0">RECOGIDA LOCAL — 0 XAF</option>
+<option value="50000">ENTREGA — 50.000 XAF</option>
 </select>
 </div>
 
 <div class="paymentBox">
-<h3>PAYMENT METHOD</h3>
+<h3>MÉTODO DE PAGO</h3>
+
 <div class="field">
 <select id="paymentMethod" onchange="showPaymentInfo()">
-<option value="">SELECT PAYMENT METHOD</option>
+<option value="">SELECCIONA MÉTODO DE PAGO</option>
 <option value="BANGE">BANGE</option>
 <option value="MUNI DINERO">MUNI DINERO</option>
 </select>
 </div>
-<div id="paymentInfo" class="paymentInfo"></div>
 
-<div class="field"><label>PAYMENT REFERENCE / CODE</label><input id="paymentReference" placeholder="Código o referencia del pago"></div>
+<div id="paymentInfo" class="paymentInfo">Selecciona un método de pago.</div>
 
 <div class="field">
-<label>PAYMENT PROOF</label>
+<label>REFERENCIA / CÓDIGO DEL PAGO</label>
+<input id="paymentReference" placeholder="Código o referencia del pago">
+</div>
+
+<div class="field">
+<label>COMPROBANTE DE PAGO</label>
+
 <div class="proof">
 <input id="paymentProof" type="file" accept="image/*">
-<div style="margin-top:7px;color:#666">Sube una foto clara del comprobante. Máximo 8 MB.</div>
+<div style="margin-top:7px;color:#666">
+Sube una foto clara del comprobante. Máximo 8 MB.
+</div>
 </div>
 </div>
 </div>
 
 <div class="cartTotal">
-<div class="totalLine"><span>PRODUCTS</span><strong id="checkoutSubtotal">0 XAF</strong></div>
-<div class="totalLine"><span>SHIPPING</span><strong id="checkoutShipping">0 XAF</strong></div>
-<div class="totalLine big"><span>TOTAL</span><strong id="checkoutTotal">0 XAF</strong></div>
+<div class="totalLine">
+<span>PRODUCTOS</span>
+<strong id="checkoutSubtotal">0 XAF</strong>
 </div>
 
-<button class="buy" onclick="submitOrder()">CONFIRM ORDER →</button>
+<div class="totalLine">
+<span>ENVÍO</span>
+<strong id="checkoutShipping">0 XAF</strong>
+</div>
+
+<div class="totalLine big">
+<span>TOTAL</span>
+<strong id="checkoutTotal">0 XAF</strong>
+</div>
+</div>
+
+<button class="buy" onclick="submitOrder()">CONFIRMAR PEDIDO →</button>
+
 <div id="orderMessage" class="orderMsg"></div>
-</div>
-</div>
 
-<script>
+</div>
+     </div>
+     <script>
 const SUPABASE_URL="https://yqlyxnlheoiftxhpteyb.supabase.co";
 const SUPABASE_KEY="sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
 const WHATSAPP="240555626619";
+
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let products=[];
@@ -311,107 +404,301 @@ let selectedRating=0;
 function money(n){
 return Number(n||0).toLocaleString("es-ES")+" XAF";
 }
+
 function escapeHtml(v){
-return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+return String(v??"").replace(/[&<>"']/g,m=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[m]));
 }
+
+function getStock(product){
+return Math.max(0,Number(product?.stock||0));
+}
+
 function saveCart(){
 localStorage.setItem("vibelevel_cart",JSON.stringify(cart));
 updateCartCount();
 }
+
 function updateCartCount(){
-document.getElementById("cartCount").textContent=cart.reduce((a,i)=>a+Number(i.quantity||0),0);
+document.getElementById("cartCount").textContent=
+cart.reduce((a,i)=>a+Number(i.quantity||0),0);
 }
+
 function openModal(id){
 document.getElementById("overlay").classList.add("show");
 document.getElementById(id).classList.add("show");
 }
+
 function closeAllModals(){
 document.querySelectorAll(".modal").forEach(x=>x.classList.remove("show"));
 document.getElementById("overlay").classList.remove("show");
 }
+
 function openCart(){
 renderCart();
 openModal("cartModal");
 }
+
 function setCategory(c,btn){
 activeCategory=c;
-document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+
+document.querySelectorAll(".filter")
+.forEach(x=>x.classList.remove("active"));
+
 if(btn)btn.classList.add("active");
-renderProducts();
-}
-<script>
-async function loadProducts(){
-const box=document.getElementById("products");
-box.innerHTML='<div class="empty">LOADING COLLECTION...</div>';
-const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
-if(error){
-console.error(error);
-box.innerHTML='<div class="empty">NO SE PUDO CARGAR LA COLECCIÓN.</div>';
-return;
-}
-products=data||[];
+
 renderProducts();
 }
 
-function renderProducts(){
+async function loadProducts(){
 const box=document.getElementById("products");
-const q=(document.getElementById("searchInput").value||"").toLowerCase().trim();
-let list=products.filter(p=>{
-const text=(p.name+" "+(p.category||"")+" "+(p.description||"")).toLowerCase();
-const search=!q||text.includes(q);
-const cat=activeCategory==="ALL"||(
-activeCategory==="NEW"?p.is_new:
-activeCategory==="SALE"?p.is_sale:true
-);
-return search&&cat;
-});
-if(!list.length){
-box.innerHTML='<div class="empty">NO PRODUCTS FOUND.</div>';
+
+box.innerHTML='<div class="empty">CARGANDO COLECCIÓN...</div>';
+
+const {data,error}=await db
+.from("products")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+console.error(error);
+
+box.innerHTML=
+'<div class="empty">NO SE PUDO CARGAR LA COLECCIÓN.</div>';
+
 return;
 }
+
+products=data||[];
+
+renderProducts();
+syncCartWithStock();
+}
+
+function renderProducts(){
+
+const box=document.getElementById("products");
+
+const q=(document.getElementById("searchInput").value||"")
+.toLowerCase()
+.trim();
+
+let list=products.filter(p=>{
+
+const text=(
+p.name+" "+
+(p.category||"")+" "+
+(p.description||"")
+).toLowerCase();
+
+const search=!q||text.includes(q);
+
+const cat=
+activeCategory==="ALL"||
+(
+activeCategory==="NEW"
+?p.is_new
+:
+activeCategory==="SALE"
+?p.is_sale
+:true
+);
+
+return search&&cat;
+});
+
+if(!list.length){
+box.innerHTML='<div class="empty">NO HAY PRODUCTOS DISPONIBLES.</div>';
+return;
+}
+
 box.innerHTML=list.map(p=>{
-const sold=Number(p.stock||0)<=0||p.sold_out;
-return `<article class="product" onclick="openProduct('${p.id}')">
-${p.is_new?'<div class="badge">NEW</div>':""}
-${sold?'<div class="sold">SOLD OUT</div>':""}
-<img class="productImg" src="${escapeHtml(p.image_url||p.image||"")}" alt="${escapeHtml(p.name)}">
+
+const stock=getStock(p);
+const sold=stock<=0||p.sold_out;
+
+return `
+<article class="product" onclick="openProduct('${p.id}')">
+
+${p.is_new?'<div class="badge">NUEVO</div>':""}
+
+${sold?'<div class="sold">AGOTADO</div>':""}
+
+<img
+class="productImg"
+src="${escapeHtml(p.image_url||p.image||"")}"
+alt="${escapeHtml(p.name)}"
+>
+
 <div class="productInfo">
-<div class="productName">${escapeHtml(p.name)}</div>
-<div class="productMeta"><span>${money(p.price)}</span>${p.old_price?`<span class="old">${money(p.old_price)}</span>`:""}</div>
-</div></article>`;
+
+<div class="productName">
+${escapeHtml(p.name)}
+</div>
+
+<div class="productMeta">
+<span>${money(p.price)}</span>
+${p.old_price?`<span class="old">${money(p.old_price)}</span>`:""}
+</div>
+
+<div class="stockLabel ${sold?"stockOut":""}">
+${sold?"AGOTADO":stock+" unidad"+(stock===1?"":"es")+" disponible"+(stock===1?"":"s")}
+</div>
+
+</div>
+</article>
+`;
+
 }).join("");
 }
 
 function openProduct(id){
-selectedProduct=products.find(p=>String(p.id)===String(id));
+
+selectedProduct=products.find(
+p=>String(p.id)===String(id)
+);
+
 selectedSize="";
+
 if(!selectedProduct)return;
-document.getElementById("detailImg").src=selectedProduct.image_url||selectedProduct.image||"";
-document.getElementById("detailName").textContent=selectedProduct.name||"";
-document.getElementById("detailPrice").textContent=money(selectedProduct.price);
-document.getElementById("detailDesc").textContent=selectedProduct.description||"";
-let sizes=Array.isArray(selectedProduct.sizes)?selectedProduct.sizes:
-String(selectedProduct.sizes||"S,M,L,XL,XXL").split(",").map(x=>x.trim()).filter(Boolean);
-document.getElementById("detailSizes").innerHTML=sizes.map(s=>`<button class="size" onclick="selectSize(this,'${escapeHtml(s)}')">${escapeHtml(s)}</button>`).join("");
+
+document.getElementById("detailImg").src=
+selectedProduct.image_url||
+selectedProduct.image||
+"";
+
+document.getElementById("detailName").textContent=
+selectedProduct.name||"";
+
+document.getElementById("detailPrice").textContent=
+money(selectedProduct.price);
+
+document.getElementById("detailDesc").textContent=
+selectedProduct.description||"";
+
+const stock=getStock(selectedProduct);
+const sold=stock<=0||selectedProduct.sold_out;
+
+document.getElementById("detailStock").textContent=
+sold
+?"AGOTADO"
+:
+stock+" unidad"+(stock===1?"":"es")+" disponible"+(stock===1?"":"s");
+
+document.getElementById("detailStock").className=
+"stockDetail"+(sold?" stockOut":"");
+
+const buyButton=document.getElementById("detailBuyBtn");
+
+buyButton.disabled=sold;
+buyButton.textContent=sold
+?"AGOTADO"
+:"AÑADIR AL CARRITO";
+
+let sizes=
+Array.isArray(selectedProduct.sizes)
+?selectedProduct.sizes
+:
+String(
+selectedProduct.sizes||"S,M,L,XL,XXL"
+)
+.split(",")
+.map(x=>x.trim())
+.filter(Boolean);
+
+document.getElementById("detailSizes").innerHTML=
+sizes.map(s=>`
+<button
+class="size"
+onclick="selectSize(this,'${escapeHtml(s)}')"
+>
+${escapeHtml(s)}
+</button>
+`).join("");
+
 openModal("detailModal");
 }
 
 function selectSize(btn,size){
+
 selectedSize=size;
-document.querySelectorAll("#detailSizes .size").forEach(x=>x.classList.remove("selected"));
+
+document
+.querySelectorAll("#detailSizes .size")
+.forEach(x=>x.classList.remove("selected"));
+
 btn.classList.add("selected");
 }
 
+function getCartQuantity(productId){
+
+return cart
+.filter(i=>String(i.product_id)===String(productId))
+.reduce(
+(total,i)=>total+Number(i.quantity||0),
+0
+);
+}
+
 function addDetailToCart(){
+
 if(!selectedProduct)return;
-let sold=Number(selectedProduct.stock||0)<=0||selectedProduct.sold_out;
-if(sold){alert("Este producto está agotado.");return;}
-let sizes=Array.isArray(selectedProduct.sizes)?selectedProduct.sizes:
-String(selectedProduct.sizes||"").split(",").map(x=>x.trim()).filter(Boolean);
-if(sizes.length&&!selectedSize){alert("Selecciona una talla.");return;}
-const existing=cart.find(i=>String(i.product_id)===String(selectedProduct.id)&&i.size===selectedSize);
-if(existing)existing.quantity++;
-else cart.push({
+
+const stock=getStock(selectedProduct);
+
+if(stock<=0||selectedProduct.sold_out){
+
+alert("Este producto está agotado.");
+return;
+}
+
+let sizes=
+Array.isArray(selectedProduct.sizes)
+?selectedProduct.sizes
+:
+String(selectedProduct.sizes||"")
+.split(",")
+.map(x=>x.trim())
+.filter(Boolean);
+
+if(sizes.length&&!selectedSize){
+
+alert("Selecciona una talla.");
+return;
+}
+
+const existing=cart.find(i=>
+String(i.product_id)===String(selectedProduct.id)&&
+i.size===selectedSize
+);
+
+const totalForProduct=getCartQuantity(selectedProduct.id);
+
+if(totalForProduct>=stock){
+
+alert(
+"No puedes añadir más unidades. "+
+"Solo quedan "+stock+" disponibles."
+);
+
+return;
+}
+
+if(existing){
+
+existing.quantity++;
+
+existing.line_total=
+Number(existing.unit_price)*existing.quantity;
+
+}else{
+
+cart.push({
 product_id:selectedProduct.id,
 product_name:selectedProduct.name,
 image_url:selectedProduct.image_url||selectedProduct.image||"",
@@ -420,96 +707,308 @@ quantity:1,
 unit_price:Number(selectedProduct.price||0),
 line_total:Number(selectedProduct.price||0)
 });
+
+}
+
 saveCart();
+
 closeAllModals();
+
 openCart();
 }
 
 function cartSubtotal(){
-return cart.reduce((a,i)=>a+Number(i.unit_price||0)*Number(i.quantity||0),0);
+
+return cart.reduce(
+(a,i)=>
+a+
+Number(i.unit_price||0)*
+Number(i.quantity||0),
+0
+);
+}
+
+function syncCartWithStock(){
+
+let changed=false;
+
+cart=cart.filter(item=>{
+
+const product=products.find(
+p=>String(p.id)===String(item.product_id)
+);
+
+if(!product){
+changed=true;
+return false;
+}
+
+const stock=getStock(product);
+
+if(stock<=0){
+changed=true;
+return false;
+}
+
+if(Number(item.quantity)>stock){
+
+item.quantity=stock;
+
+item.line_total=
+Number(item.unit_price)*stock;
+
+changed=true;
+}
+
+return true;
+});
+
+if(changed)saveCart();
 }
 
 function renderCart(){
+
+syncCartWithStock();
+
 const box=document.getElementById("cartItems");
+
 if(!cart.length){
-box.innerHTML='<div class="empty">YOUR BAG IS EMPTY.</div>';
-document.getElementById("cartSubtotal").textContent=money(0);
+
+box.innerHTML=
+'<div class="empty">TU CARRITO ESTÁ VACÍO.</div>';
+
+document.getElementById("cartSubtotal").textContent=
+money(0);
+
 return;
 }
-box.innerHTML=cart.map((i,index)=>`
+
+box.innerHTML=cart.map((i,index)=>{
+
+const product=products.find(
+p=>String(p.id)===String(i.product_id)
+);
+
+const stock=product?getStock(product):Number(i.quantity);
+
+const atMax=Number(i.quantity)>=stock;
+
+return `
 <div class="cartItem">
+
 <img src="${escapeHtml(i.image_url||"")}">
+
 <div>
-<div class="cartItemName">${escapeHtml(i.product_name)}</div>
-<div class="cartItemMeta">SIZE: ${escapeHtml(i.size)} · ${money(i.unit_price)}</div>
+
+<div class="cartItemName">
+${escapeHtml(i.product_name)}
+</div>
+
+<div class="cartItemMeta">
+TALLA: ${escapeHtml(i.size)}
+· ${money(i.unit_price)}
+</div>
+
 <div class="qty">
-<button onclick="changeQty(${index},-1)">−</button>
+
+<button
+onclick="changeQty(${index},-1)"
+${Number(i.quantity)<=1?"disabled":""}
+>−</button>
+
 <strong>${i.quantity}</strong>
-<button onclick="changeQty(${index},1)">+</button>
-<button class="remove" onclick="removeCart(${index})">REMOVE</button>
+
+<button
+onclick="changeQty(${index},1)"
+${atMax?"disabled":""}
+>+</button>
+
+<button
+class="remove"
+onclick="removeCart(${index})"
+>
+ELIMINAR
+</button>
+
 </div>
+
+${atMax?
+`<div class="stockWarning">
+LÍMITE DE STOCK: ${stock} UNIDAD${stock===1?"":"ES"}
+</div>`
+:
+`<div class="stockWarning">
+QUEDAN ${stock-Number(i.quantity)} UNIDAD${stock-Number(i.quantity)===1?"":"ES"}
+</div>`
+}
+
 </div>
-<strong>${money(Number(i.unit_price)*Number(i.quantity))}</strong>
-</div>`).join("");
-document.getElementById("cartSubtotal").textContent=money(cartSubtotal());
+
+<strong>
+${money(Number(i.unit_price)*Number(i.quantity))}
+</strong>
+
+</div>
+`;
+
+}).join("");
+
+document.getElementById("cartSubtotal").textContent=
+money(cartSubtotal());
 }
 
 function changeQty(index,n){
+
 if(!cart[index])return;
-cart[index].quantity=Math.max(1,Number(cart[index].quantity)+n);
-cart[index].line_total=Number(cart[index].unit_price)*cart[index].quantity;
+
+const item=cart[index];
+
+if(n>0){
+
+const product=products.find(
+p=>String(p.id)===String(item.product_id)
+);
+
+if(!product){
+
+alert("Este producto ya no está disponible.");
+return;
+}
+
+const stock=getStock(product);
+
+if(Number(item.quantity)>=stock){
+
+alert(
+"No puedes superar el stock disponible. "+
+"Solo quedan "+stock+" unidades."
+);
+
+return;
+}
+}
+
+item.quantity=Math.max(
+1,
+Number(item.quantity)+n
+);
+
+item.line_total=
+Number(item.unit_price)*item.quantity;
+
 saveCart();
+
 renderCart();
 }
+
 function removeCart(index){
+
 cart.splice(index,1);
+
 saveCart();
+
 renderCart();
 }
 
 function buildOrderItems(){
+
 return {
+
 orderItems:cart.map(i=>({
+
 product_id:i.product_id,
 product_name:i.product_name,
 quantity:Number(i.quantity),
 size:i.size,
 unit_price:Number(i.unit_price),
 line_total:Number(i.unit_price)*Number(i.quantity)
+
 })),
+
 subtotal:cartSubtotal()
+
 };
 }
 
 function openCheckout(){
-if(!cart.length){alert("El carrito está vacío.");return;}
+
+if(!cart.length){
+
+alert("El carrito está vacío.");
+
+return;
+}
+
 closeAllModals();
+
 updateCheckoutTotals();
+
 openModal("checkoutModal");
 }
 
 function updateCheckoutTotals(){
+
 const subtotal=cartSubtotal();
-const shipping=Number(document.getElementById("shippingSelect").value||0);
-document.getElementById("checkoutSubtotal").textContent=money(subtotal);
-document.getElementById("checkoutShipping").textContent=money(shipping);
-document.getElementById("checkoutTotal").textContent=money(subtotal+shipping);
+
+const shipping=
+Number(
+document.getElementById("shippingSelect").value||0
+);
+
+document.getElementById("checkoutSubtotal")
+.textContent=money(subtotal);
+
+document.getElementById("checkoutShipping")
+.textContent=money(shipping);
+
+document.getElementById("checkoutTotal")
+.textContent=money(subtotal+shipping);
 }
 
 function showPaymentInfo(){
-const m=document.getElementById("paymentMethod").value;
-const box=document.getElementById("paymentInfo");
-if(m==="BANGE"){
-box.innerHTML="<strong>BANGE</strong><br>Cuenta: 38816123501-21<br>Titular: Nicolás Salvador Lopete Sima";
-}else if(m==="MUNI DINERO"){
-box.innerHTML="<strong>MUNI DINERO</strong><br>Teléfono: +240 555626619<br>Titular: Nicolás Salvador Lopete Sima";
-}else{
-box.innerHTML="Selecciona un método de pago.";
-}
-}
 
-function buildAdminWhatsAppUrl(orderNumber,name,phone,orderItems,shipping,total){
-const quantityTotal=orderItems.reduce((a,i)=>a+Number(i.quantity||0),0);
+const m=
+document.getElementById("paymentMethod").value;
+
+const box=
+document.getElementById("paymentInfo");
+
+if(m==="BANGE"){
+
+box.innerHTML=
+"<strong>BANGE</strong><br>"+
+"Cuenta: 38816123501-21<br>"+
+"Titular: Nicolás Salvador Lopete Sima";
+
+}else if(m==="MUNI DINERO"){
+
+box.innerHTML=
+"<strong>MUNI DINERO</strong><br>"+
+"Teléfono: +240 555626619<br>"+
+"Titular: Nicolás Salvador Lopete Sima";
+
+}else{
+
+box.innerHTML=
+"Selecciona un método de pago.";
+
+}
+}
+          function buildAdminWhatsAppUrl(
+orderNumber,
+name,
+phone,
+orderItems,
+shipping,
+total
+){
+
+const quantityTotal=
+orderItems.reduce(
+(a,i)=>a+Number(i.quantity||0),
+0
+);
+
 const msg=`VIBELEVEL — NUEVO PEDIDO
 
 Pedido: ${orderNumber}
@@ -522,100 +1021,372 @@ Envío: ${money(shipping)}
 Total: ${money(total)}
 
 Revisar en VibeLevel Admin.`;
-return "https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(msg);
+
+return "https://wa.me/"+
+WHATSAPP+
+"?text="+
+encodeURIComponent(msg);
+}
+
+async function checkCurrentStock(){
+
+const ids=[
+...new Set(
+cart.map(i=>i.product_id)
+)
+];
+
+if(!ids.length){
+
+return{
+ok:false,
+message:"El carrito está vacío."
+};
+
+}
+
+const {data,error}=await db
+.from("products")
+.select("id,name,stock,sold_out")
+.in("id",ids);
+
+if(error){
+
+return{
+ok:false,
+message:"No se pudo comprobar el stock: "+
+error.message
+};
+
+}
+
+for(const item of cart){
+
+const product=(data||[]).find(
+p=>String(p.id)===String(item.product_id)
+);
+
+if(!product){
+
+return{
+ok:false,
+message:
+"El producto "+
+item.product_name+
+" ya no está disponible."
+};
+
+}
+
+const stock=getStock(product);
+
+if(product.sold_out||stock<=0){
+
+return{
+ok:false,
+message:
+item.product_name+
+" está agotado."
+};
+
+}
+
+if(Number(item.quantity)>stock){
+
+return{
+ok:false,
+message:
+item.product_name+
+" solo tiene "+
+stock+
+" unidad"+
+(stock===1?"":"es")+
+" disponible"+
+(stock===1?"":"s")+
+". Has seleccionado "+
+item.quantity+"."
+};
+
+}
+}
+
+return{
+ok:true,
+products:data||[]
+};
 }
 
 async function submitOrder(){
-const message=document.getElementById("orderMessage");
+
+const message=
+document.getElementById("orderMessage");
+
 message.innerHTML="";
+
 if(!cart.length){
+
 alert("El carrito está vacío.");
+
 return;
 }
 
-const name=document.getElementById("checkoutName").value.trim();
-const phone=document.getElementById("checkoutPhone").value.trim();
-const address=document.getElementById("checkoutAddress").value.trim();
-const paymentMethod=document.getElementById("paymentMethod").value;
-const paymentReference=document.getElementById("paymentReference").value.trim();
-const proof=document.getElementById("paymentProof").files[0];
-const shipping=Number(document.getElementById("shippingSelect").value||0);
+/* COMPROBACIÓN FINAL DEL STOCK */
 
-if(!name||!phone||!address||!paymentMethod||!paymentReference||!proof){
-message.innerHTML="<p>Completa todos los campos y sube el comprobante.</p>";
+const stockCheck=
+await checkCurrentStock();
+
+if(!stockCheck.ok){
+
+message.innerHTML=
+`<p style="color:#c00">
+${escapeHtml(stockCheck.message)}
+</p>`;
+
+await loadProducts();
+
+renderCart();
+
 return;
 }
+
+const name=
+document.getElementById("checkoutName")
+.value.trim();
+
+const phone=
+document.getElementById("checkoutPhone")
+.value.trim();
+
+const address=
+document.getElementById("checkoutAddress")
+.value.trim();
+
+const paymentMethod=
+document.getElementById("paymentMethod")
+.value;
+
+const paymentReference=
+document.getElementById("paymentReference")
+.value.trim();
+
+const proof=
+document.getElementById("paymentProof")
+.files[0];
+
+const shipping=
+Number(
+document.getElementById("shippingSelect")
+.value||0
+);
+
+if(
+!name||
+!phone||
+!address||
+!paymentMethod||
+!paymentReference||
+!proof
+){
+
+message.innerHTML=
+"<p>Completa todos los campos y sube el comprobante.</p>";
+
+return;
+}
+
 if(!proof.type.startsWith("image/")){
-message.innerHTML="<p>El comprobante debe ser una imagen.</p>";
+
+message.innerHTML=
+"<p>El comprobante debe ser una imagen.</p>";
+
 return;
 }
+
 if(proof.size>8*1024*1024){
-message.innerHTML="<p>El comprobante no puede superar 8 MB.</p>";
+
+message.innerHTML=
+"<p>El comprobante no puede superar 8 MB.</p>";
+
 return;
 }
 
 let whatsappWindow=null;
 
 try{
-whatsappWindow=window.open("about:blank","_blank");
 
-const {orderItems,subtotal}=buildOrderItems();
+whatsappWindow=
+window.open("about:blank","_blank");
+
+const {
+orderItems,
+subtotal
+}=buildOrderItems();
+
 const total=subtotal+shipping;
-const orderNumber="VL-"+Date.now();
-const extension=(proof.name.split(".").pop()||"jpg").toLowerCase();
-const filePath="comprobantes/"+orderNumber+"-"+Math.random().toString(36).slice(2)+"."+extension;
 
-const {error:uploadError}=await db.storage.from("payment-proofs").upload(filePath,proof,{
+const orderNumber=
+"VL-"+Date.now();
+
+const extension=
+(
+proof.name
+.split(".")
+.pop()||
+"jpg"
+).toLowerCase();
+
+const filePath=
+"comprobantes/"+
+orderNumber+
+"-"+
+Math.random()
+.toString(36)
+.slice(2)+
+"."+
+extension;
+
+const {
+error:uploadError
+}=await db.storage
+.from("payment-proofs")
+.upload(
+filePath,
+proof,
+{
 contentType:proof.type,
 upsert:false
-});
-if(uploadError)throw new Error("Error al subir comprobante: "+uploadError.message);
+}
+);
 
-const {data:orderData,error:orderError}=await db.from("orders").insert({
+if(uploadError){
+
+throw new Error(
+"Error al subir comprobante: "+
+uploadError.message
+);
+
+}
+
+const {
+data:orderData,
+error:orderError
+}=await db
+.from("orders")
+.insert({
+
 order_number:orderNumber,
+
 customer_name:name,
+
 customer_phone:phone,
+
 customer_address:address,
+
 payment_method:paymentMethod,
+
 payment_reference:paymentReference,
+
 payment_proof_url:filePath,
-shipping_method:shipping===0?"LOCAL":"DELIVERY",
+
+shipping_method:
+shipping===0
+?"LOCAL"
+:"DELIVERY",
+
 shipping_cost:shipping,
+
 subtotal:subtotal,
+
 total:total,
+
 payment_status:"PENDING",
+
 order_status:"NEW"
-}).select().single();
 
-if(orderError)throw new Error("Error al crear pedido: "+orderError.message+" | Código: "+(orderError.code||"sin código"));
+})
+.select()
+.single();
 
-const itemsToInsert=orderItems.map(i=>({
+if(orderError){
+
+throw new Error(
+"Error al crear pedido: "+
+orderError.message+
+" | Código: "+
+(orderError.code||"sin código")
+);
+
+}
+
+const itemsToInsert=
+orderItems.map(i=>({
+
 order_id:orderData.id,
+
 product_id:i.product_id,
+
 product_name:i.product_name,
+
 quantity:i.quantity,
+
 size:i.size,
+
 unit_price:i.unit_price,
+
 line_total:i.line_total
+
 }));
 
-const {data:itemsData,error:itemsError}=await db.from("order_items").insert(itemsToInsert).select();
+const {
+data:itemsData,
+error:itemsError
+}=await db
+.from("order_items")
+.insert(itemsToInsert)
+.select();
 
 console.log("ITEMS:",itemsToInsert);
 console.log("RESPUESTA:",itemsData);
 console.log("ERROR:",itemsError);
 
-if(itemsError)throw new Error("Error al guardar productos: "+itemsError.message+" | Código: "+(itemsError.code||"sin código"));
+if(itemsError){
+
+throw new Error(
+"Error al guardar productos: "+
+itemsError.message+
+" | Código: "+
+(itemsError.code||"sin código")
+);
+
+}
 
 message.innerHTML=`
-<div style="padding:15px;border:1px solid #111">
-<strong>PEDIDO RECIBIDO CORRECTAMENTE.</strong><br><br>
-Número de pedido: <strong>${escapeHtml(orderNumber)}</strong><br>
-Estado: <strong>EN PROCESO</strong><br>
-Pago: <strong>PENDIENTE DE VERIFICACIÓN</strong>
-</div>`;
 
-const whatsappUrl=buildAdminWhatsAppUrl(
+<div style="padding:15px;border:1px solid #111">
+
+<strong>PEDIDO RECIBIDO CORRECTAMENTE.</strong>
+
+<br><br>
+
+Número de pedido:
+<strong>${escapeHtml(orderNumber)}</strong>
+
+<br>
+
+Estado:
+<strong>EN PROCESO</strong>
+
+<br>
+
+Pago:
+<strong>PENDIENTE DE VERIFICACIÓN</strong>
+
+</div>
+
+`;
+
+const whatsappUrl=
+buildAdminWhatsAppUrl(
 orderNumber,
 name,
 phone,
@@ -625,12 +1396,21 @@ total
 );
 
 if(whatsappWindow){
-whatsappWindow.location.href=whatsappUrl;
+
+whatsappWindow.location.href=
+whatsappUrl;
+
 }else{
-window.open(whatsappUrl,"_blank");
+
+window.open(
+whatsappUrl,
+"_blank"
+);
+
 }
 
 cart=[];
+
 saveCart();
 
 document.getElementById("checkoutName").value="";
@@ -639,83 +1419,192 @@ document.getElementById("checkoutAddress").value="";
 document.getElementById("paymentMethod").value="";
 document.getElementById("paymentReference").value="";
 document.getElementById("paymentProof").value="";
-document.getElementById("paymentInfo").innerHTML="";
+document.getElementById("paymentInfo").innerHTML=
+"Selecciona un método de pago.";
 
 }catch(error){
+
 console.error(error);
-if(whatsappWindow)whatsappWindow.close();
-message.innerHTML=`<p style="color:#c00">No se pudo completar el pedido.<br>${escapeHtml(error.message)}</p>`;
+
+if(whatsappWindow)
+whatsappWindow.close();
+
+message.innerHTML=
+`<p style="color:#c00">
+No se pudo completar el pedido.<br>
+${escapeHtml(error.message)}
+</p>`;
+
 }
-     }
-     <script>
+}
+
 async function loadReviews(){
-const box=document.getElementById("reviewsList");
-const {data,error}=await db.from("reviews").select("*").order("created_at",{ascending:false});
+
+const box=
+document.getElementById("reviewsList");
+
+const {
+data,
+error
+}=await db
+.from("reviews")
+.select("*")
+.order("created_at",{ascending:false});
+
 if(error){
-box.innerHTML='<div class="empty">REVIEWS UNAVAILABLE.</div>';
+
+box.innerHTML=
+'<div class="empty">LAS OPINIONES NO ESTÁN DISPONIBLES.</div>';
+
 return;
 }
-box.innerHTML=(data||[]).map(r=>`
+
+box.innerHTML=
+(data||[])
+.map(r=>`
+
 <div class="review">
-<div class="stars">${"★".repeat(Number(r.rating||0))}${"☆".repeat(5-Number(r.rating||0))}</div>
-<div class="reviewName">${escapeHtml(r.name||"Anonymous")}</div>
-<div class="reviewText">${escapeHtml(r.text||"")}</div>
-</div>`).join("")||'<div class="empty">BE THE FIRST TO REVIEW.</div>';
+
+<div class="stars">
+${"★".repeat(Number(r.rating||0))}
+${"☆".repeat(5-Number(r.rating||0))}
+</div>
+
+<div class="reviewName">
+${escapeHtml(r.name||"Anónimo")}
+</div>
+
+<div class="reviewText">
+${escapeHtml(r.text||"")}
+</div>
+
+</div>
+
+`)
+.join("")
+||
+'<div class="empty">SÉ EL PRIMERO EN DEJAR UNA OPINIÓN.</div>';
 }
 
 function setRating(n){
+
 selectedRating=n;
-document.getElementById("ratingStars").textContent=
-[1,2,3,4,5].map(x=>x<=n?"★":"☆").join(" ");
+
+document.getElementById("ratingStars")
+.textContent=
+[1,2,3,4,5]
+.map(x=>x<=n?"★":"☆")
+.join(" ");
 }
 
-document.getElementById("ratingStars").onclick=e=>{
-const rect=e.currentTarget.getBoundingClientRect();
-const x=e.clientX-rect.left;
-setRating(Math.min(5,Math.max(1,Math.ceil(x/(rect.width/5)))));
+document.getElementById("ratingStars")
+.onclick=e=>{
+
+const rect=
+e.currentTarget.getBoundingClientRect();
+
+const x=
+e.clientX-rect.left;
+
+setRating(
+Math.min(
+5,
+Math.max(
+1,
+Math.ceil(
+x/(rect.width/5)
+)
+)
+)
+);
 };
 
 async function submitReview(){
-const name=document.getElementById("reviewName").value.trim();
-const text=document.getElementById("reviewText").value.trim();
-const msg=document.getElementById("reviewMessage");
+
+const name=
+document.getElementById("reviewName")
+.value.trim();
+
+const text=
+document.getElementById("reviewText")
+.value.trim();
+
+const msg=
+document.getElementById("reviewMessage");
 
 if(!name||!text||!selectedRating){
-msg.textContent="Completa nombre, opinión y valoración.";
+
+msg.textContent=
+"Completa nombre, opinión y valoración.";
+
 return;
 }
 
-const {error}=await db.from("reviews").insert({
+const {error}=await db
+.from("reviews")
+.insert({
+
 name:name,
+
 text:text,
+
 rating:selectedRating
+
 });
 
 if(error){
+
 console.error(error);
-msg.textContent="No se pudo publicar la review.";
+
+msg.textContent=
+"No se pudo publicar la opinión.";
+
 return;
 }
 
 document.getElementById("reviewName").value="";
 document.getElementById("reviewText").value="";
+
 selectedRating=0;
+
 setRating(0);
-msg.textContent="Review publicada correctamente.";
+
+msg.textContent=
+"Opinión publicada correctamente.";
+
 loadReviews();
 }
 
-window.addEventListener("storage",updateCartCount);
-window.addEventListener("resize",updateCartCount);
+window.addEventListener(
+"storage",
+updateCartCount
+);
 
-document.addEventListener("DOMContentLoaded",()=>{
+window.addEventListener(
+"resize",
+updateCartCount
+);
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
 updateCartCount();
-loadProducts();
-loadReviews();
-updateCheckoutTotals();
-});
 
-setInterval(loadProducts,30000);
+loadProducts();
+
+loadReviews();
+
+updateCheckoutTotals();
+
+}
+);
+
+setInterval(
+loadProducts,
+30000
+);
+
 </script>
 </body>
 </html>
