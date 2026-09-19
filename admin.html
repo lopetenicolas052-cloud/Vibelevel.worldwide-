@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#000000">
 <title>VibeLevel Admin</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -36,190 +36,145 @@ hr{border:0;border-top:1px solid #292929;margin:30px 0}
 .productAdminInfo strong{display:block;font-size:13px;margin-bottom:6px}
 .productAdminInfo span{display:block;color:#888;font-size:11px}
 .productAdmin .delete{width:auto;padding:10px 12px;margin:0;font-size:11px}
-@media(max-width:600px){.row{grid-template-columns:1fr}.productAdmin{align-items:flex-start}.productAdmin .delete{width:90px}}
+.ordersAdmin{display:grid;gap:15px;margin-top:15px}
+.orderAdmin{background:#080808;border:1px solid #292929;padding:15px}
+.orderTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.orderNumber{font-size:14px;font-weight:bold;letter-spacing:1px}
+.orderDate{font-size:10px;color:#777;margin-top:5px}
+.orderStatusBadge{font-size:9px;font-weight:bold;padding:7px 9px;background:#222}
+.orderSection{border-top:1px solid #292929;margin-top:15px;padding-top:15px}
+.orderSectionTitle{font-size:10px;font-weight:bold;letter-spacing:2px;margin-bottom:10px}
+.orderData{font-size:11px;line-height:1.8;color:#ccc}
+.orderData strong{color:#fff}
+.orderItems{display:grid;gap:8px}
+.orderItem{border:1px solid #292929;padding:10px;font-size:11px}
+.orderItemTop{display:flex;justify-content:space-between;gap:10px}
+.orderItemMeta{color:#888;font-size:10px;margin-top:5px;line-height:1.6}
+.proofBtn{background:#fff;color:#000;margin-top:10px}
+.orderControls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.orderControls button{grid-column:1/-1}
+.modalBg{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:999}
+.modalBg.show{display:flex}
+.proofBox{position:relative;background:#111;border:1px solid #333;width:min(700px,100%);padding:20px}
+.proofBox img{display:block;width:100%;max-height:75vh;object-fit:contain;background:#000}
+.closeProof{position:absolute;right:10px;top:10px;width:35px;height:35px;padding:0;margin:0;background:#fff;color:#000}
+.filterGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){
+.row,.orderControls,.filterGrid{grid-template-columns:1fr}
+.productAdmin{align-items:flex-start}
+.productAdmin .delete{width:90px}
+.orderTop{flex-direction:column}
+}
 </style>
 </head>
 <body>
-<div class="box">
 
-<div id="login">
-<h1>VIBELEVEL</h1>
-<p class="small">PANEL DE ADMINISTRACIÓN</p>
-<label>Correo electrónico</label>
-<input id="email" type="email" placeholder="Tu correo" autocomplete="email">
-<label>Contraseña</label>
-<input id="password" type="password" placeholder="Tu contraseña" autocomplete="current-password">
-<button id="loginBtn">ENTRAR</button>
-<div id="loginMessage"></div>
+<div class="box" id="loginBox">
+<h1>VIBELEVEL ADMIN</h1>
+<label>EMAIL</label>
+<input id="email" type="email" autocomplete="username">
+<label>PASSWORD</label>
+<input id="password" type="password" autocomplete="current-password">
+<button id="loginBtn">LOGIN</button>
+<div id="loginMessage" class="message"></div>
 </div>
 
-<div id="admin" class="hidden">
+<div class="box hidden" id="adminBox">
 <h1>VIBELEVEL ADMIN</h1>
-<p class="small">Publica productos directamente en la tienda.</p>
 
-<hr>
+<h2>PUBLICAR PRODUCTO</h2>
 
-<h2>AÑADIR PRODUCTO</h2>
-
-<label>Nombre del producto</label>
-<input id="name" type="text" placeholder="Ej: VibeLevel Polo">
+<label>NOMBRE</label>
+<input id="name">
 
 <div class="row">
 <div>
-<label>Precio</label>
-<input id="price" type="number" step="0.01" placeholder="25000">
+<label>PRECIO</label>
+<input id="price" type="number">
 </div>
-    
->
 <div>
-<label>Precio anterior</label>
-<input id="old_price" type="number" step="0.01" placeholder="30000">
+<label>PRECIO ANTERIOR</label>
+<input id="old_price" type="number">
 </div>
 </div>
 
-<label>Categoría</label>
-<select id="category">
-<option value="TEES">TEES</option>
-<option value="HOODIES">HOODIES</option>
-<option value="BOTTOMS">BOTTOMS</option>
-<option value="JACKETS">JACKETS</option>
-<option value="ACCESSORIES">ACCESSORIES</option>
-</select>
+<label>CATEGORÍA</label>
+<input id="category">
 
-<label>Descripción</label>
-<textarea id="description" placeholder="Describe el producto..."></textarea>
+<label>DESCRIPCIÓN</label>
+<textarea id="description"></textarea>
 
-<label>Tallas</label>
-<input id="sizes" type="text" placeholder="S,M,L,XL,XXL">
+<label>TALLAS</label>
+<input id="sizes" placeholder="S,M,L,XL,XXL">
 
-<label>Stock</label>
-<input id="stock" type="number" value="1" min="0" placeholder="Cantidad disponible">
+<label>STOCK</label>
+<input id="stock" type="number" value="0">
 
-<label>Foto del producto</label>
+<label>IMAGEN</label>
 <input id="image" type="file" accept="image/*">
 
-<img id="preview" class="preview" alt="Vista previa">
+<img id="preview" class="preview">
 
 <div class="check">
 <input id="is_new" type="checkbox">
-<span>Marcar como NEW</span>
+<label style="margin:0">PRODUCTO NUEVO</label>
 </div>
 
 <div class="check">
 <input id="is_sale" type="checkbox">
-<span>Marcar como SALE</span>
+<label style="margin:0">EN OFERTA</label>
 </div>
 
 <button id="saveBtn">PUBLICAR PRODUCTO</button>
-<div id="productMessage"></div>
+<div id="productMessage" class="message"></div>
 
 <hr>
 
 <h2>PRODUCTOS PUBLICADOS</h2>
-<p class="small">Desde aquí puedes eliminar productos de la tienda.</p>
-<div id="adminProducts" class="productsAdmin">
-<p class="small">Cargando productos...</p>
-</div>
-<div id="deleteMessage"></div>
-
-<hr>
+<div id="adminProducts" class="productsAdmin"></div>
+<div id="deleteMessage" class="message"></div>
 <hr>
 
-<h2>📦 PEDIDOS Y PAGOS</h2>
+<h2>PEDIDOS Y PAGOS</h2>
 
-<p class="small">
-Aquí aparecen los pedidos realizados desde la tienda.
-Comprueba manualmente el ingreso en BANGE o Muni Dinero antes de confirmar el pago.
-</p>
-
-<div class="row">
-
+<div class="filterGrid">
 <div>
-<label>FILTRAR PAGO</label>
-
+<label>ESTADO DEL PAGO</label>
 <select id="paymentFilter">
 <option value="ALL">TODOS</option>
-<option value="PENDING">PENDIENTE DE VERIFICACIÓN</option>
-<option value="PAID">PAGADO / CONFIRMADO</option>
-<option value="NOT_PAID">NO PAGADO / NO CONFIRMADO</option>
+<option value="PENDING">PENDIENTE</option>
+<option value="PAID">PAGADO</option>
+<option value="NOT_PAID">NO PAGADO</option>
 </select>
 </div>
 
 <div>
-<label>FILTRAR PEDIDO</label>
-
+<label>ESTADO DEL PEDIDO</label>
 <select id="orderFilter">
 <option value="ALL">TODOS</option>
 <option value="NEW">NUEVO</option>
-<option value="PREPARING">EN PREPARACIÓN</option>
+<option value="PREPARING">PREPARANDO</option>
 <option value="SHIPPED">ENVIADO</option>
 <option value="COMPLETED">COMPLETADO</option>
 </select>
 </div>
-
 </div>
 
-<button id="refreshOrdersBtn">
-🔄 ACTUALIZAR PEDIDOS
-</button>
+<button id="refreshOrders">ACTUALIZAR PEDIDOS</button>
 
-<div id="ordersAdmin"></div>
+<div id="ordersMessage" class="message"></div>
+<div id="ordersAdmin" class="ordersAdmin"></div>
 
-<div id="ordersMessage"></div>
+<hr>
 
-<!-- MODAL COMPROBANTE -->
-
-<div id="proofModal"
-style="
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.92);
-display:none;
-align-items:center;
-justify-content:center;
-padding:20px;
-z-index:9999;
-">
-
-<div
-style="
-width:min(900px,100%);
-max-height:95vh;
-overflow:auto;
-background:#111;
-border:1px solid #333;
-padding:15px;
-">
-
-<h3>COMPROBANTE DE PAGO</h3>
-
-<img
-id="proofImage"
-src=""
-alt="Comprobante de pago"
-style="
-width:100%;
-max-height:75vh;
-object-fit:contain;
-background:#000;
-">
-
-<button
-id="closeProofBtn"
-style="
-background:#222;
-color:#fff;
-border:1px solid #444;
-">
-
-CERRAR
-
-</button>
-
-</div>
-
-    </div>
 <button id="logoutBtn" class="logout">CERRAR SESIÓN</button>
+
+</div>
+
+<div id="proofModal" class="modalBg">
+<div class="proofBox">
+<button id="closeProofBtn" class="closeProof">×</button>
+<img id="proofImage">
 </div>
 </div>
 
@@ -228,177 +183,178 @@ const SUPABASE_URL="https://yqlyxnlheoiftxhpteyb.supabase.co";
 const SUPABASE_KEY="sb_publishable_5VLYWrFAgEXJkWhdErOikg_vHOKIHyb";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const login=document.getElementById("login");
-const admin=document.getElementById("admin");
+let allOrders=[];
+
+const loginBox=document.getElementById("loginBox");
+const adminBox=document.getElementById("adminBox");
 const loginMessage=document.getElementById("loginMessage");
 const productMessage=document.getElementById("productMessage");
 const deleteMessage=document.getElementById("deleteMessage");
-const imageInput=document.getElementById("image");
-const preview=document.getElementById("preview");
-const adminProducts=document.getElementById("adminProducts");
+const ordersMessage=document.getElementById("ordersMessage");
+const ordersAdmin=document.getElementById("ordersAdmin");
+
+function escapeHtml(v){
+return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function money(n){
+return Number(n||0).toLocaleString("es-ES")+" XAF";
+}
+
+function formatDate(v){
+if(!v)return"";
+const d=new Date(v);
+return isNaN(d)?String(v):d.toLocaleString("es-ES");
+}
+
+function showAdmin(){
+loginBox.classList.add("hidden");
+adminBox.classList.remove("hidden");
+loadAdminProducts();
+loadOrders();
+}
 
 async function checkSession(){
 const {data,error}=await supabaseClient.auth.getSession();
-if(error){console.error(error);return}
+if(error){
+console.error(error);
+return;
+}
 if(data.session){
-login.classList.add("hidden");
-admin.classList.remove("hidden");
-loadAdminProducts();
-loadOrders();
-    
+showAdmin();
 }else{
-login.classList.remove("hidden");
-admin.classList.add("hidden");
+loginBox.classList.remove("hidden");
+adminBox.classList.add("hidden");
 }
 }
 
 document.getElementById("loginBtn").addEventListener("click",async()=>{
 const email=document.getElementById("email").value.trim();
 const password=document.getElementById("password").value;
-if(!email||!password){
-loginMessage.className="message error";
-loginMessage.textContent="❌ Introduce correo y contraseña.";
-return;
-}
 loginMessage.className="message";
-loginMessage.textContent="Comprobando...";
+loginMessage.textContent="Iniciando sesión...";
+
 const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+
 if(error){
 loginMessage.className="message error";
 loginMessage.textContent="❌ "+error.message;
 return;
 }
-loginMessage.textContent="";
-login.classList.add("hidden");
-admin.classList.remove("hidden");
-loadAdminProducts();
- loadOrders();
+
+loginMessage.className="message success";
+loginMessage.textContent="✅ Sesión iniciada.";
+showAdmin();
 });
 
-imageInput.addEventListener("change",()=>{
-const file=imageInput.files[0];
+document.getElementById("logoutBtn").addEventListener("click",async()=>{
+await supabaseClient.auth.signOut();
+location.reload();
+});
+
+document.getElementById("image").addEventListener("change",e=>{
+const file=e.target.files[0];
+const preview=document.getElementById("preview");
+
 if(!file){
 preview.style.display="none";
 preview.src="";
 return;
 }
+
 preview.src=URL.createObjectURL(file);
 preview.style.display="block";
 });
 
-document.getElementById("saveBtn").addEventListener("click",async()=>{
+document.getElementById("saveBtn").addEventListener("click",saveProduct);
+
+async function saveProduct(){
 productMessage.className="message";
-productMessage.textContent="Preparando producto...";
+productMessage.textContent="";
 
 const name=document.getElementById("name").value.trim();
-const priceValue=document.getElementById("price").value;
-const oldPriceValue=document.getElementById("old_price").value;
-const category=document.getElementById("category").value;
+const price=Number(document.getElementById("price").value||0);
+const oldPrice=document.getElementById("old_price").value;
+const category=document.getElementById("category").value.trim();
 const description=document.getElementById("description").value.trim();
 const sizes=document.getElementById("sizes").value.trim();
-const stockValue=document.getElementById("stock").value;
-const imageFile=imageInput.files[0];
+const stock=Number(document.getElementById("stock").value||0);
+const image=document.getElementById("image").files[0];
 const isNew=document.getElementById("is_new").checked;
 const isSale=document.getElementById("is_sale").checked;
 
-if(!name){
+if(!name||!price||!image){
 productMessage.className="message error";
-productMessage.textContent="❌ Escribe el nombre del producto.";
-return;
-}
-
-if(priceValue===""){
-productMessage.className="message error";
-productMessage.textContent="❌ Introduce el precio.";
-return;
-}
-
-if(!imageFile){
-productMessage.className="message error";
-productMessage.textContent="❌ Selecciona una foto.";
-return;
-}
-
-const {data:sessionData}=await supabaseClient.auth.getSession();
-
-if(!sessionData.session){
-productMessage.className="message error";
-productMessage.textContent="❌ Tu sesión ha caducado. Vuelve a iniciar sesión.";
+productMessage.textContent="Completa nombre, precio e imagen.";
 return;
 }
 
 try{
-productMessage.textContent="📤 Subiendo imagen...";
+productMessage.textContent="Subiendo imagen...";
 
-const extension=imageFile.name.split(".").pop().toLowerCase();
-const fileName=Date.now()+"-"+Math.random().toString(36).substring(2)+"."+extension;
-const filePath="productos/"+fileName;
+const extension=(image.name.split(".").pop()||"jpg").toLowerCase();
+const filePath="productos/"+Date.now()+"-"+Math.random().toString(36).slice(2)+"."+extension;
 
-const upload=await supabaseClient.storage.from("product-images").upload(
-filePath,
-imageFile,
-{
-cacheControl:"3600",
-upsert:false,
-contentType:imageFile.type
-}
-);
+const {error:uploadError}=await supabaseClient.storage
+.from("product-images")
+.upload(filePath,image,{
+contentType:image.type,
+upsert:false
+});
 
-if(upload.error){
-throw new Error("Error al subir la imagen: "+upload.error.message);
-}
+if(uploadError)throw new Error("Error al subir imagen: "+uploadError.message);
 
-const publicUrl=supabaseClient.storage.from("product-images").getPublicUrl(filePath);
-const imageUrl=publicUrl.data.publicUrl;
+const {data:publicData}=supabaseClient.storage
+.from("product-images")
+.getPublicUrl(filePath);
 
-productMessage.textContent="💾 Publicando producto...";
+const imageUrl=publicData.publicUrl;
 
-const {data,error}=await supabaseClient.from("products").insert({
+const {error:insertError}=await supabaseClient
+.from("products")
+.insert({
 name:name,
-price:Number(priceValue),
-description:description,
-image_url:imageUrl,
-sizes:sizes,
+price:price,
+old_price:oldPrice?Number(oldPrice):null,
 category:category,
+description:description,
+sizes:sizes,
+stock:stock,
+sold_out:stock<=0,
+image_url:imageUrl,
 is_new:isNew,
-is_sale:isSale,
-old_price:oldPriceValue===""?null:Number(oldPriceValue),
-stock:stockValue===""?0:Number(stockValue),
-sold_out:stockValue!==""?Number(stockValue)<=0:false
-}).select().single();
+is_sale:isSale
+});
 
-if(error){
-throw new Error("Error al guardar producto: "+error.message);
-}
-
-console.log("Producto publicado:",data);
+if(insertError)throw new Error("Error guardando producto: "+insertError.message);
 
 productMessage.className="message success";
-productMessage.textContent="✅ PRODUCTO PUBLICADO CORRECTAMENTE. Ya está guardado en Supabase.";
+productMessage.textContent="✅ PRODUCTO PUBLICADO CORRECTAMENTE.";
 
 document.getElementById("name").value="";
 document.getElementById("price").value="";
 document.getElementById("old_price").value="";
+document.getElementById("category").value="";
 document.getElementById("description").value="";
 document.getElementById("sizes").value="";
-document.getElementById("stock").value="1";
+document.getElementById("stock").value="0";
+document.getElementById("image").value="";
+document.getElementById("preview").style.display="none";
 document.getElementById("is_new").checked=false;
 document.getElementById("is_sale").checked=false;
-imageInput.value="";
-preview.src="";
-preview.style.display="none";
 
-loadAdminProducts();
-loadOrders();
+await loadAdminProducts();
+
 }catch(error){
 console.error(error);
 productMessage.className="message error";
 productMessage.textContent="❌ "+error.message;
 }
-});
+}
 
 async function loadAdminProducts(){
-adminProducts.innerHTML="<p class='small'>Cargando productos...</p>";
+const box=document.getElementById("adminProducts");
+box.innerHTML='<div class="small">Cargando productos...</div>';
 
 const {data,error}=await supabaseClient
 .from("products")
@@ -406,74 +362,43 @@ const {data,error}=await supabaseClient
 .order("created_at",{ascending:false});
 
 if(error){
-adminProducts.innerHTML="<p class='message error'>❌ "+error.message+"</p>";
+box.innerHTML="";
+deleteMessage.className="message error";
+deleteMessage.textContent="❌ "+error.message;
 return;
 }
 
-if(!data||data.length===0){
-adminProducts.innerHTML="<p class='small'>No hay productos publicados.</p>";
+if(!data||!data.length){
+box.innerHTML='<div class="small">No hay productos publicados.</div>';
 return;
 }
 
-adminProducts.innerHTML=data.map(p=>`
+box.innerHTML=data.map(p=>`
 <div class="productAdmin">
 <img src="${escapeHtml(p.image_url||"")}" alt="">
 <div class="productAdminInfo">
-<strong>${escapeHtml(p.name||"Sin nombre")}</strong>
-<span>${Number(p.price||0).toLocaleString("es-ES")} XAF</span>
+<strong>${escapeHtml(p.name)}</strong>
+<span>${money(p.price)}</span>
 <span>Stock: ${Number(p.stock||0)}</span>
+<span>${p.sold_out?"AGOTADO":"DISPONIBLE"}</span>
 </div>
 <button class="delete" onclick="deleteProduct('${p.id}')">ELIMINAR</button>
 </div>
 `).join("");
 }
 
-function escapeHtml(value){
-return String(value??"").replace(/[&<>"']/g,function(m){
-return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m];
-});
-}
-
 async function deleteProduct(id){
+if(!confirm("¿Eliminar este producto?"))return;
+
+deleteMessage.className="message";
+deleteMessage.textContent="Eliminando...";
+
 const product=await getProduct(id);
 
 if(!product){
 deleteMessage.className="message error";
-deleteMessage.textContent="❌ No se encontró el producto.";
+deleteMessage.textContent="❌ Producto no encontrado.";
 return;
-}
-
-const confirmDelete=confirm(
-"⚠️ ¿ESTÁS SEGURO?\n\nVas a eliminar:\n"+product.name+"\n\nEste producto desaparecerá de la tienda."
-);
-
-if(!confirmDelete)return;
-
-deleteMessage.className="message";
-deleteMessage.textContent="🗑️ Eliminando producto...";
-
-try{
-
-if(product.image_url){
-const marker="/storage/v1/object/public/product-images/";
-const position=product.image_url.indexOf(marker);
-
-if(position!==-1){
-const filePath=decodeURIComponent(
-product.image_url.substring(position+marker.length)
-);
-
-if(filePath){
-const removeImage=await supabaseClient
-.storage
-.from("product-images")
-.remove([filePath]);
-
-if(removeImage.error){
-console.warn("No se pudo borrar la imagen:",removeImage.error.message);
-}
-}
-}
 }
 
 const {error}=await supabaseClient
@@ -482,25 +407,21 @@ const {error}=await supabaseClient
 .eq("id",id);
 
 if(error){
-throw new Error(error.message);
+deleteMessage.className="message error";
+deleteMessage.textContent="❌ "+error.message;
+return;
 }
 
 deleteMessage.className="message success";
-deleteMessage.textContent="✅ PRODUCTO ELIMINADO CORRECTAMENTE.";
+deleteMessage.textContent="✅ Producto eliminado.";
 
-loadAdminProducts();
-loadOrders();
-}catch(error){
-console.error(error);
-deleteMessage.className="message error";
-deleteMessage.textContent="❌ Error al eliminar: "+error.message;
-}
+await loadAdminProducts();
 }
 
 async function getProduct(id){
 const {data,error}=await supabaseClient
 .from("products")
-.select("id,name,image_url")
+.select("*")
 .eq("id",id)
 .single();
 
@@ -511,28 +432,9 @@ return null;
 
 return data;
 }
-/* =========================
-   PEDIDOS Y PAGOS
-========================= */
-
-const ordersAdmin=document.getElementById("ordersAdmin");
-const ordersMessage=document.getElementById("ordersMessage");
-const paymentFilter=document.getElementById("paymentFilter");
-const orderFilter=document.getElementById("orderFilter");
-const proofModal=document.getElementById("proofModal");
-const proofImage=document.getElementById("proofImage");
-
-let allOrders=[];
-
-
-/* =========================
-   CARGAR PEDIDOS
-========================= */
-
-async function loadOrders(){
-
-ordersAdmin.innerHTML=
-'<p class="small">📦 Cargando pedidos...</p>';
+    async function loadOrders(){
+ordersMessage.className="message";
+ordersMessage.textContent="Cargando pedidos...";
 
 const {data,error}=await supabaseClient
 .from("orders")
@@ -540,488 +442,179 @@ const {data,error}=await supabaseClient
 .order("created_at",{ascending:false});
 
 if(error){
-
 console.error(error);
-
-ordersAdmin.innerHTML=
-'<p class="message error">❌ Error cargando pedidos: '+
-escapeHtml(error.message)+
-'</p>';
-
+ordersMessage.className="message error";
+ordersMessage.textContent="❌ Error cargando pedidos: "+error.message;
 return;
-
 }
 
 allOrders=data||[];
-
 renderOrders();
-
 }
-
-
-/* =========================
-   MOSTRAR PEDIDOS
-========================= */
 
 function renderOrders(){
+const paymentFilter=document.getElementById("paymentFilter").value;
+const orderFilter=document.getElementById("orderFilter").value;
 
-const paymentValue=paymentFilter.value;
-const orderValue=orderFilter.value;
-
-let filtered=allOrders;
-
-if(paymentValue!=="ALL"){
-
-filtered=filtered.filter(
-o=>(o.payment_status||"PENDING")===paymentValue
-);
-
-}
-
-if(orderValue!=="ALL"){
-
-filtered=filtered.filter(
-o=>(o.order_status||"NEW")===orderValue
-);
-
-}
-
-if(filtered.length===0){
-
-ordersAdmin.innerHTML=
-'<p class="small">No hay pedidos con estos filtros.</p>';
-
-return;
-
-}
-
-ordersAdmin.innerHTML=
-filtered.map(order=>createOrderCard(order)).join("");
-
-filtered.forEach(order=>{
-loadOrderItems(order.id);
+const filtered=allOrders.filter(order=>{
+const paymentOk=paymentFilter==="ALL"||order.payment_status===paymentFilter;
+const orderOk=orderFilter==="ALL"||order.order_status===orderFilter;
+return paymentOk&&orderOk;
 });
 
+if(!filtered.length){
+ordersAdmin.innerHTML='<div class="small">No hay pedidos con estos filtros.</div>';
+return;
 }
 
-
-/* =========================
-   TARJETA DE PEDIDO
-========================= */
+ordersAdmin.innerHTML=filtered.map(createOrderCard).join("");
+filtered.forEach(order=>loadOrderItems(order.id));
+}
 
 function createOrderCard(order){
+const proof=order.payment_proof_url;
 
-const paymentStatus=
-order.payment_status||"PENDING";
+const proofButton=proof?
+`<button class="proofBtn" onclick="viewProof('${escapeHtml(proof)}')">VER COMPROBANTE DE PAGO</button>`:
+'<div class="small">No hay comprobante.</div>';
 
-const orderStatus=
-order.order_status||"NEW";
+return`
+<div class="orderAdmin">
 
-let paymentText=
-"🟡 PENDIENTE DE VERIFICACIÓN";
+<div class="orderTop">
+<div>
+<div class="orderNumber">${escapeHtml(order.order_number||"SIN NÚMERO")}</div>
+<div class="orderDate">${formatDate(order.created_at)}</div>
+</div>
+<div class="orderStatusBadge">${escapeHtml(order.order_status||"NEW")}</div>
+</div>
 
-if(paymentStatus==="PAID")
-paymentText="🟢 PAGADO / CONFIRMADO";
+<div class="orderSection">
+<div class="orderSectionTitle">DATOS DEL CLIENTE</div>
+<div class="orderData">
+<strong>Nombre:</strong> ${escapeHtml(order.customer_name)}<br>
+<strong>Teléfono:</strong> ${escapeHtml(order.customer_phone)}<br>
+<strong>Dirección:</strong> ${escapeHtml(order.customer_address)}
+</div>
+</div>
 
-if(paymentStatus==="NOT_PAID")
-paymentText="🔴 NO PAGADO / NO CONFIRMADO";
+<div class="orderSection">
+<div class="orderSectionTitle">PAGO</div>
+<div class="orderData">
+<strong>Método:</strong> ${escapeHtml(order.payment_method)}<br>
+<strong>Referencia / código:</strong> ${escapeHtml(order.payment_reference)}<br>
+<strong>Estado:</strong> ${escapeHtml(order.payment_status)}
+</div>
+${proofButton}
+</div>
 
-const paymentMethod=
-String(order.payment_method||"")
-.toUpperCase();
+<div class="orderSection">
+<div class="orderSectionTitle">ENVÍO Y TOTAL</div>
+<div class="orderData">
+<strong>Método:</strong> ${escapeHtml(order.shipping_method)}<br>
+<strong>Envío:</strong> ${money(order.shipping_cost)}<br>
+<strong>Subtotal:</strong> ${money(order.subtotal)}<br>
+<strong>TOTAL:</strong> ${money(order.total)}
+</div>
+</div>
 
-const date=
-order.created_at
-?new Date(order.created_at)
-.toLocaleString("es-ES")
-:"";
+<div class="orderSection">
+<div class="orderSectionTitle">PRODUCTOS</div>
+<div id="items-${order.id}" class="orderItems">
+<div class="small">Cargando productos...</div>
+</div>
+</div>
 
-const proofExists=
-!!order.payment_proof_url;
+<div class="orderSection">
+<div class="orderSectionTitle">ACTUALIZAR PEDIDO</div>
 
-return `
-
-<div
-style="
-background:#080808;
-border:1px solid #292929;
-padding:18px;
-margin-top:15px;
-">
-
-<div
-style="
-display:flex;
-justify-content:space-between;
-gap:10px;
-flex-wrap:wrap;
-border-bottom:1px solid #292929;
-padding-bottom:15px;
-">
+<div class="orderControls">
 
 <div>
-
-<strong style="font-size:18px">
-PEDIDO ${escapeHtml(order.order_number||"SIN NÚMERO")}
-</strong>
-
-<div class="small">
-${escapeHtml(date)}
-</div>
-
-</div>
-
-<strong>
-${paymentText}
-</strong>
-
-</div>
-
-
-<div class="row">
-
-
-<div>
-
-<label>CLIENTE</label>
-
-<div>
-${escapeHtml(order.customer_name||"—")}
-</div>
-
-</div>
-
-
-<div>
-
-<label>TELÉFONO</label>
-
-<div>
-${escapeHtml(order.customer_phone||"—")}
-</div>
-
-</div>
-
-
-<div>
-
-<label>DIRECCIÓN</label>
-
-<div>
-${escapeHtml(order.customer_address||"—")}
-</div>
-
-</div>
-
-
-<div>
-
-<label>MÉTODO DE PAGO</label>
-
-<div>
-${escapeHtml(paymentMethod||"—")}
-</div>
-
-</div>
-
-
-<div>
-
-<label>REFERENCIA DE PAGO</label>
-
-<div>
-${escapeHtml(order.payment_reference||"—")}
-</div>
-
-</div>
-
-
-<div>
-
-<label>ENVÍO</label>
-
-<div>
-${escapeHtml(order.shipping_method||"—")}
-</div>
-
-</div>
-
-
-<div>
-
-<label>COSTE DE ENVÍO</label>
-
-<div>
-${Number(order.shipping_cost||0).toLocaleString("es-ES")} XAF
-</div>
-
-</div>
-
-
-<div>
-
-<label>TOTAL</label>
-
-<div>
-<strong>
-${Number(order.total||0).toLocaleString("es-ES")} XAF
-</strong>
-</div>
-
-</div>
-
-</div>
-
-
-<hr>
-
-<div>
-
-<strong>🛍️ PRODUCTOS</strong>
-
-<div id="items-${escapeHtml(order.id)}"
-class="small"
-style="margin-top:10px">
-
-Cargando productos...
-
-</div>
-
-</div>
-
-
-<hr>
-
-<div>
-
-<strong>🧾 COMPROBANTE</strong>
-
-<p class="small">
-
-${
-proofExists
-?"El cliente ha enviado un comprobante."
-:"El cliente todavía no ha enviado comprobante."
-}
-
-</p>
-
-${
-proofExists
-?
-`
-<button
-onclick="viewProof('${escapeHtml(order.payment_proof_url)}')"
->
-📷 VER COMPROBANTE
-</button>
-`
-:""
-}
-
-</div>
-
-
-<hr>
-
-
 <label>ESTADO DEL PAGO</label>
-
-<select id="payment-${escapeHtml(order.id)}">
-
-<option value="PENDING"
-${paymentStatus==="PENDING"?"selected":""}>
-PENDIENTE DE VERIFICACIÓN
-</option>
-
-<option value="PAID"
-${paymentStatus==="PAID"?"selected":""}>
-PAGADO / CONFIRMADO
-</option>
-
-<option value="NOT_PAID"
-${paymentStatus==="NOT_PAID"?"selected":""}>
-NO PAGADO / NO CONFIRMADO
-</option>
-
+<select id="payment-${order.id}">
+<option value="PENDING" ${order.payment_status==="PENDING"?"selected":""}>PENDING</option>
+<option value="PAID" ${order.payment_status==="PAID"?"selected":""}>PAID</option>
+<option value="NOT_PAID" ${order.payment_status==="NOT_PAID"?"selected":""}>NOT PAID</option>
 </select>
-
-
-<label>ESTADO DEL PEDIDO</label>
-
-<select id="status-${escapeHtml(order.id)}">
-
-<option value="NEW"
-${orderStatus==="NEW"?"selected":""}>
-NUEVO
-</option>
-
-<option value="PREPARING"
-${orderStatus==="PREPARING"?"selected":""}>
-EN PREPARACIÓN
-</option>
-
-<option value="SHIPPED"
-${orderStatus==="SHIPPED"?"selected":""}>
-ENVIADO
-</option>
-
-<option value="COMPLETED"
-${orderStatus==="COMPLETED"?"selected":""}>
-COMPLETADO
-</option>
-
-</select>
-
-
-<button
-onclick="saveOrder('${escapeHtml(order.id)}')"
->
-💾 GUARDAR CAMBIOS DEL PEDIDO
-</button>
-
 </div>
 
-`;
+<div>
+<label>ESTADO DEL PEDIDO</label>
+<select id="status-${order.id}">
+<option value="NEW" ${order.order_status==="NEW"?"selected":""}>NEW</option>
+<option value="PREPARING" ${order.order_status==="PREPARING"?"selected":""}>PREPARING</option>
+<option value="SHIPPED" ${order.order_status==="SHIPPED"?"selected":""}>SHIPPED</option>
+<option value="COMPLETED" ${order.order_status==="COMPLETED"?"selected":""}>COMPLETED</option>
+</select>
+</div>
 
+<button onclick="saveOrder('${order.id}')">GUARDAR CAMBIOS</button>
+
+</div>
+</div>
+
+</div>`;
 }
-
-
-/* =========================
-   PRODUCTOS DEL PEDIDO
-========================= */
 
 async function loadOrderItems(orderId){
+const box=document.getElementById("items-"+orderId);
+if(!box)return;
 
-const container=
-document.getElementById("items-"+orderId);
-
-if(!container)return;
-
-const {data,error}=
-await supabaseClient
+const {data,error}=await supabaseClient
 .from("order_items")
 .select("*")
-.eq("order_id",orderId)
-.order("created_at",{ascending:true});
+.eq("order_id",orderId);
 
 if(error){
-
-container.innerHTML=
-"❌ Error cargando productos: "+
-escapeHtml(error.message);
-
+box.innerHTML='<div class="small">No se pudieron cargar los productos.</div>';
+console.error(error);
 return;
-
 }
 
-if(!data||data.length===0){
-
-container.innerHTML=
-"Sin productos.";
-
+if(!data||!data.length){
+box.innerHTML='<div class="small">Este pedido no tiene productos registrados.</div>';
 return;
-
 }
 
-container.innerHTML=data.map(item=>`
-
-<div
-style="
-padding:10px 0;
-border-bottom:1px solid #222;
-"
->
-
-<strong>
-${escapeHtml(item.product_name||"Producto")}
-</strong>
-
-<div class="small">
-
-Cantidad:
-${Number(item.quantity||0)}
-
-|
-
-Talla:
-${escapeHtml(item.size||"—")}
-
-|
-
-Precio:
-${Number(item.unit_price||0).toLocaleString("es-ES")}
-XAF
-
-|
-
-Total:
-${Number(item.line_total||0).toLocaleString("es-ES")}
-XAF
-
+box.innerHTML=data.map(item=>`
+<div class="orderItem">
+<div class="orderItemTop">
+<strong>${escapeHtml(item.product_name)}</strong>
+<strong>${money(item.line_total)}</strong>
 </div>
-
+<div class="orderItemMeta">
+Cantidad: ${Number(item.quantity||0)}<br>
+Talla: ${escapeHtml(item.size||"N/A")}<br>
+Precio unitario: ${money(item.unit_price)}
 </div>
-
+</div>
 `).join("");
-
 }
-
-
-/* =========================
-   GUARDAR CAMBIOS
-========================= */
 
 async function saveOrder(orderId){
 
-const paymentStatus=
-document.getElementById(
-"payment-"+orderId
-).value;
-
-const orderStatus=
-document.getElementById(
-"status-"+orderId
-).value;
+const paymentStatus=document.getElementById("payment-"+orderId).value;
+const orderStatus=document.getElementById("status-"+orderId).value;
 
 ordersMessage.className="message";
 ordersMessage.textContent="💾 Guardando cambios...";
 
 try{
 
-/* =========================================
-   1. OBTENER EL PEDIDO ACTUAL
-========================================= */
-
-const {data:order,error:orderError}=
-await supabaseClient
+const {data:order,error:orderError}=await supabaseClient
 .from("orders")
 .select("*")
 .eq("id",orderId)
 .single();
 
 if(orderError){
-throw new Error(
-"No se pudo obtener el pedido: "+
-orderError.message
-);
+throw new Error("No se pudo obtener el pedido: "+orderError.message);
 }
 
+const wasAlreadyPaid=order.payment_status==="PAID";
 
-/* =========================================
-   2. COMPROBAR SI YA ESTABA PAGADO
-========================================= */
-
-const wasAlreadyPaid=
-order.payment_status==="PAID";
-
-
-/* =========================================
-   3. ACTUALIZAR ESTADO DEL PEDIDO
-========================================= */
-
-const {error:updateError}=
-await supabaseClient
+const {error:updateError}=await supabaseClient
 .from("orders")
 .update({
 payment_status:paymentStatus,
@@ -1030,86 +623,40 @@ order_status:orderStatus
 .eq("id",orderId);
 
 if(updateError){
-throw new Error(
-"Error guardando el pedido: "+
-updateError.message
-);
+throw new Error("Error guardando el pedido: "+updateError.message);
 }
 
+if(paymentStatus==="PAID"&&!wasAlreadyPaid){
 
-/* =========================================
-   4. DESCONTAR STOCK
-   SOLO CUANDO PASA A PAGADO
-========================================= */
-
-if(
-paymentStatus==="PAID" &&
-!wasAlreadyPaid
-){
-
-const {data:items,error:itemsError}=
-await supabaseClient
+const {data:items,error:itemsError}=await supabaseClient
 .from("order_items")
 .select("*")
 .eq("order_id",orderId);
 
 if(itemsError){
-throw new Error(
-"No se pudieron obtener los productos del pedido: "+
-itemsError.message
-);
+throw new Error("No se pudieron obtener los productos del pedido: "+itemsError.message);
 }
 
-
-if(!items || items.length===0){
-
-throw new Error(
-"El pedido no tiene productos registrados."
-);
-
+if(!items||items.length===0){
+throw new Error("El pedido no tiene productos registrados.");
 }
-
-
-/* =========================================
-   RECORRER LOS PRODUCTOS
-========================================= */
 
 for(const item of items){
 
-const {data:product,error:productError}=
-await supabaseClient
+const {data:product,error:productError}=await supabaseClient
 .from("products")
 .select("id,name,stock")
 .eq("id",item.product_id)
 .single();
 
-if(productError || !product){
-
-throw new Error(
-"No se encontró el producto: "+
-item.product_name
-);
-
+if(productError||!product){
+throw new Error("No se encontró el producto: "+item.product_name);
 }
 
-
-/* =========================================
-   STOCK ACTUAL
-========================================= */
-
-const currentStock=
-Number(product.stock||0);
-
-const quantity=
-Number(item.quantity||0);
-
-
-/* =========================================
-   COMPROBAR STOCK
-========================================= */
+const currentStock=Number(product.stock||0);
+const quantity=Number(item.quantity||0);
 
 if(currentStock<quantity){
-
 throw new Error(
 "Stock insuficiente para "+
 item.product_name+
@@ -1118,24 +665,11 @@ currentStock+
 ". Solicitado: "+
 quantity
 );
-
 }
 
+const newStock=currentStock-quantity;
 
-/* =========================================
-   CALCULAR NUEVO STOCK
-========================================= */
-
-const newStock=
-currentStock-quantity;
-
-
-/* =========================================
-   ACTUALIZAR STOCK
-========================================= */
-
-const {error:stockError}=
-await supabaseClient
+const {error:stockError}=await supabaseClient
 .from("products")
 .update({
 stock:newStock,
@@ -1144,179 +678,94 @@ sold_out:newStock<=0
 .eq("id",item.product_id);
 
 if(stockError){
-
 throw new Error(
 "Error actualizando el stock de "+
 item.product_name+
 ": "+
 stockError.message
 );
-
 }
-
 }
-
 }
-
-
-/* =========================================
-   5. MENSAJE FINAL
-========================================= */
 
 ordersMessage.className="message success";
 
-if(
-paymentStatus==="PAID" &&
-!wasAlreadyPaid
-){
-
-ordersMessage.textContent=
-"✅ PAGO CONFIRMADO. STOCK ACTUALIZADO CORRECTAMENTE.";
-
+if(paymentStatus==="PAID"&&!wasAlreadyPaid){
+ordersMessage.textContent="✅ PAGO CONFIRMADO. STOCK ACTUALIZADO CORRECTAMENTE.";
 }else{
-
-ordersMessage.textContent=
-"✅ CAMBIOS GUARDADOS CORRECTAMENTE.";
-
+ordersMessage.textContent="✅ CAMBIOS GUARDADOS CORRECTAMENTE.";
 }
 
-
-/* =========================================
-   6. ACTUALIZAR PEDIDOS
-========================================= */
-
 await loadOrders();
-
-
-/* =========================================
-   7. ACTUALIZAR PRODUCTOS DEL ADMIN
-========================================= */
-
 await loadAdminProducts();
-
 
 }catch(error){
 
 console.error(error);
-
 ordersMessage.className="message error";
-
-ordersMessage.textContent=
-"❌ "+error.message;
+ordersMessage.textContent="❌ "+error.message;
 
 }
-
-    }
-
-/* =========================
-   VER COMPROBANTE
-========================= */
+}
 
 async function viewProof(path){
 
-if(!path)return;
+if(!path){
+alert("No existe comprobante.");
+return;
+}
 
-proofImage.src="";
-proofModal.style.display="flex";
+let imageUrl=path;
 
 try{
 
-let url=path;
+if(!/^https?:\/\//i.test(path)){
 
-if(path.startsWith("http")){
-
-url=path;
-
-}else{
-
-const {data,error}=
-await supabaseClient
+const {data,error}=await supabaseClient
 .storage
 .from("payment-proofs")
 .createSignedUrl(path,3600);
 
-if(error)
-throw new Error(error.message);
+if(error)throw new Error(error.message);
 
-url=data.signedUrl;
-
+imageUrl=data.signedUrl;
 }
 
-proofImage.src=url;
+document.getElementById("proofImage").src=imageUrl;
+document.getElementById("proofModal").classList.add("show");
 
 }catch(error){
 
-proofModal.style.display="none";
-
-ordersMessage.className=
-"message error";
-
-ordersMessage.textContent=
-"❌ No se pudo abrir el comprobante: "+
-error.message;
+console.error(error);
+alert("No se pudo abrir el comprobante: "+error.message);
 
 }
-
 }
 
-
-/* =========================
-   CERRAR COMPROBANTE
-========================= */
-
-document
-.getElementById("closeProofBtn")
-.addEventListener("click",()=>{
-
-proofModal.style.display="none";
-proofImage.src="";
-
+document.getElementById("closeProofBtn").addEventListener("click",()=>{
+document.getElementById("proofModal").classList.remove("show");
+document.getElementById("proofImage").src="";
 });
 
-
-proofModal.addEventListener("click",e=>{
-
-if(e.target===proofModal){
-
-proofModal.style.display="none";
-proofImage.src="";
-
+document.getElementById("proofModal").addEventListener("click",e=>{
+if(e.target.id==="proofModal"){
+document.getElementById("proofModal").classList.remove("show");
+document.getElementById("proofImage").src="";
 }
-
 });
 
+document.getElementById("paymentFilter").addEventListener("change",renderOrders);
+document.getElementById("orderFilter").addEventListener("change",renderOrders);
+document.getElementById("refreshOrders").addEventListener("click",loadOrders);
 
-/* =========================
-   FILTROS
-========================= */
-
-paymentFilter.addEventListener(
-"change",
-renderOrders
-);
-
-orderFilter.addEventListener(
-"change",
-renderOrders
-);
-
-
-/* =========================
-   ACTUALIZAR
-========================= */
-
-document
-.getElementById("refreshOrdersBtn")
-.addEventListener(
-"click",
-loadOrders
-);
-document.getElementById("logoutBtn").addEventListener("click",async()=>{
-await supabaseClient.auth.signOut();
-location.reload();
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+if(session&&!adminBox.classList.contains("hidden")){
+loadOrders();
+loadAdminProducts();
+}
 });
 
 checkSession();
 </script>
 </body>
-    </html>
+</html>
