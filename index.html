@@ -545,32 +545,45 @@ behavior:"smooth",
 block:"start"
 });
 
-}
 
- function checkoutWhatsApp(){
-  if(!cart.length){alert("El carrito está vacío");return;}
-  const name=document.getElementById("customerName").value;
-  const phone=document.getElementById("customerPhone").value;
-  const address=document.getElementById("customerAddress").value;
-  if(!name||!phone||!address){alert("Completa tus datos");return;}
-  // si quieres usar checkout directo, aquí va tu logica
-}
+function checkoutWhatsApp(){
 
-function notifyAdminWhatsApp(order, items){
-  const MI_NUMERO = "240555626619";
-  let texto = `🔔 *NUEVO PEDIDO LOPETE* 🔔%0A%0A`;
-  texto += `*Cliente:* ${encodeURIComponent(order.customer_name)}%0A`;
-  texto += `*Tel:* ${encodeURIComponent(order.customer_phone)}%0A`;
-  texto += `*Ciudad:* ${encodeURIComponent(order.customer_city)}%0A`;
-  texto += `*Direccion:* ${encodeURIComponent(order.customer_address)}%0A%0A`;
-  texto += `*PRODUCTOS:*%0A`;
+if(!cart.length){alert("El carrito está vacío.");return}
+const name=document.getElementById("customerName").value.trim();
+const phone=document.getElementById("customerPhone").value.trim();
+const address=document.getElementById("customerAddress").value.trim();
+if(!name||!phone||!address){alert("Completa nombre, teléfono y dirección.");return}
+let sub=0;
+let text="VIBELEVEL WORLDWIDE%0A%0A*NUEVO PEDIDO*%0A";
+cart.forEach(item=>{
+const p=products.find(x=>String(x.id)===String(item.id));
+if(p){sub+=Number(p.price)*item.qty;text+=`%0A• ${encodeURIComponent(p.name)} x${item.qty} — ${encodeURIComponent(money(Number(p.price)*item.qty))}%0ATalla: ${encodeURIComponent(item.size||"-")}`}
+});
+const shipping=Number(document.querySelector('input[name="shipping"]:checked')?.value||0);
+const total=sub+shipping;
+text+=`%0A%0ASubtotal: ${encodeURIComponent(money(sub))}%0AEnvío: ${encodeURIComponent(money(shipping))}%0A*TOTAL: ${encodeURIComponent(money(total))}*%0A%0ANombre: ${encodeURIComponent(name)}%0ATeléfono: ${encodeURIComponent(phone)}%0ADirección: ${encodeURIComponent(address)}`;
+window.open("https://wa.me/"+WHATSAPP+"?text="+text,"_blank");
+     }
+    function notifyAdminWhatsApp(orderNumber, name, phone, address, paymentMethod, paymentReference, items, subtotal, shipping, total){
+  let text = `VIBELEVEL - NUEVO PEDIDO PAGADO%0A%0A`;
+  text += `*Numero:* ${encodeURIComponent(orderNumber)}%0A`;
+  text += `*Cliente:* ${encodeURIComponent(name)}%0A`;
+  text += `*Telefono:* ${encodeURIComponent(phone)}%0A`;
+  text += `*Direccion:* ${encodeURIComponent(address)}%0A`;
+  text += `*Metodo:* ${encodeURIComponent(paymentMethod)}%0A`;
+  text += `*Referencia:* ${encodeURIComponent(paymentReference)}%0A%0A`;
+  text += `*PRODUCTOS:*%0A`;
+  
   items.forEach(item => {
-    texto += `• ${encodeURIComponent(item.name)} x${item.quantity} = ${item.price * item.quantity} XAF%0A`;
+    text += `• ${encodeURIComponent(item.product_name)} - Talla: ${encodeURIComponent(item.size)} - x${item.quantity} - ${encodeURIComponent(money(item.line_total))}%0A`;
   });
-  texto += `%0A*TOTAL: ${order.total} XAF*%0A`;
-  window.open("https://wa.me/"+MI_NUMERO+"?text="+texto, '_blank');
-}
+  
+  text += `%0ASubtotal: ${encodeURIComponent(money(subtotal))}%0A`;
+  text += `Envio: ${encodeURIComponent(money(shipping))}%0A`;
+  text += `*TOTAL PAGADO: ${encodeURIComponent(money(total))}*`;
 
+  window.open("https://wa.me/"+WHATSAPP+"?text="+text, "_blank");
+    } 
 function rateProduct(n){
 selectedRating=n;
 document.querySelectorAll("#detailStars .star").forEach((s,i)=>s.classList.toggle("active",i<n));
@@ -1032,12 +1045,11 @@ VibeLevel comprobará el ingreso
 antes de confirmar el pago.
 `;
 
-
+notifyAdminWhatsApp(orderNumber, name, phone, address, paymentMethod, paymentReference, orderItems, subtotal, shipping, total);
 /* =========================
    LIMPIAR
 ========================= */
-         let o={customer_name:customerName,customer_phone:customerPhone,customer_city:customerCity,customer_address:customerAddress,total:total};
-    try{notifyAdminWhatsApp(o,cart)}catch(e){}
+         
 cart=[];
 
 saveCart();
