@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000">
+<title>NØVRA — Worldwide Store</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL =
+"https://aolvmuxronsqikvulvex.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_rjZPtLmKS9HPJwux3lTcyQ_IO2bmUYk";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+</script>
+
+<style>
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:#080808;
+color:#fff;
+}
+
+button,input,select,textarea{
+font:inherit;
+}
+
+button{
+cursor:pointer;
+}
+
+a{
+color:inherit;
+text-decoration:none;
+}
+
+header{
+position:sticky;
+top:0;
+z-index:50;
+height:64px;
+background:#000;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 16px;
+border-bottom:1px solid #222;
+}
+
+.logo{
+font-size:24px;
+font-weight:900;
+letter-spacing:2px;
+}
+
+.header-actions{
+display:flex;
+gap:8px;
+}
+
+.icon-btn{
+background:#111;
+color:#fff;
+border:1px solid #333;
+width:42px;
+height:42px;
+border-radius:8px;
+position:relative;
+}
+
+.badge{
+position:absolute;
+top:-5px;
+right:-5px;
+background:#fff;
+color:#000;
+font-size:10px;
+font-weight:bold;
+min-width:17px;
+height:17px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+.hero{
+min-height:430px;
+padding:70px 20px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+background:
+radial-gradient(circle at 80% 20%,#292929,transparent 35%),
+linear-gradient(135deg,#111,#050505);
+}
+
+.hero-small{
+font-size:13px;
+letter-spacing:4px;
+font-weight:bold;
+margin-bottom:12px;
+}
+
+.hero h1{
+font-size:clamp(58px,18vw,130px);
+line-height:.85;
+font-weight:900;
+letter-spacing:-5px;
+}
+
+.hero p{
+max-width:500px;
+color:#aaa;
+line-height:1.6;
+margin:25px 0;
+}
+
+.hero button{
+width:max-content;
+background:#fff;
+color:#000;
+border:0;
+padding:15px 25px;
+font-weight:900;
+}
+
+.categories{
+display:flex;
+gap:8px;
+overflow-x:auto;
+padding:15px;
+border-bottom:1px solid #222;
+}
+
+.category{
+white-space:nowrap;
+background:#111;
+border:1px solid #333;
+color:#aaa;
+padding:10px 16px;
+border-radius:30px;
+}
+
+.category.active{
+background:#fff;
+color:#000;
+border-color:#fff;
+}
+
+.store-bar{
+padding:25px 15px 10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.store-bar h2{
+font-size:28px;
+}
+
+.sort{
+background:#111;
+color:#fff;
+border:1px solid #333;
+padding:9px;
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:15px;
+}
+
+.product{
+background:#111;
+border:1px solid #222;
+overflow:hidden;
+position:relative;
+}
+
+.product-image{
+height:220px;
+background:#181818;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+}
+
+.placeholder{
+font-size:32px;
+font-weight:900;
+color:#333;
+}
+
+.product-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.product-tag{
+position:absolute;
+top:8px;
+left:8px;
+background:#fff;
+color:#000;
+font-size:10px;
+font-weight:bold;
+padding:5px 7px;
+}
+
+.favorite{
+position:absolute;
+top:8px;
+right:8px;
+width:32px;
+height:32px;
+border:0;
+border-radius:50%;
+background:#000b;
+color:#fff;
+}
+
+.product-info{
+padding:12px;
+}
+
+.product-name{
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.product-category{
+font-size:11px;
+color:#777;
+}
+
+.price-row{
+display:flex;
+gap:7px;
+align-items:center;
+margin:10px 0;
+}
+
+.price{
+font-weight:900;
+}
+
+.old-price{
+font-size:12px;
+color:#666;
+text-decoration:line-through;
+}
+
+.add{
+width:100%;
+padding:10px;
+border:1px solid #333;
+background:#fff;
+color:#000;
+font-weight:bold;
+}
+
+.search-box{
+display:none;
+padding:10px 15px;
+background:#0d0d0d;
+}
+
+.search-box.show{
+display:block;
+}
+
+.search-box input{
+width:100%;
+padding:13px;
+background:#111;
+color:#fff;
+border:1px solid #333;
+outline:none;
+}
+.overlay{
+position:fixed;
+inset:0;
+background:#000c;
+z-index:100;
+display:none;
+overflow-y:auto;
+padding:15px;
+}
+
+.overlay.show{
+display:block;
+}
+
+.modal{
+background:#0d0d0d;
+border:1px solid #333;
+max-width:600px;
+margin:30px auto;
+padding:18px;
+}
+
+.modal-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.close{
+background:none;
+border:0;
+color:#fff;
+font-size:25px;
+}
+
+.detail-image{
+height:300px;
+background:#181818;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:20px;
+}
+
+.detail-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.detail-image .placeholder{
+font-size:45px;
+}
+
+.detail-name{
+font-size:25px;
+font-weight:900;
+}
+
+.detail-description{
+color:#999;
+line-height:1.6;
+margin:12px 0;
+}
+
+.detail-price{
+font-size:22px;
+font-weight:900;
+margin:15px 0;
+}
+
+.sizes{
+display:flex;
+gap:8px;
+margin:15px 0;
+}
+
+.size{
+background:#111;
+border:1px solid #444;
+color:#fff;
+padding:10px 15px;
+}
+
+.size.selected{
+background:#fff;
+color:#000;
+}
+
+.detail-add{
+width:100%;
+padding:15px;
+background:#fff;
+color:#000;
+border:0;
+font-weight:900;
+}
+
+.cart-item{
+display:flex;
+gap:10px;
+padding:12px 0;
+border-bottom:1px solid #222;
+}
+
+.cart-img{
+width:70px;
+height:70px;
+background:#181818;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-shrink:0;
+}
+
+.cart-img img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.cart-info{
+flex:1;
+}
+
+.cart-name{
+font-weight:bold;
+}
+
+.cart-size{
+font-size:12px;
+color:#777;
+}
+
+.cart-price{
+margin-top:5px;
+}
+
+.qty{
+display:flex;
+gap:8px;
+align-items:center;
+margin-top:8px;
+}
+
+.qty button{
+width:25px;
+height:25px;
+background:#222;
+color:#fff;
+border:1px solid #444;
+}
+
+.remove{
+background:none;
+border:0;
+color:#777;
+}
+
+.total-box{
+margin-top:20px;
+border-top:1px solid #333;
+padding-top:15px;
+}
+
+.total-line{
+display:flex;
+justify-content:space-between;
+margin:8px 0;
+color:#aaa;
+}
+
+.total-line.final{
+color:#fff;
+font-size:20px;
+font-weight:900;
+}
+
+.checkout-btn{
+width:100%;
+padding:15px;
+margin-top:15px;
+background:#fff;
+color:#000;
+border:0;
+font-weight:900;
+}
+.form-group{
+margin-bottom:14px;
+}
+
+.form-group label{
+display:block;
+font-size:12px;
+color:#999;
+margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+width:100%;
+background:#111;
+border:1px solid #333;
+color:#fff;
+padding:12px;
+outline:none;
+}
+
+.form-group textarea{
+min-height:90px;
+resize:vertical;
+}
+
+.payment-options{
+display:flex;
+flex-direction:column;
+gap:8px;
+margin:10px 0 15px;
+}
+
+.payment-option{
+display:flex;
+gap:10px;
+align-items:center;
+padding:12px;
+background:#111;
+border:1px solid #333;
+}
+
+.payment-option small{
+display:block;
+color:#777;
+}
+
+.payment-reference{
+display:none;
+}
+
+.payment-reference.show{
+display:block;
+}
+
+.empty{
+text-align:center;
+color:#777;
+padding:40px 10px;
+}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:20px;
+transform:translateX(-50%);
+background:#fff;
+color:#000;
+padding:12px 18px;
+font-weight:bold;
+z-index:300;
+display:none;
+}
+
+.toast.show{
+display:block;
+}
+
+footer{
+padding:40px 15px;
+text-align:center;
+color:#555;
+border-top:1px solid #222;
+margin-top:30px;
+}
+
+@media(min-width:700px){
+.products{
+grid-template-columns:repeat(4,1fr);
+}
+
+.product-image{
+height:280px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+NØVRA
+</div>
+
+<div class="header-actions">
+
+<button
+class="icon-btn"
+onclick="toggleSearch()">
+⌕
+</button>
+
+<button
+class="icon-btn"
+onclick="openFavorites()">
+♡
+<span
+class="badge"
+id="favCount">
+0
+</span>
+</button>
+
+<button
+class="icon-btn"
+onclick="openCart()">
+🛒
+<span
+class="badge"
+id="cartCount">
+0
+</span>
+</button>
+
+</div>
+</header>
+
+<div
+class="search-box"
+id="searchBox">
+
+<input
+id="searchInput"
+type="search"
+placeholder="Buscar productos..."
+oninput="searchProducts()">
+
+</div>
+<section class="hero">
+
+<div class="hero-small">
+TIENDA MUNDIAL
+</div>
+
+<h1>NØVRA</h1>
+
+<p>
+Descubre productos seleccionados para
+la vida moderna, estilo, tecnología
+y uso diario.
+</p>
+
+<button
+onclick="document.getElementById('shop').scrollIntoView()">
+COMPRAR AHORA
+</button>
+
+</section>
+
+<div class="categories">
+
+<button
+class="category active"
+onclick="filterCategory('ALL',this)">
+TODOS
+</button>
+
+<button
+class="category"
+onclick="filterCategory('TECH',this)">
+TECNOLOGÍA
+</button>
+
+<button
+class="category"
+onclick="filterCategory('FASHION',this)">
+MODA
+</button>
+
+<button
+class="category"
+onclick="filterCategory('HOME',this)">
+HOGAR
+</button>
+
+<button
+class="category"
+onclick="filterCategory('ACCESSORIES',this)">
+ACCESORIOS
+</button>
+
+<button
+class="category"
+onclick="filterCategory('LIFESTYLE',this)">
+ESTILO DE VIDA
+</button>
+
+</div>
+
+<section id="shop">
+
+<div class="store-bar">
+
+<h2>TIENDA</h2>
+
+<select
+id="sortSelect"
+class="sort"
+onchange="sortProducts()">
+
+<option value="featured">
+DESTACADOS
+</option>
+
+<option value="low">
+PRECIO: MENOR A MAYOR
+</option>
+
+<option value="high">
+PRECIO: MAYOR A MENOR
+</option>
+
+</select>
+
+</div>
+
+<div
+class="products"
+id="products">
+</div>
+
+</section>
+
+<footer>
+NØVRA — TIENDA MUNDIAL
+<br><br>
+© 2026 NØVRA
+</footer>
+
+<div
+class="overlay"
+id="productOverlay">
+
+<div
+class="modal"
+id="productDetail">
+</div>
+
+</div>
+
+<div
+class="overlay"
+id="cartOverlay">
+
+<div class="modal">
+
+<div class="modal-head">
+
+<h2>TU CARRITO</h2>
+
+<button
+class="close"
+onclick="closeModal('cartOverlay')">
+×
+</button>
+
+</div>
+
+<div id="cartContent">
+</div>
+
+</div>
+</div>
+
+<div
+class="overlay"
+id="favoritesOverlay">
+
+<div class="modal">
+
+<div class="modal-head">
+
+<h2>FAVORITOS</h2>
+
+<button
+class="close"
+onclick="closeModal('favoritesOverlay')">
+×
+</button>
+
+</div>
+
+<div id="favoritesContent">
+</div>
+
+</div>
+</div>
+<div
+class="overlay"
+id="checkoutOverlay">
+
+<div class="modal">
+
+<div class="modal-head">
+
+<h2>FINALIZAR COMPRA</h2>
+
+<button
+class="close"
+onclick="closeModal('checkoutOverlay')">
+×
+</button>
+
+</div>
+
+<form
+id="checkoutForm"
+onsubmit="submitOrder(event)">
+
+<div class="form-group">
+
+<label>NOMBRE COMPLETO</label>
+
+<input
+id="customerName"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>CORREO ELECTRÓNICO</label>
+
+<input
+id="customerEmail"
+type="email"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>TELÉFONO</label>
+
+<input
+id="customerPhone"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>PAÍS</label>
+
+<select
+id="customerCountry"
+required>
+
+<option value="">
+Selecciona tu país
+</option>
+
+<option>España</option>
+<option>Francia</option>
+<option>Alemania</option>
+<option>Italia</option>
+<option>Portugal</option>
+<option>Bélgica</option>
+<option>Países Bajos</option>
+<option>Reino Unido</option>
+<option>Estados Unidos</option>
+<option>Canadá</option>
+<option>Otro</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>DIRECCIÓN</label>
+
+<textarea
+id="customerAddress"
+required>
+</textarea>
+
+</div>
+
+<label>
+MÉTODO DE PAGO
+</label>
+
+<div class="payment-options">
+
+<label class="payment-option">
+
+<input
+type="radio"
+name="payment"
+value="BANGE"
+onclick="paymentChanged()"
+required>
+
+<div>
+BANGE
+<small>
+Transferencia bancaria
+</small>
+</div>
+
+</label>
+
+<label class="payment-option">
+
+<input
+type="radio"
+name="payment"
+value="MUNI_DINERO"
+onclick="paymentChanged()">
+
+<div>
+MUNI DINERO
+<small>
+Pago móvil
+</small>
+</div>
+
+</label>
+
+<label class="payment-option">
+
+<input
+type="radio"
+name="payment"
+value="CARD"
+onclick="paymentChanged()">
+
+<div>
+TARJETA
+<small>
+Pago con tarjeta internacional
+</small>
+</div>
+
+</label>
+
+</div>
+
+<div
+class="form-group payment-reference"
+id="referenceBox">
+
+<label>
+REFERENCIA DEL PAGO
+</label>
+
+<input
+id="paymentReference"
+placeholder="Introduce el número de transferencia o referencia">
+
+</div>
+
+<div class="total-box">
+
+<div class="total-line">
+
+<span>Subtotal</span>
+
+<strong
+id="checkoutSubtotal">
+€0.00
+</strong>
+
+</div>
+
+<div class="total-line">
+
+<span>Envío</span>
+
+<strong
+id="checkoutShipping">
+Por calcular
+</strong>
+
+</div>
+
+<div class="total-line final">
+
+<span>Total</span>
+
+<strong
+id="checkoutTotal">
+€0.00
+</strong>
+
+</div>
+
+</div>
+
+<button
+class="checkout-btn"
+type="submit">
+
+REALIZAR PEDIDO
+
+</button>
+
+</form>
+
+</div>
+</div>
+
+<div
+class="toast"
+id="toast">
+</div>
+
+<script>
+
+const productsData=[
+
+{
+id:1,
+name:"Minimal Smart Watch",
+category:"TECH",
+price:39.90,
+oldPrice:59.90,
+tag:"NUEVO",
+image:"",
+stock:99,
+sizes:[],
+description:"Modern smart watch for everyday use."
+},
+
+{
+id:2,
+name:"Urban Essential Hoodie",
+category:"FASHION",
+price:34.90,
+oldPrice:49.90,
+tag:"OFERTA",
+image:"",
+stock:99,
+sizes:["S","M","L","XL"],
+description:"Comfortable everyday urban hoodie."
+},
+
+{
+id:3,
+name:"Everyday Crossbody Bag",
+category:"ACCESSORIES",
+price:24.90,
+oldPrice:34.90,
+tag:"NUEVO",
+image:"",
+stock:99,
+sizes:[],
+description:"Compact crossbody bag for daily use."
+},
+
+{
+id:4,
+name:"Portable LED Lamp",
+category:"HOME",
+price:22.90,
+oldPrice:29.90,
+tag:"",
+image:"",
+stock:99,
+sizes:[],
+description:"Portable modern LED lamp."
+},
+
+{
+id:5,
+name:"Wireless Earbuds",
+category:"TECH",
+price:29.90,
+oldPrice:44.90,
+tag:"OFERTA",
+image:"",
+stock:99,
+sizes:[],
+description:"Wireless earbuds for everyday listening."
+},
+{
+id:6,
+name:"Classic Urban Cap",
+category:"FASHION",
+price:19.90,
+oldPrice:24.90,
+tag:"",
+image:"",
+stock:99,
+sizes:["ONE SIZE"],
+description:"Minimal urban cap."
+},
+
+{
+id:7,
+name:"Travel Organizer",
+category:"LIFESTYLE",
+price:18.90,
+oldPrice:27.90,
+tag:"NUEVO",
+image:"",
+stock:99,
+sizes:[],
+description:"Useful organizer for travel."
+},
+
+{
+id:8,
+name:"Desk Setup Stand",
+category:"TECH",
+price:26.90,
+oldPrice:39.90,
+tag:"",
+image:"",
+stock:99,
+sizes:[],
+description:"Minimal stand for your desk setup."
+}
+
+];
+
+let products=[...productsData];
+
+let cart=JSON.parse(
+localStorage.getItem("novra_cart")||"[]"
+);
+
+let favorites=JSON.parse(
+localStorage.getItem("novra_favorites")||"[]"
+);
+
+let selectedProduct=null;
+
+let selectedSize="";
+
+let currentCategory="ALL";
+
+async function loadProducts(){
+
+const {data,error}=
+await supabaseClient
+.from("products")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+
+console.error(
+"Supabase products error:",
+error
+);
+
+showToast(
+"No se pudieron cargar los productos"
+);
+
+return;
+
+}
+
+if(data && data.length){
+
+productsData.length=0;
+
+data.forEach(p=>{
+
+productsData.push({
+
+id:p.id,
+
+name:p.name,
+
+category:p.category,
+
+price:Number(p.price),
+
+oldPrice:
+p.old_price!==null &&
+p.old_price!==undefined
+?Number(p.old_price)
+:Number(p.price),
+
+tag:
+p.is_new
+?"NUEVO"
+:p.is_sale
+?"OFERTA"
+:"",
+
+image:p.image||"",
+
+sizes:Array.isArray(p.sizes)
+?p.sizes
+:[],
+
+stock:
+Number.isFinite(Number(p.stock))
+?Number(p.stock)
+:0,
+
+description:
+p.description||""
+
+});
+
+});
+
+products=[...productsData];
+
+renderProducts();
+
+}
+
+}
+
+function save(){
+
+localStorage.setItem(
+"novra_cart",
+JSON.stringify(cart)
+);
+
+localStorage.setItem(
+"novra_favorites",
+JSON.stringify(favorites)
+);
+
+updateBadges();
+
+}
+
+function updateBadges(){
+
+document.getElementById("cartCount")
+.textContent=
+cart.reduce(
+(a,b)=>a+b.quantity,
+0
+);
+
+document.getElementById("favCount")
+.textContent=
+favorites.length;
+
+}
+
+function getProductStock(id){
+
+let p=
+productsData.find(x=>x.id===id);
+
+if(!p)
+return 0;
+
+return Number(p.stock)||0;
+
+}
+
+function getCartQuantity(id,size){
+
+return cart
+.filter(x=>
+x.id===id &&
+x.size===size
+)
+.reduce(
+(s,x)=>s+x.quantity,
+0
+);
+
+}
+
+function renderProducts(list=products){
+
+const box=
+document.getElementById("products");
+
+if(!list.length){
+
+box.innerHTML=
+'<div class="empty">No se encontraron productos.</div>';
+
+return;
+
+}
+
+box.innerHTML=list.map(p=>`
+
+<div class="product">
+
+<div class="product-image">
+
+${
+p.image
+?`<img src="${p.image}">`
+:`<div class="placeholder">NØVRA</div>`
+}
+
+${
+p.tag
+?`<span class="product-tag">${p.tag}</span>`
+:""
+}
+
+<button
+class="favorite"
+onclick="toggleFavorite(${p.id})">
+
+${
+favorites.includes(p.id)
+?"♥"
+:"♡"
+}
+
+</button>
+
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+${p.name}
+</div>
+
+<div class="product-category">
+${p.category}
+</div>
+
+<div class="price-row">
+
+<span class="price">
+€${p.price.toFixed(2)}
+</span>
+
+<span class="old-price">
+€${p.oldPrice.toFixed(2)}
+</span>
+
+</div>
+
+<button
+class="add"
+onclick="openProduct(${p.id})">
+
+VER PRODUCTO
+
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+function openProduct(id){
+
+selectedProduct=
+productsData.find(p=>p.id===id);
+
+if(!selectedProduct){
+
+showToast("Producto no encontrado");
+
+return;
+
+}
+
+selectedSize=
+selectedProduct.sizes &&
+selectedProduct.sizes.length
+?selectedProduct.sizes[0]
+:"";
+
+let sizes=
+selectedProduct.sizes &&
+selectedProduct.sizes.length
+?selectedProduct.sizes.map(s=>`
+
+<button
+class="size ${s===selectedSize?"selected":""}"
+onclick="selectSize('${s}',this)">
+${s}
+</button>
+
+`).join("")
+:"";
+
+document.getElementById("productDetail")
+.innerHTML=`
+
+<div class="modal-head">
+
+<h2>PRODUCTO</h2>
+
+<button
+class="close"
+onclick="closeModal('productOverlay')">
+×
+</button>
+
+</div>
+
+<div class="detail-image">
+
+${
+selectedProduct.image
+?`<img src="${selectedProduct.image}">`
+:`<div class="placeholder">NØVRA</div>`
+}
+
+</div>
+
+<div class="detail-name">
+${selectedProduct.name}
+</div>
+
+<div class="detail-description">
+${selectedProduct.description}
+</div>
+
+<div class="detail-price">
+€${selectedProduct.price.toFixed(2)}
+</div>
+
+${sizes
+?`<div class="sizes">${sizes}</div>`
+:""}
+
+<button
+class="detail-add"
+onclick="addToCart()">
+
+AÑADIR AL CARRITO
+
+</button>
+
+`;
+
+document
+.getElementById("productOverlay")
+.classList.add("show");
+
+}
+
+function selectSize(size,button){
+
+selectedSize=size;
+
+document
+.querySelectorAll(".size")
+.forEach(x=>
+x.classList.remove("selected")
+);
+
+button.classList.add("selected");
+
+}
+
+function addToCart(){
+
+if(!selectedProduct){
+
+showToast("Producto no seleccionado");
+
+return;
+
+}
+
+if(
+selectedProduct.sizes &&
+selectedProduct.sizes.length &&
+!selectedSize
+){
+
+showToast("Selecciona una talla");
+
+return;
+
+}
+
+let size=
+selectedSize||"";
+
+let current=
+getCartQuantity(
+selectedProduct.id,
+size
+);
+
+let stock=
+getProductStock(
+selectedProduct.id
+);
+
+if(
+stock>0 &&
+current>=stock
+){
+
+showToast(
+"No hay más stock disponible"
+);
+
+return;
+
+}
+
+let found=cart.find(
+x=>
+x.id===selectedProduct.id &&
+x.size===size
+);
+
+if(found){
+
+if(stock>0 && found.quantity>=stock){
+
+showToast(
+"No hay más stock disponible"
+);
+
+return;
+
+}
+
+found.quantity++;
+
+}else{
+
+cart.push({
+
+id:selectedProduct.id,
+
+name:selectedProduct.name,
+
+price:selectedProduct.price,
+
+size:size,
+
+quantity:1,
+
+image:selectedProduct.image
+
+});
+
+}
+
+save();
+
+closeModal("productOverlay");
+
+showToast("Añadido al carrito");
+
+}
+
+function openCart(){
+
+renderCart();
+
+document
+.getElementById("cartOverlay")
+.classList.add("show");
+
+}
+
+function renderCart(){
+
+const box=
+document.getElementById("cartContent");
+
+if(!cart.length){
+
+box.innerHTML=
+'<div class="empty">Tu carrito está vacío.</div>';
+
+return;
+
+}
+
+box.innerHTML=
+cart.map((item,i)=>`
+
+<div class="cart-item">
+
+<div class="cart-img">
+
+${
+item.image
+?`<img src="${item.image}">`
+:`<div>NØ</div>`
+}
+
+</div>
+
+<div class="cart-info">
+
+<div class="cart-name">
+${item.name}
+</div>
+
+<div class="cart-size">
+${item.size||""}
+</div>
+
+<div class="cart-price">
+€${(item.price*item.quantity).toFixed(2)}
+</div>
+
+<div class="qty">
+
+<button
+onclick="changeQuantity(${i},-1)">
+−
+</button>
+
+<span>
+${item.quantity}
+</span>
+
+<button
+onclick="changeQuantity(${i},1)">
++
+</button>
+
+<button
+class="remove"
+onclick="removeCartItem(${i})">
+
+ELIMINAR
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`).join("");
+
+let subtotal=
+cart.reduce(
+(s,x)=>s+x.price*x.quantity,
+0
+);
+
+box.innerHTML+=`
+
+<div class="total-box">
+
+<div class="total-line final">
+
+<span>Total</span>
+
+<strong>
+€${subtotal.toFixed(2)}
+</strong>
+
+</div>
+
+<button
+class="checkout-btn"
+onclick="openCheckout()">
+
+FINALIZAR COMPRA
+
+</button>
+
+</div>
+
+`;
+
+}
+function changeQuantity(i,n){
+
+let item=cart[i];
+
+if(!item)
+return;
+
+if(n>0){
+
+let stock=
+getProductStock(item.id);
+
+if(
+stock>0 &&
+item.quantity>=stock
+){
+
+showToast(
+"No hay más stock disponible"
+);
+
+return;
+
+}
+
+}
+
+cart[i].quantity+=n;
+
+if(cart[i].quantity<=0)
+cart.splice(i,1);
+
+save();
+
+renderCart();
+
+}
+
+function removeCartItem(i){
+
+cart.splice(i,1);
+
+save();
+
+renderCart();
+
+}
+
+function toggleFavorite(id){
+
+if(favorites.includes(id)){
+
+favorites=
+favorites.filter(x=>x!==id);
+
+}else{
+
+favorites.push(id);
+
+}
+
+save();
+
+renderProducts();
+
+}
+
+function openFavorites(){
+
+let list=
+productsData.filter(
+p=>favorites.includes(p.id)
+);
+
+document.getElementById("favoritesContent")
+.innerHTML=list.length
+?list.map(p=>`
+
+<div class="cart-item">
+
+<div class="cart-info">
+
+<div class="cart-name">
+${p.name}
+</div>
+
+<div class="cart-price">
+€${p.price.toFixed(2)}
+</div>
+
+<button
+class="add"
+onclick="openProduct(${p.id});closeModal('favoritesOverlay')">
+
+VER PRODUCTO
+
+</button>
+
+</div>
+
+</div>
+
+`).join("")
+:'<div class="empty">Todavía no tienes favoritos.</div>';
+
+document
+.getElementById("favoritesOverlay")
+.classList.add("show");
+
+}
+
+function openCheckout(){
+
+if(!cart.length){
+
+showToast("Tu carrito está vacío");
+
+return;
+
+}
+
+closeModal("cartOverlay");
+
+let subtotal=
+cart.reduce(
+(s,x)=>s+x.price*x.quantity,
+0
+);
+
+document.getElementById("checkoutSubtotal")
+.textContent=
+"€"+subtotal.toFixed(2);
+
+document.getElementById("checkoutShipping")
+.textContent=
+"€0.00";
+
+document.getElementById("checkoutTotal")
+.textContent=
+"€"+subtotal.toFixed(2);
+
+document
+.getElementById("checkoutOverlay")
+.classList.add("show");
+
+}
+
+function paymentChanged(){
+
+let method=
+document.querySelector(
+'input[name="payment"]:checked'
+)?.value;
+
+let box=
+document.getElementById("referenceBox");
+
+if(
+method==="BANGE"||
+method==="MUNI_DINERO"
+)
+box.classList.add("show");
+else
+box.classList.remove("show");
+
+}
+
+function createOrderNumber(){
+
+let d=new Date();
+
+let year=d.getFullYear();
+
+let month=
+String(d.getMonth()+1)
+.padStart(2,"0");
+
+let day=
+String(d.getDate())
+.padStart(2,"0");
+
+let hour=
+String(d.getHours())
+.padStart(2,"0");
+
+let minute=
+String(d.getMinutes())
+.padStart(2,"0");
+
+let second=
+String(d.getSeconds())
+.padStart(2,"0");
+
+return "NV-"+year+"-"+month+day+
+"-"+hour+minute+second;
+
+}
+
+async function submitOrder(e){
+
+e.preventDefault();
+
+if(!cart.length){
+
+showToast(
+"Tu carrito está vacío"
+);
+
+return;
+
+}
+
+let subtotal=
+cart.reduce(
+(s,x)=>s+x.price*x.quantity,
+0
+);
+
+let shipping=0;
+
+let total=
+subtotal+shipping;
+
+let method=
+document.querySelector(
+'input[name="payment"]:checked'
+)?.value||"";
+
+if(!method){
+
+showToast(
+"Selecciona un método de pago"
+);
+
+return;
+
+}
+
+let customerNameValue=
+document.getElementById("customerName").value.trim();
+
+let customerEmailValue=
+document.getElementById("customerEmail").value.trim();
+
+let customerPhoneValue=
+document.getElementById("customerPhone").value.trim();
+
+let customerCountryValue=
+document.getElementById("customerCountry").value;
+
+let customerAddressValue=
+document.getElementById("customerAddress").value.trim();
+
+let paymentReferenceValue=
+document.getElementById("paymentReference").value.trim();
+
+let orderNumber=
+createOrderNumber();
+
+let button=
+document.querySelector(
+'#checkoutForm .checkout-btn'
+);
+
+button.disabled=true;
+
+button.textContent=
+"PROCESANDO...";
+
+try{
+
+for(const item of cart){
+
+let product=
+productsData.find(
+p=>p.id===item.id
+);
+
+if(!product){
+
+throw new Error(
+"Producto no encontrado: "+item.name
+);
+
+}
+
+let stock=
+Number(product.stock)||0;
+
+if(
+stock>0 &&
+item.quantity>stock
+){
+
+throw new Error(
+"No hay stock suficiente para: "+
+item.name
+);
+
+}
+
+}
+
+const customerResult=
+await supabaseClient
+.from("customers")
+.insert({
+
+name:customerNameValue,
+
+email:customerEmailValue,
+
+phone:customerPhoneValue,
+
+country:customerCountryValue,
+
+address:customerAddressValue
+
+})
+.select("id")
+.single();
+
+if(customerResult.error){
+
+throw customerResult.error;
+
+}
+
+const orderResult=
+await supabaseClient
+.from("orders")
+.insert({
+
+order_number:orderNumber,
+
+customer_name:customerNameValue,
+
+customer_email:customerEmailValue,
+
+customer_phone:customerPhoneValue,
+
+customer_country:customerCountryValue,
+
+customer_address:customerAddressValue,
+
+payment_method:method,
+
+payment_reference:
+paymentReferenceValue||null,
+
+subtotal:subtotal,
+
+shipping:shipping,
+
+total:total,
+
+payment_status:
+method==="CARD"
+?"pending"
+:"pending",
+
+order_status:"new"
+
+})
+.select("id")
+.single();
+
+if(orderResult.error){
+
+throw orderResult.error;
+
+}
+
+const orderId=
+orderResult.data.id;
+
+const itemsData=
+cart.map(item=>({
+
+order_id:orderId,
+
+product_id:item.id,
+
+product_name:item.name,
+
+size:item.size||null,
+
+quantity:item.quantity,
+
+price:item.price
+
+}));
+
+const itemsResult=
+await supabaseClient
+.from("order_items")
+.insert(itemsData);
+
+if(itemsResult.error){
+
+throw itemsResult.error;
+
+}
+
+for(const item of cart){
+
+let product=
+productsData.find(
+p=>p.id===item.id
+);
+
+if(!product)
+continue;
+
+let stock=
+Number(product.stock)||0;
+
+if(stock<=0)
+continue;
+
+let newStock=
+stock-item.quantity;
+
+const updateResult=
+await supabaseClient
+.from("products")
+.update({
+stock:newStock
+})
+.eq("id",item.id);
+
+if(updateResult.error){
+
+console.error(
+"Stock update error:",
+updateResult.error
+);
+
+}
+
+product.stock=newStock;
+
+}
+
+cart=[];
+
+save();
+
+document
+.getElementById("checkoutForm")
+.reset();
+
+document.getElementById("referenceBox")
+.classList.remove("show");
+
+closeModal("checkoutOverlay");
+
+showToast(
+"Pedido "+orderNumber+" creado. En proceso."
+);
+
+console.log(
+"Pedido creado:",
+orderNumber
+);
+
+}catch(error){
+
+console.error(
+"Order error:",
+error
+);
+
+showToast(
+"Error al crear el pedido"
+);
+
+}finally{
+
+button.disabled=false;
+
+button.textContent=
+"REALIZAR PEDIDO";
+
+}
+
+}
+function filterCategory(category,button){
+
+currentCategory=category;
+
+document
+.querySelectorAll(".category")
+.forEach(x=>
+x.classList.remove("active")
+);
+
+button.classList.add("active");
+
+products=
+category==="ALL"
+?[...productsData]
+:productsData.filter(
+p=>p.category===category
+);
+
+renderProducts();
+
+}
+
+function toggleSearch(){
+
+document
+.getElementById("searchBox")
+.classList.toggle("show");
+
+document
+.getElementById("searchInput")
+.focus();
+
+}
+
+function searchProducts(){
+
+let q=
+document
+.getElementById("searchInput")
+.value
+.toLowerCase()
+.trim();
+
+let base=
+currentCategory==="ALL"
+?[...productsData]
+:productsData.filter(
+p=>p.category===currentCategory
+);
+
+if(!q){
+
+renderProducts(base);
+
+return;
+
+}
+
+renderProducts(
+base.filter(p=>
+p.name.toLowerCase().includes(q)||
+p.category.toLowerCase().includes(q)||
+(p.description||"")
+.toLowerCase()
+.includes(q)
+)
+);
+
+}
+
+function sortProducts(){
+
+let v=
+document.getElementById("sortSelect")
+.value;
+
+let list=[...products];
+
+if(v==="low")
+list.sort(
+(a,b)=>a.price-b.price
+);
+
+if(v==="high")
+list.sort(
+(a,b)=>b.price-a.price
+);
+
+renderProducts(list);
+
+}
+
+function closeModal(id){
+
+document
+.getElementById(id)
+.classList.remove("show");
+
+}
+
+function showToast(message){
+
+let t=
+document.getElementById("toast");
+
+t.textContent=message;
+
+t.classList.add("show");
+
+setTimeout(
+()=>t.classList.remove("show"),
+2200
+);
+
+}
+
+async function initializeStore(){
+
+updateBadges();
+
+renderProducts();
+
+await loadProducts();
+
+updateBadges();
+
+}
+
+initializeStore();
+
+</script>
+
+</body>
+</html>
